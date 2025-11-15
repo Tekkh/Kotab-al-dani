@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
     'lessons',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +137,15 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
+
+# --- إعدادات Django REST Framework ---
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # استخدام المصادقة بالتوكن
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        # السماح بالوصول للمستخدمين المسجلين فقط افتراضيًا
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
