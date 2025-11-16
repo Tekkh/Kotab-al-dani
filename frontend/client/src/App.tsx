@@ -33,7 +33,7 @@ function App() {
 
       {/* 2. تحديث الروابط لاستخدام الحارس */}
       <Routes>
-        {/* الروابط العامة (التي يراها الجميع) */}
+        {/* الروابط العامة */}
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
