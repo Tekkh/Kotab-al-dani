@@ -2,20 +2,22 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+// 1. [تغيير] استيراد "الخطاف"
+import { useAuth } from '../context/AuthContext';
+
 export default function LoginPage() {
-  // 1. "حالات" (States) لتخزين مدخلات المستخدم
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-
   const navigate = useNavigate();
 
-  // 2. الدالة التي سيتم استدعاؤها عند إرسال النموذج
+  // 2. [تغيير] استخدام "الخطاف" للحصول على دالة login
+  const { login } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // 3. إرسال البيانات إلى الـ API الذي قمنا ببنائه
     try {
       const response = await axios.post(
         'http://127.0.0.1:8000/api/auth/login/', 
@@ -25,19 +27,17 @@ export default function LoginPage() {
         }
       );
 
-      // 4. إذا نجح تسجيل الدخول (الخادم سيعيد 200)
       const token = response.data.token;
+
+      // 3. [تغيير] استخدام دالة login المركزية بدلاً من localStorage
+      login(token); 
+
       console.log('تم تسجيل الدخول بنجاح. التوكن:', token);
 
-      // 5. [هام جداً] حفظ التوكن في المتصفح (LocalStorage)
-      // هذا هو "المفتاح" الذي سنستخدمه في جميع الطلبات القادمة
-      localStorage.setItem('authToken', token);
-
-      // 6. إعادة توجيه المستخدم إلى الصفحة الرئيسية
-      navigate('/');
+      // 4. [تغيير] إعادة التوجيه إلى لوحة التحكم بدلاً من الرئيسية
+      navigate('/dashboard');
 
     } catch (err: any) {
-      // 7. إذا فشل تسجيل الدخول (مثل: كلمة مرور خاطئة)
       console.error('فشل تسجيل الدخول:', err.response.data);
       setError('فشل تسجيل الدخول. (اسم المستخدم أو كلمة المرور غير صحيحة)');
     }
@@ -46,10 +46,7 @@ export default function LoginPage() {
   return (
     <div>
       <h2>تسجيل الدخول</h2>
-      {/* 8. عرض رسالة الخطأ إذا وجدت */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      {/* 9. نموذج تسجيل الدخول */}
       <form onSubmit={handleSubmit}>
         <div>
           <label>اسم المستخدم:</label>

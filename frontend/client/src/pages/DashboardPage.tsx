@@ -1,11 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 
+// 1. [تغيير] استيراد "الخطاف"
+import { useAuth } from '../context/AuthContext';
+
 export default function DashboardPage() {
   const navigate = useNavigate();
 
-  // دالة لتسجيل الخروج (حذف المفتاح وإعادة التوجيه)
+  // 2. [تغيير] استخدام "الخطاف" للحصول على دالة logout
+  const { logout } = useAuth();
+
+  // 3. [تغيير] الدالة تستدعي "logout" من السياق
   const handleLogout = () => {
-    localStorage.removeItem('authToken'); // حذف المفتاح
+    logout(); // حذف المفتاح وتحديث "الحالة"
     navigate('/login'); // اذهب إلى صفحة تسجيل الدخول
   };
 
