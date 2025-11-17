@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
-from .models import ProgressLog, UserProgress
-from .serializers import ProgressLogSerializer, UserProgressSerializer
+from .models import ProgressLog, UserProgress, QuranStructure
+from .serializers import ProgressLogSerializer, UserProgressSerializer, QuranStructureSerializer
 
 # 1. View لسجل الوِرد (الملاحظات)
 class ProgressLogViewSet(viewsets.ModelViewSet):
@@ -32,3 +32,15 @@ class UserProgressViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # عند إنشاء حالة آية جديدة، قم بتعيين المستخدم تلقائيًا
         serializer.save(user=self.request.user)
+        
+# --- 3. [جديد] View لهيكل القرآن ---
+class QuranStructureViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint للقراءة فقط، يعرض هيكل القرآن (الآيات، الصفحات، إلخ).
+    """
+    queryset = QuranStructure.objects.all()
+    serializer_class = QuranStructureSerializer
+
+    # [هام] هذا الـ API للقراءة فقط، ولكن يجب أن تكون مسجلاً لترى
+    # (يمكن تغيير هذا إلى permissions.AllowAny إذا أردنا أن يكون عاماً)
+    permission_classes = [permissions.IsAuthenticated]
