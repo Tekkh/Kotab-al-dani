@@ -1,45 +1,87 @@
 import { useEffect, useState } from 'react';
 import apiClient from '../api/apiClient';
 
-// 1. تعريف "نوع" بيانات الآية (مطابق للموديل)
 interface Ayah {
   id: number;
   surah_name: string;
   ayah_id: number;
   ayah_text: string;
-  page: number;
+}
+
+// 1. [جديد] تعريف شكل بيانات التقدم
+interface UserProgress {
+  id: number;
+  ayah: number; // ID الآية في قاعدة البيانات
+  status: 'memorized' | 'reviewing' | 'not_memorized';
 }
 
 export default function MusafView() {
-  // 2. "حالة" (State) لتخزين الآيات
   const [ayahs, setAyahs] = useState<Ayah[]>([]);
+  // 2. [جديد] حالة لتخزين تقدم المستخدم
+  const [progressMap, setProgressMap] = useState<Record<number, string>>({});
   const [error, setError] = useState<string | null>(null);
 
-  // 3. جلب البيانات المحمية عند تحميل المكون
   useEffect(() => {
-    apiClient.get('/quran-structure/')
-      .then(response => {
-        setAyahs(response.data);
+    // دالة لجلب الهيكل
+    const fetchStructure = apiClient.get('/quran-structure/');
+    // دالة لجلب التقدم
+    const fetchProgress = apiClient.get('/user-progress/');
+
+    // 3. [تحديث] تنفيذ الطلبين معاً (Parallel)
+    Promise.all([fetchStructure, fetchProgress])
+      .then(([structureRes, progressRes]) => {
+        setAyahs(structureRes.data);
+
+        // 4. [جديد] تحويل قائمة التقدم إلى "خريطة" لسهولة البحث
+        // النتيجة ستكون مثل: { 1: 'memorized', 2: 'reviewing' }
+        const map: Record<number, string> = {};
+        progressRes.data.forEach((item: UserProgress) => {
+          map[item.ayah] = item.status;
+        });
+        setProgressMap(map);
       })
       .catch(err => {
-        console.error("فشل جلب هيكل القرآن:", err);
-        setError("فشل جلب بيانات المصحف.");
+        console.error("فشل جلب البيانات:", err);
+        setError("فشل تحميل المصحف أو التقدم.");
       });
-  }, []); // [] = نفذ مرة واحدة
+  }, []);
+
+  // 5. [جديد] دالة مساعدة لتحديد لون الخلفية
+  const getBackgroundColor = (ayahId: number) => {
+    const status = progressMap[ayahId];
+    if (status === 'memorized') return '#dcfce7'; // أخضر فاتح
+    if (status === 'reviewing') return '#fef9c3'; // أصفر فاتح
+    return 'transparent'; // شفاف (غير محفوظ)
+  };
 
   return (
-    <div style={{ border: '1px solid green', padding: '10px', marginTop: '20px' }}>
-      <h2>المصحف التفاعلي (تجريبي)</h2>
+    <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', marginTop: '20px' }}>
+      <h3>المصحف التفاعلي (تجريبي)</h3>
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      <p>تم تحميل {ayahs.length} آيات بنجاح.</p>
-
-      {/* 4. (اختياري) عرض الآيات المجلوبة كاختبار */}
-      <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+      <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
         {ayahs.map(ayah => (
-          <p key={ayah.id}>
-            {ayah.surah_name} ({ayah.ayah_id}): {ayah.ayah_text}
-          </p>
+          <div 
+            key={ayah.id} 
+            style={{ 
+              // 6. [تحديث] تطبيق اللون ديناميكياً
+              backgroundColor: getBackgroundColor(ayah.id),
+              padding: '8px',
+              marginBottom: '4px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s'
+            }}
+          >
+            <strong>{ayah.surah_name} ({ayah.ayah_id}):</strong> {ayah.ayah_text}
+
+            {/* عرض نص الحالة للتوضيح أثناء التطوير */}
+            {progressMap[ayah.id] && (
+              <span style={{ fontSize: '0.8em', color: '#666', marginRight: '10px' }}>
+                 - ({progressMap[ayah.id] === 'memorized' ? 'تم الحفظ' : 'مراجعة'})
+              </span>
+            )}
+          </div>
         ))}
       </div>
     </div>
