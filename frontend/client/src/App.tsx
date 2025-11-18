@@ -7,7 +7,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import './App.css';
+//import './App.css';
 
 function App() {
   // 2. [تغيير] استخدام "السياق" لمعرفة حالة تسجيل الدخول

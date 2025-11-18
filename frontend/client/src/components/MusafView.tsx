@@ -2,27 +2,24 @@ import { useEffect, useState } from 'react';
 import apiClient from '../api/apiClient';
 
 interface Ayah {
-  id: number; // ID في جدول QuranStructure
+  id: number;
   surah_name: string;
   ayah_id: number;
   ayah_text: string;
 }
 
-// [تحديث] نحتاج تخزين ID السجل الخاص بالتقدم لنتمكن من تعديله
 interface UserProgress {
-  id: number; // ID في جدول UserProgress (للتحديث/الحذف)
-  ayah: number; // ID الآية المرتبطة
+  id: number;
+  ayah: number;
   status: 'memorized' | 'reviewing' | 'not_memorized';
 }
 
 export default function MusafView() {
   const [ayahs, setAyahs] = useState<Ayah[]>([]);
-  // [تحديث] الخريطة الآن تخزن الكائن كاملاً وليس الحالة فقط
   const [progressMap, setProgressMap] = useState<Record<number, UserProgress>>({});
   const [error, setError] = useState<string | null>(null);
-  const [loadingId, setLoadingId] = useState<number | null>(null); // لإظهار حالة التحميل لآية محددة
+  const [loadingId, setLoadingId] = useState<number | null>(null);
 
-  // دالة جلب البيانات (كما هي)
   const fetchData = () => {
     const fetchStructure = apiClient.get('/quran-structure/');
     const fetchProgress = apiClient.get('/user-progress/');
@@ -30,8 +27,6 @@ export default function MusafView() {
     Promise.all([fetchStructure, fetchProgress])
       .then(([structureRes, progressRes]) => {
         setAyahs(structureRes.data);
-
-        // بناء الخريطة: ayah_id -> ProgressObject
         const map: Record<number, UserProgress> = {};
         progressRes.data.forEach((item: UserProgress) => {
           map[item.ayah] = item;
@@ -48,80 +43,85 @@ export default function MusafView() {
     fetchData();
   }, []);
 
-  // --- [المنطق الجديد] دالة التعامل مع النقر ---
   const handleAyahClick = async (ayahDbId: number) => {
-    setLoadingId(ayahDbId); // تفعيل التحميل لهذه الآية
-
+    setLoadingId(ayahDbId);
     const currentProgress = progressMap[ayahDbId];
 
     try {
       if (!currentProgress) {
-        // 1. الحالة: غير محفوظ -> إنشاء سجل جديد (POST)
-        // الحالة الافتراضية ستكون 'memorized'
-        await apiClient.post('/user-progress/', {
-          ayah: ayahDbId,
-          status: 'memorized'
-        });
+        await apiClient.post('/user-progress/', { ayah: ayahDbId, status: 'memorized' });
       } else if (currentProgress.status === 'memorized') {
-        // 2. الحالة: محفوظ -> تحديث إلى مراجعة (PATCH)
-        await apiClient.patch(`/user-progress/${currentProgress.id}/`, {
-          status: 'reviewing'
-        });
+        await apiClient.patch(`/user-progress/${currentProgress.id}/`, { status: 'reviewing' });
       } else {
-        // 3. الحالة: مراجعة -> حذف السجل للعودة لغير محفوظ (DELETE)
         await apiClient.delete(`/user-progress/${currentProgress.id}/`);
       }
-
-      // تحديث البيانات بعد العملية لإظهار اللون الجديد
-      fetchData(); 
-
+      fetchData();
     } catch (err) {
-      console.error("فشل تحديث الحالة", err);
-      alert("حدث خطأ أثناء تحديث الحالة");
+      console.error(err);
+      alert("حدث خطأ");
     } finally {
-      setLoadingId(null); // إيقاف التحميل
+      setLoadingId(null);
     }
   };
 
-  const getBackgroundColor = (ayahId: number) => {
+  // دالة لتحديد فئات الألوان بدلاً من الألوان الثابتة
+  const getStatusClasses = (ayahId: number) => {
     const progress = progressMap[ayahId];
-    if (!progress) return 'transparent';
-    if (progress.status === 'memorized') return '#dcfce7'; // أخضر
-    if (progress.status === 'reviewing') return '#fef9c3'; // أصفر
-    return 'transparent';
+    if (!progress) return 'bg-white hover:bg-gray-50 border-gray-100'; // غير محفوظ
+    if (progress.status === 'memorized') return 'bg-emerald-100 border-emerald-200 text-emerald-900'; // محفوظ
+    if (progress.status === 'reviewing') return 'bg-yellow-50 border-yellow-200 text-yellow-900'; // مراجعة
+    return 'bg-white';
   };
 
   return (
-    <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', marginTop: '20px' }}>
-      <h3>المصحف التفاعلي (اضغط على الآية لتغيير حالتها)</h3>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      {/* رأس المكون */}
+      <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <h3 className="font-bold text-gray-800 flex items-center gap-2">
+          <span className="text-2xl">📖</span> المصحف التفاعلي
+        </h3>
+        <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded border">
+          اضغط على الآية لتغيير حالتها
+        </span>
+      </div>
 
-      <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-        {ayahs.map(ayah => (
-          <div 
-            key={ayah.id} 
-            onClick={() => handleAyahClick(ayah.id)} // ربط النقر
-            style={{ 
-              backgroundColor: getBackgroundColor(ayah.id),
-              opacity: loadingId === ayah.id ? 0.5 : 1, // تأثير بصري أثناء التحميل
-              padding: '8px',
-              marginBottom: '4px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              userSelect: 'none', // منع تحديد النص عند النقر السريع
-              transition: 'all 0.2s'
-            }}
-          >
-            <strong>{ayah.surah_name} ({ayah.ayah_id}):</strong> {ayah.ayah_text}
+      {error && <div className="p-4 text-red-600 bg-red-50 text-center">{error}</div>}
+      
+      {/* منطقة عرض الآيات */}
+      <div className="p-6 max-h-[600px] overflow-y-auto custom-scrollbar space-y-3">
+        {ayahs.length === 0 ? (
+          <div className="text-center py-10 text-gray-400">جاري تحميل المصحف...</div>
+        ) : (
+          ayahs.map(ayah => (
+            <div 
+              key={ayah.id} 
+              onClick={() => handleAyahClick(ayah.id)}
+              className={`
+                relative p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer
+                ${getStatusClasses(ayah.id)}
+                ${loadingId === ayah.id ? 'opacity-50 cursor-wait' : ''}
+              `}
+            >
+              <div className="flex justify-between items-start mb-2">
+                <span className="text-xs font-bold px-2 py-0.5 rounded bg-black/5 text-black/60">
+                  {ayah.surah_name} : {ayah.ayah_id}
+                </span>
+                
+                {/* أيقونة الحالة */}
+                {progressMap[ayah.id]?.status === 'memorized' && (
+                  <span className="text-emerald-600 text-lg">✅</span>
+                )}
+                {progressMap[ayah.id]?.status === 'reviewing' && (
+                  <span className="text-yellow-600 text-lg">🔄</span>
+                )}
+              </div>
 
-            {/* نص توضيحي للحالة */}
-            {progressMap[ayah.id] && (
-              <span style={{ fontSize: '0.8em', color: '#666', marginRight: '10px' }}>
-                 - ({progressMap[ayah.id].status === 'memorized' ? 'تم الحفظ' : 'مراجعة'})
-              </span>
-            )}
-          </div>
-        ))}
+              <p className="text-xl font-amiri leading-loose text-right" style={{ fontFamily: 'Amiri, serif' }}>
+                {ayah.ayah_text}
+              </p>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
