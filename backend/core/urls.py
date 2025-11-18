@@ -1,27 +1,32 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from django.conf import settings
+from django.conf.urls.static import static
 
-# --- 1. استيراد الـ Views ---
+# Imports
 from lessons.views import WeeklyLessonViewSet
-# --- [تعديل] ---
 from progress.views import ProgressLogViewSet, UserProgressViewSet, QuranStructureViewSet
-# --- [نهاية التعديل] ---
+# [جديد] استيراد مكتبة
+from library.views import MatnViewSet, TajweedLessonViewSet, TafsirViewSet
 
-# --- 2. إنشاء الموجّه المركزي ---
+# Router
 router = DefaultRouter()
-
-# --- 3. تسجيل الـ Views ---
 router.register(r'lessons', WeeklyLessonViewSet, basename='lesson')
 router.register(r'progress-logs', ProgressLogViewSet, basename='progresslog')
 router.register(r'user-progress', UserProgressViewSet, basename='userprogress')
-# --- [الإضافة الجديدة] ---
 router.register(r'quran-structure', QuranStructureViewSet, basename='quranstructure')
-# --- [نهاية الإضافة] ---
 
-# --- 4. الأنماط الرئيسية للـ URL ---
+# [جديد] تسجيل المكتبة
+router.register(r'library/matoon', MatnViewSet, basename='matn')
+router.register(r'library/tajweed', TajweedLessonViewSet, basename='tajweed')
+router.register(r'library/tafsir', TafsirViewSet, basename='tafsir')
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('users.urls')),
-    path('api/', include(router.urls)), # الموجّه المركزي
+    path('api/', include(router.urls)),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
