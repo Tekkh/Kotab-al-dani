@@ -5,6 +5,7 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import LibraryPage from './pages/LibraryPage';
+import SupervisorPage from './pages/SupervisorPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/library" element={<LibraryPage />} />
+        <Route path="/supervisor" element={<SupervisorPage />} />
       </Route>
     </Routes>
   );

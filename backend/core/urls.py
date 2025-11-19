@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 
 # Imports
 from lessons.views import WeeklyLessonViewSet
-from progress.views import ProgressLogViewSet, UserProgressViewSet, QuranStructureViewSet
+from progress.views import ProgressLogViewSet, ThumnProgressViewSet, QuranStructureViewSet
 # [جديد] استيراد مكتبة
 from library.views import MatnViewSet, TajweedLessonViewSet, TafsirViewSet
 
@@ -14,7 +14,7 @@ from library.views import MatnViewSet, TajweedLessonViewSet, TafsirViewSet
 router = DefaultRouter()
 router.register(r'lessons', WeeklyLessonViewSet, basename='lesson')
 router.register(r'progress-logs', ProgressLogViewSet, basename='progresslog')
-router.register(r'user-progress', UserProgressViewSet, basename='userprogress')
+router.register(r'thumn-progress', ThumnProgressViewSet, basename='thumnprogress')
 router.register(r'quran-structure', QuranStructureViewSet, basename='quranstructure')
 
 # [جديد] تسجيل المكتبة
