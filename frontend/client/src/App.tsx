@@ -6,6 +6,7 @@ import DashboardPage from './pages/DashboardPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import LibraryPage from './pages/LibraryPage';
 import SupervisorPage from './pages/SupervisorPage';
+import BadgesPage from './pages/BadgesPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/library" element={<LibraryPage />} />
         <Route path="/supervisor" element={<SupervisorPage />} />
+        <Route path="/badges" element={<BadgesPage />} />
       </Route>
     </Routes>
   );

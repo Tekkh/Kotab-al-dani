@@ -4,11 +4,12 @@ from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 # Imports
 from lessons.views import WeeklyLessonViewSet
 from progress.views import ProgressLogViewSet, ThumnProgressViewSet, QuranStructureViewSet
-# [جديد] استيراد مكتبة
 from library.views import MatnViewSet, TajweedLessonViewSet, TafsirViewSet
+from gamification.views import UserBadgeViewSet
 
 # Router
 router = DefaultRouter()
@@ -16,6 +17,7 @@ router.register(r'lessons', WeeklyLessonViewSet, basename='lesson')
 router.register(r'progress-logs', ProgressLogViewSet, basename='progresslog')
 router.register(r'thumn-progress', ThumnProgressViewSet, basename='thumnprogress')
 router.register(r'quran-structure', QuranStructureViewSet, basename='quranstructure')
+router.register(r'my-badges', UserBadgeViewSet, basename='my-badges')
 
 # [جديد] تسجيل المكتبة
 router.register(r'library/matoon', MatnViewSet, basename='matn')
