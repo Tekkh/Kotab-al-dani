@@ -4,6 +4,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from .serializers import UserSerializer
 from django.contrib.auth.models import User
+from rest_framework.permissions import IsAdminUser # استيراد هام
+from .serializers import StudentSummarySerializer # استيراد السيريالايزر الجديد
 
 # --- 1. واجهة التسجيل (كما كانت) ---
 class CreateUserView(generics.CreateAPIView):
@@ -33,3 +35,8 @@ class LoginView(ObtainAuthToken):
             'email': user.email,
             'username': user.username
         })
+
+class StudentListView(generics.ListAPIView):
+    queryset = User.objects.filter(is_staff=False) # نجلب الطلاب فقط (ليس المشرفين)
+    serializer_class = StudentSummarySerializer
+    permission_classes = [IsAdminUser] # حماية صارمة: المشرفون فقط

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from progress.models import UserProgress
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,3 +19,20 @@ class UserSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+
+class StudentSummarySerializer(serializers.ModelSerializer):
+    total_memorized = serializers.SerializerMethodField()
+    last_activity = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'total_memorized', 'last_activity']
+
+    def get_total_memorized(self, obj):
+        # حساب عدد الآيات المحفوظة
+        return obj.progress.filter(status='memorized').count()
+
+    def get_last_activity(self, obj):
+        # آخر مرة سجل فيها وِرداً
+        last_log = obj.logs.order_by('-date').first()
+        return last_log.date if last_log else None
