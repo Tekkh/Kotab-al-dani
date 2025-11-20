@@ -1,126 +1,160 @@
 import { useEffect, useState } from 'react';
-import apiClient from '../api/apiClient';
+import axios from 'axios';
+import { ChevronRight, ChevronLeft, Search, Loader2, BookOpen } from 'lucide-react';
 
-interface Ayah {
+// واجهة لبيانات السورة من API
+interface Chapter {
   id: number;
-  surah_name: string;
-  ayah_id: number;
-  ayah_text: string;
-}
-
-interface UserProgress {
-  id: number;
-  ayah: number;
-  status: 'memorized' | 'reviewing' | 'not_memorized';
+  name_arabic: string;
+  pages: [number, number]; // [صفحة البداية، صفحة النهاية]
 }
 
 export default function MusafView() {
-  const [ayahs, setAyahs] = useState<Ayah[]>([]);
-  const [progressMap, setProgressMap] = useState<Record<number, UserProgress>>({});
-  const [error, setError] = useState<string | null>(null);
-  const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
+  const [inputPage, setInputPage] = useState('1');
+  const [loading, setLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
-  const fetchData = () => {
-    const fetchStructure = apiClient.get('/quran-structure/');
-    const fetchProgress = apiClient.get('/user-progress/');
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [selectedSurah, setSelectedSurah] = useState<number>(1); // رقم السورة المختارة
 
-    Promise.all([fetchStructure, fetchProgress])
-      .then(([structureRes, progressRes]) => {
-        setAyahs(structureRes.data);
-        const map: Record<number, UserProgress> = {};
-        progressRes.data.forEach((item: UserProgress) => {
-          map[item.ayah] = item;
-        });
-        setProgressMap(map);
-      })
-      .catch(err => {
-        console.error(err);
-        setError("فشل تحميل البيانات.");
-      });
-  };
-
+  // 1. جلب قائمة السور عند تحميل المكون
   useEffect(() => {
-    fetchData();
+    axios.get('https://api.quran.com/api/v4/chapters?language=ar')
+      .then(res => {
+        setChapters(res.data.chapters);
+      })
+      .catch(err => console.error("فشل جلب قائمة السور", err));
   }, []);
 
-  const handleAyahClick = async (ayahDbId: number) => {
-    setLoadingId(ayahDbId);
-    const currentProgress = progressMap[ayahDbId];
-
-    try {
-      if (!currentProgress) {
-        await apiClient.post('/user-progress/', { ayah: ayahDbId, status: 'memorized' });
-      } else if (currentProgress.status === 'memorized') {
-        await apiClient.patch(`/user-progress/${currentProgress.id}/`, { status: 'reviewing' });
-      } else {
-        await apiClient.delete(`/user-progress/${currentProgress.id}/`);
+  // 2. تحديث السورة المختارة بناءً على الصفحة الحالية
+  useEffect(() => {
+    if (chapters.length > 0) {
+      // نجد السورة التي تحتوي هذه الصفحة
+      const currentChapter = chapters.find(ch => page >= ch.pages[0] && page <= ch.pages[1]);
+      if (currentChapter) {
+        setSelectedSurah(currentChapter.id);
       }
-      fetchData();
-    } catch (err) {
-      console.error(err);
-      alert("حدث خطأ");
-    } finally {
-      setLoadingId(null);
+    }
+    
+    setLoading(true);
+    setImageError(false);
+    setInputPage(page.toString());
+  }, [page, chapters]);
+
+  // 3. دالة توليد رابط الصورة (مصحف ورش - دار المعرفة)
+  const getPageUrl = (pageNum: number) => {
+    // تنسيق الرقم: 001, 050, 604
+    const pageStr = pageNum.toString().padStart(3, '0');
+    
+    // --- [الخيار 1: أرشيف الإنترنت - مصحف ورش (نسخة المدينة)] ---
+    // رابط مباشر ومجرب، عادة ما يكون مستقراً
+    return `https://archive.org/download/Warsh-Madinah-Mushaf/Warsh-Madinah-Mushaf-${pageStr}.jpg`;
+
+    // --- [الخيار 3: خادم صور بديل] ---
+    // return `https://shamelws.com/download/quran/warsh/${pageStr}.jpg`;
+  };
+
+  // التنقل عند اختيار سورة من القائمة
+  const handleSurahChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const surahId = Number(e.target.value);
+    setSelectedSurah(surahId);
+    
+    const chapter = chapters.find(c => c.id === surahId);
+    if (chapter) {
+      setPage(chapter.pages[0]); // الانتقال لبداية السورة
     }
   };
 
-  // دالة لتحديد فئات الألوان بدلاً من الألوان الثابتة
-  const getStatusClasses = (ayahId: number) => {
-    const progress = progressMap[ayahId];
-    if (!progress) return 'bg-white hover:bg-gray-50 border-gray-100'; // غير محفوظ
-    if (progress.status === 'memorized') return 'bg-emerald-100 border-emerald-200 text-emerald-900'; // محفوظ
-    if (progress.status === 'reviewing') return 'bg-yellow-50 border-yellow-200 text-yellow-900'; // مراجعة
-    return 'bg-white';
+  const handlePageInput = (e: React.FormEvent) => {
+    e.preventDefault();
+    let p = parseInt(inputPage);
+    if (isNaN(p)) p = 1;
+    if (p < 1) p = 1;
+    if (p > 604) p = 604;
+    setPage(p);
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      {/* رأس المكون */}
-      <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-        <h3 className="font-bold text-gray-800 flex items-center gap-2">
-          <span className="text-2xl">📖</span> المصحف التفاعلي
-        </h3>
-        <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded border">
-          اضغط على الآية لتغيير حالتها
-        </span>
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-[850px]">
+      
+      {/* الشريط العلوي: أدوات التحكم */}
+      <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex flex-col md:flex-row gap-4 justify-between items-center">
+        
+        {/* 1. قائمة السور (ميزة جديدة) */}
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <BookOpen className="text-emerald-600 w-5 h-5" />
+          <select 
+            value={selectedSurah}
+            onChange={handleSurahChange}
+            className="p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none bg-white flex-1 md:w-48"
+          >
+            <option value="" disabled>اختر السورة</option>
+            {chapters.map(ch => (
+              <option key={ch.id} value={ch.id}>
+                {ch.id}. {ch.name_arabic}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* 2. البحث بالصفحة */}
+        <form onSubmit={handlePageInput} className="flex items-center gap-2">
+          <span className="text-sm text-gray-500 whitespace-nowrap">صفحة:</span>
+          <div className="relative">
+            <input 
+              type="number" min="1" max="604"
+              value={inputPage}
+              onChange={(e) => setInputPage(e.target.value)}
+              className="w-16 p-1.5 pl-2 text-center border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
+            />
+          </div>
+        </form>
+
+        {/* 3. أزرار التنقل */}
+        <div className="flex items-center gap-2" dir="ltr">
+          <button 
+            onClick={() => setPage(p => Math.min(604, p + 1))}
+            disabled={page >= 604}
+            className="p-2 bg-white border hover:bg-gray-100 rounded-full disabled:opacity-50 transition-colors shadow-sm"
+            title="الصفحة التالية"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          
+          <button 
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page <= 1}
+            className="p-2 bg-white border hover:bg-gray-100 rounded-full disabled:opacity-50 transition-colors shadow-sm"
+            title="الصفحة السابقة"
+          >
+            <ChevronRight size={20} />
+          </button>
+        </div>
       </div>
 
-      {error && <div className="p-4 text-red-600 bg-red-50 text-center">{error}</div>}
-      
-      {/* منطقة عرض الآيات */}
-      <div className="p-6 max-h-[600px] overflow-y-auto custom-scrollbar space-y-3">
-        {ayahs.length === 0 ? (
-          <div className="text-center py-10 text-gray-400">جاري تحميل المصحف...</div>
-        ) : (
-          ayahs.map(ayah => (
-            <div 
-              key={ayah.id} 
-              onClick={() => handleAyahClick(ayah.id)}
-              className={`
-                relative p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer
-                ${getStatusClasses(ayah.id)}
-                ${loadingId === ayah.id ? 'opacity-50 cursor-wait' : ''}
-              `}
-            >
-              <div className="flex justify-between items-start mb-2">
-                <span className="text-xs font-bold px-2 py-0.5 rounded bg-black/5 text-black/60">
-                  {ayah.surah_name} : {ayah.ayah_id}
-                </span>
-                
-                {/* أيقونة الحالة */}
-                {progressMap[ayah.id]?.status === 'memorized' && (
-                  <span className="text-emerald-600 text-lg">✅</span>
-                )}
-                {progressMap[ayah.id]?.status === 'reviewing' && (
-                  <span className="text-yellow-600 text-lg">🔄</span>
-                )}
-              </div>
+      {/* منطقة العرض */}
+      <div className="flex-1 bg-[#fffdf5] flex justify-center items-center overflow-auto relative p-2 scroll-smooth">
+        {loading && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#fffdf5] z-10">
+            <Loader2 className="w-10 h-10 text-emerald-600 animate-spin mb-3" />
+            <span className="text-emerald-800 font-medium animate-pulse">جاري جلب الصفحة...</span>
+          </div>
+        )}
 
-              <p className="text-xl font-amiri leading-loose text-right" style={{ fontFamily: 'Amiri, serif' }}>
-                {ayah.ayah_text}
-              </p>
-            </div>
-          ))
+        {imageError ? (
+          <div className="text-center text-red-500">
+            <p>فشل تحميل الصورة.</p>
+            <button onClick={() => setLoading(true)} className="underline mt-2">إعادة المحاولة</button>
+          </div>
+        ) : (
+          <img 
+            src={getPageUrl(page)}
+            alt={`Page ${page}`} 
+            className={`h-full object-contain shadow-xl max-w-full transition-opacity duration-300 ${loading ? 'opacity-0' : 'opacity-100'}`}
+            onLoad={() => setLoading(false)}
+            onError={() => { setLoading(false); setImageError(true); }}
+          />
         )}
       </div>
     </div>
