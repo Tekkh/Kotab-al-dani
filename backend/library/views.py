@@ -28,7 +28,7 @@ class TafsirViewSet(viewsets.ReadOnlyModelViewSet):
 def quran_page_proxy(request, page_number):
     try:
         # [تحديث] استخدام ID = 1 للتجربة
-        external_url = f"https://api.quranpedia.net/v1/mushafs/1/pages/{page_number}"
+        external_url = f"https://api.quranpedia.net/v1/mushafs/4/pages/{page_number}"
         
         # طباعة للتحقق في التيرمينال
         print(f"Connecting to: {external_url}")
