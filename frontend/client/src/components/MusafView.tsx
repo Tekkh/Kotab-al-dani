@@ -27,7 +27,7 @@ export default function MusafView() {
       .catch(err => console.error("فشل جلب قائمة السور", err));
   }, []);
 
-  // 2. تحديث السورة المختارة بناءً على الصفحة الحالية
+  // 2. تحديث السورة بناءً على الصفحة الحالية
   useEffect(() => {
     if (chapters.length > 0) {
       // نجد السورة التي تحتوي هذه الصفحة
