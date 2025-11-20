@@ -18,10 +18,10 @@ export default function LoginPage() {
         'http://127.0.0.1:8000/api/auth/login/', 
         { username, password }
       );
-      login(response.data.token);
+      // التعديل هنا: تمرير التوكن + حالة المشرف
+      login(response.data.token, response.data.is_staff);
       navigate('/dashboard');
     } catch (err: any) {
-      console.error(err);
       setError('اسم المستخدم أو كلمة المرور غير صحيحة');
     }
   };

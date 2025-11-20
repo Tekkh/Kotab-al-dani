@@ -33,9 +33,9 @@ class LoginView(ObtainAuthToken):
             'token': token.key,
             'user_id': user.pk,
             'email': user.email,
-            'username': user.username
+            'username': user.username,
+            'is_staff': user.is_staff  # <--- هذه هي الإضافة المهمة
         })
-
 class StudentListView(generics.ListAPIView):
     queryset = User.objects.filter(is_staff=False) # نجلب الطلاب فقط (ليس المشرفين)
     serializer_class = StudentSummarySerializer

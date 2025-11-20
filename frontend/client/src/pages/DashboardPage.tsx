@@ -16,7 +16,7 @@ interface ProgressLog {
 
 export default function DashboardPage() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, isStaff } = useAuth();
   const [logs, setLogs] = useState<ProgressLog[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -152,7 +152,8 @@ export default function DashboardPage() {
       <p className="text-xs text-gray-500">الأوسمة والجوائز</p>
     </div>
   </div>
-</Link>
+  </Link>
+{isStaff && (
   <Link to="/supervisor" className="block bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-emerald-200 transition-all group mt-4">
   <div className="flex items-center gap-3">
     <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center group-hover:bg-purple-100 transition-colors">
@@ -163,7 +164,8 @@ export default function DashboardPage() {
       <p className="text-xs text-gray-500">متابعة الطلاب</p>
     </div>
   </div>
-</Link>
+  </Link>
+)}
           {/* Main Content */}
           <div className="lg:col-span-3">
             <MusafView />
