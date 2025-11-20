@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 # Imports
 from lessons.views import WeeklyLessonViewSet
 from progress.views import ProgressLogViewSet, ThumnProgressViewSet, QuranStructureViewSet
-from library.views import MatnViewSet, TajweedLessonViewSet, TafsirViewSet
+from library.views import MatnViewSet, TajweedLessonViewSet, TafsirViewSet, quran_page_proxy
 from gamification.views import UserBadgeViewSet
 
 # Router
@@ -28,6 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('users.urls')),
     path('api/', include(router.urls)),
+    path('api/proxy/quran/pages/<int:page_number>/', quran_page_proxy, name='quran-proxy'),
 ]
 
 if settings.DEBUG:
