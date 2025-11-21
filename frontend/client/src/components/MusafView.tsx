@@ -1,24 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ChevronRight, ChevronLeft, Search, Loader2, BookOpen } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Search, Loader2, BookOpen, AlertCircle } from 'lucide-react';
 
-// واجهة لبيانات السورة من API
+// واجهة لبيانات السورة
 interface Chapter {
   id: number;
   name_arabic: string;
-  pages: [number, number]; // [صفحة البداية، صفحة النهاية]
+  pages: [number, number];
 }
 
 export default function MusafView() {
   const [page, setPage] = useState(1);
   const [inputPage, setInputPage] = useState('1');
   const [loading, setLoading] = useState(true);
-  const [imageError, setImageError] = useState(false);
-
+  const [error, setError] = useState(false);
+  
   const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [selectedSurah, setSelectedSurah] = useState<number>(1); // رقم السورة المختارة
+  const [selectedSurah, setSelectedSurah] = useState<number>(1);
 
-  // 1. جلب قائمة السور عند تحميل المكون
+  // 1. جلب قائمة السور (للتنقل)
   useEffect(() => {
     axios.get('https://api.quran.com/api/v4/chapters?language=ar')
       .then(res => {
@@ -27,43 +27,30 @@ export default function MusafView() {
       .catch(err => console.error("فشل جلب قائمة السور", err));
   }, []);
 
-  // 2. تحديث السورة بناءً على الصفحة الحالية
+  // 2. تحديث السورة المختارة عند تغيير الصفحة
   useEffect(() => {
     if (chapters.length > 0) {
-      // نجد السورة التي تحتوي هذه الصفحة
       const currentChapter = chapters.find(ch => page >= ch.pages[0] && page <= ch.pages[1]);
       if (currentChapter) {
         setSelectedSurah(currentChapter.id);
       }
     }
-    
     setLoading(true);
-    setImageError(false);
+    setError(false);
     setInputPage(page.toString());
   }, [page, chapters]);
 
-  // 3. دالة توليد رابط الصورة (مصحف ورش - دار المعرفة)
+  // 3. [هام] دالة الرابط الجديد (CDN)
   const getPageUrl = (pageNum: number) => {
-    // تنسيق الرقم: 001, 050, 604
-    const pageStr = pageNum.toString().padStart(3, '0');
-    
-    // --- [الخيار 1: أرشيف الإنترنت - مصحف ورش (نسخة المدينة)] ---
-    // رابط مباشر ومجرب، عادة ما يكون مستقراً
-    return `https://archive.org/download/Warsh-Madinah-Mushaf/Warsh-Madinah-Mushaf-${pageStr}.jpg`;
-
-    // --- [الخيار 3: خادم صور بديل] ---
-    // return `https://shamelws.com/download/quran/warsh/${pageStr}.jpg`;
+    //const pageStr = pageNum.toString().padStart(3, '0');
+    return `https://cdn.jsdelivr.net/gh/QuranHub/quran-pages-images@main/kfgqpc/warsh/${pageNum}.jpg`;
   };
 
-  // التنقل عند اختيار سورة من القائمة
   const handleSurahChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const surahId = Number(e.target.value);
     setSelectedSurah(surahId);
-    
     const chapter = chapters.find(c => c.id === surahId);
-    if (chapter) {
-      setPage(chapter.pages[0]); // الانتقال لبداية السورة
-    }
+    if (chapter) setPage(chapter.pages[0]);
   };
 
   const handlePageInput = (e: React.FormEvent) => {
@@ -78,10 +65,10 @@ export default function MusafView() {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-[850px]">
       
-      {/* الشريط العلوي: أدوات التحكم */}
+      {/* الشريط العلوي */}
       <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex flex-col md:flex-row gap-4 justify-between items-center">
         
-        {/* 1. قائمة السور (ميزة جديدة) */}
+        {/* قائمة السور */}
         <div className="flex items-center gap-2 w-full md:w-auto">
           <BookOpen className="text-emerald-600 w-5 h-5" />
           <select 
@@ -98,7 +85,7 @@ export default function MusafView() {
           </select>
         </div>
 
-        {/* 2. البحث بالصفحة */}
+        {/* البحث بالصفحة */}
         <form onSubmit={handlePageInput} className="flex items-center gap-2">
           <span className="text-sm text-gray-500 whitespace-nowrap">صفحة:</span>
           <div className="relative">
@@ -111,13 +98,12 @@ export default function MusafView() {
           </div>
         </form>
 
-        {/* 3. أزرار التنقل */}
+        {/* أزرار التنقل */}
         <div className="flex items-center gap-2" dir="ltr">
           <button 
             onClick={() => setPage(p => Math.min(604, p + 1))}
             disabled={page >= 604}
             className="p-2 bg-white border hover:bg-gray-100 rounded-full disabled:opacity-50 transition-colors shadow-sm"
-            title="الصفحة التالية"
           >
             <ChevronLeft size={20} />
           </button>
@@ -134,18 +120,21 @@ export default function MusafView() {
       </div>
 
       {/* منطقة العرض */}
-      <div className="flex-1 bg-[#fffdf5] flex justify-center items-center overflow-auto relative p-2 scroll-smooth">
+      <div className="flex-1 bg-[#fffdf5] flex justify-center items-center overflow-auto relative p-2">
         {loading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#fffdf5] z-10">
-            <Loader2 className="w-10 h-10 text-emerald-600 animate-spin mb-3" />
+            <Loader2 className="w-12 h-12 text-emerald-600 animate-spin mb-3" />
             <span className="text-emerald-800 font-medium animate-pulse">جاري جلب الصفحة...</span>
           </div>
         )}
 
-        {imageError ? (
-          <div className="text-center text-red-500">
-            <p>فشل تحميل الصورة.</p>
-            <button onClick={() => setLoading(true)} className="underline mt-2">إعادة المحاولة</button>
+        {error ? (
+          <div className="text-center p-6 bg-red-50 rounded-xl border border-red-100 max-w-md">
+            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-2" />
+            <p className="font-bold text-red-800 mb-1">فشل تحميل الصورة</p>
+            <button onClick={() => { setLoading(true); setError(false); }} className="underline mt-2">
+              إعادة المحاولة
+            </button>
           </div>
         ) : (
           <img 
@@ -153,7 +142,7 @@ export default function MusafView() {
             alt={`Page ${page}`} 
             className={`h-full object-contain shadow-xl max-w-full transition-opacity duration-300 ${loading ? 'opacity-0' : 'opacity-100'}`}
             onLoad={() => setLoading(false)}
-            onError={() => { setLoading(false); setImageError(true); }}
+            onError={() => { setLoading(false); setError(true); }}
           />
         )}
       </div>
