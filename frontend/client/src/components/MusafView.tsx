@@ -1,24 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ChevronRight, ChevronLeft, Search, Loader2, BookOpen, AlertCircle } from 'lucide-react';
 
-// واجهة لبيانات السورة
+// واجهة بيانات السورة
 interface Chapter {
   id: number;
   name_arabic: string;
-  pages: [number, number];
+  pages: [number, number]; // [صفحة البداية، صفحة النهاية]
 }
 
 export default function MusafView() {
+  // حالات الصفحة والصورة
   const [page, setPage] = useState(1);
   const [inputPage, setInputPage] = useState('1');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   
+  // حالات السور
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [selectedSurah, setSelectedSurah] = useState<number>(1);
 
-  // 1. جلب قائمة السور (للتنقل)
+  // 1. جلب قائمة السور عند تحميل المكون
   useEffect(() => {
     axios.get('https://api.quran.com/api/v4/chapters?language=ar')
       .then(res => {
@@ -27,30 +29,54 @@ export default function MusafView() {
       .catch(err => console.error("فشل جلب قائمة السور", err));
   }, []);
 
-  // 2. تحديث السورة المختارة عند تغيير الصفحة
+  // 2. دالة الرابط (التي تأكدنا أنها تعمل)
+  const getPageUrl = (pageNum: number) => {
+    // الرابط المباشر (بدون أصفار إضافية)
+    return `https://cdn.jsdelivr.net/gh/QuranHub/quran-pages-images@main/kfgqpc/warsh/${pageNum}.jpg`;
+  };
+
+  // 3. التحميل المسبق للصورة + تحديث السورة المختارة
   useEffect(() => {
+    setLoading(true);
+    setError(false);
+    setInputPage(page.toString());
+
+    // أ) تحديث القائمة المنسدلة لتوافق الصفحة الحالية
     if (chapters.length > 0) {
       const currentChapter = chapters.find(ch => page >= ch.pages[0] && page <= ch.pages[1]);
       if (currentChapter) {
         setSelectedSurah(currentChapter.id);
       }
     }
-    setLoading(true);
-    setError(false);
-    setInputPage(page.toString());
+
+    // ب) تحميل الصورة في الذاكرة
+    const img = new Image();
+    img.src = getPageUrl(page);
+    
+    img.onload = () => {
+      setLoading(false);
+    };
+    
+    img.onerror = () => {
+      setLoading(false);
+      setError(true);
+    };
+
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
   }, [page, chapters]);
 
-  // 3. [هام] دالة الرابط الجديد (CDN)
-  const getPageUrl = (pageNum: number) => {
-    //const pageStr = pageNum.toString().padStart(3, '0');
-    return `https://cdn.jsdelivr.net/gh/QuranHub/quran-pages-images@main/kfgqpc/warsh/${pageNum}.jpg`;
-  };
-
+  // التعامل مع تغيير السورة من القائمة
   const handleSurahChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const surahId = Number(e.target.value);
     setSelectedSurah(surahId);
+    
     const chapter = chapters.find(c => c.id === surahId);
-    if (chapter) setPage(chapter.pages[0]);
+    if (chapter) {
+      setPage(chapter.pages[0]); // الانتقال لبداية السورة
+    }
   };
 
   const handlePageInput = (e: React.FormEvent) => {
@@ -68,7 +94,7 @@ export default function MusafView() {
       {/* الشريط العلوي */}
       <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex flex-col md:flex-row gap-4 justify-between items-center">
         
-        {/* قائمة السور */}
+        {/* 1. قائمة السور */}
         <div className="flex items-center gap-2 w-full md:w-auto">
           <BookOpen className="text-emerald-600 w-5 h-5" />
           <select 
@@ -85,7 +111,7 @@ export default function MusafView() {
           </select>
         </div>
 
-        {/* البحث بالصفحة */}
+        {/* 2. البحث بالصفحة */}
         <form onSubmit={handlePageInput} className="flex items-center gap-2">
           <span className="text-sm text-gray-500 whitespace-nowrap">صفحة:</span>
           <div className="relative">
@@ -98,7 +124,7 @@ export default function MusafView() {
           </div>
         </form>
 
-        {/* أزرار التنقل */}
+        {/* 3. أزرار التنقل */}
         <div className="flex items-center gap-2" dir="ltr">
           <button 
             onClick={() => setPage(p => Math.min(604, p + 1))}
@@ -121,29 +147,29 @@ export default function MusafView() {
 
       {/* منطقة العرض */}
       <div className="flex-1 bg-[#fffdf5] flex justify-center items-center overflow-auto relative p-2">
+        
         {loading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#fffdf5] z-10">
-            <Loader2 className="w-12 h-12 text-emerald-600 animate-spin mb-3" />
+            <Loader2 className="w-10 h-10 text-emerald-600 animate-spin mb-3" />
             <span className="text-emerald-800 font-medium animate-pulse">جاري جلب الصفحة...</span>
           </div>
         )}
-
+        
         {error ? (
           <div className="text-center p-6 bg-red-50 rounded-xl border border-red-100 max-w-md">
             <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-2" />
             <p className="font-bold text-red-800 mb-1">فشل تحميل الصورة</p>
-            <button onClick={() => { setLoading(true); setError(false); }} className="underline mt-2">
-              إعادة المحاولة
-            </button>
+            <button onClick={() => setPage(page)} className="underline mt-2">إعادة المحاولة</button>
           </div>
         ) : (
-          <img 
-            src={getPageUrl(page)}
-            alt={`Page ${page}`} 
-            className={`h-full object-contain shadow-xl max-w-full transition-opacity duration-300 ${loading ? 'opacity-0' : 'opacity-100'}`}
-            onLoad={() => setLoading(false)}
-            onError={() => { setLoading(false); setError(true); }}
-          />
+          // عرض الصورة (التي تم تحميلها مسبقاً في الذاكرة)
+          !loading && (
+            <img 
+              src={getPageUrl(page)}
+              alt={`Page ${page}`} 
+              className="h-full object-contain shadow-xl max-w-full transition-opacity duration-300"
+            />
+          )
         )}
       </div>
     </div>
