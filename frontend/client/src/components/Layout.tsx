@@ -26,7 +26,7 @@ export default function Layout({ children, title }: LayoutProps) {
     navigate('/login');
   };
 
-  // تعريف روابط القائمة (ديناميكية حسب الدور)
+  // تعريف روابط القائمة (حسب الدور)
   const navItems = [
     { name: 'الرئيسية', path: '/', icon: Home, show: true },  
     { name: 'لوحة التحكم', path: '/dashboard', icon: LayoutDashboard, show: true },
