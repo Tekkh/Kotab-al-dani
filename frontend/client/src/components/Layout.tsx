@@ -28,7 +28,7 @@ export default function Layout({ children, title }: LayoutProps) {
 
   // تعريف روابط القائمة (ديناميكية حسب الدور)
   const navItems = [
-    { name: 'الرئيسية', path: '/', icon: Home, show: true }, // رابط للصفحة 
+    { name: 'الرئيسية', path: '/', icon: Home, show: true }, // رابط  
     { name: 'لوحة التحكم', path: '/dashboard', icon: LayoutDashboard, show: true },
     { name: 'المكتبة', path: '/library', icon: BookOpen, show: true },
     { name: 'إنجازاتي', path: '/badges', icon: Award, show: !isStaff }, // إخفاء للمشرف
