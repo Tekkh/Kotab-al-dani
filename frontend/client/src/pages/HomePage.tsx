@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { BookOpen, Calendar, Clock, Users, Phone, Heart, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import logoImage from '../assets/Logo.svg'; 
 import patternImage from '../assets/pattern.svg';
 
 interface Lesson {
@@ -26,26 +27,34 @@ export default function HomePage() {
     <div className="min-h-screen bg-white font-cairo" dir="rtl">
       
       {/* --- 1. رأس الصفحة --- */}
-      <nav className="bg-white/90 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+      <nav className="bg-white/90 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 md:w-10 md:h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white font-bold text-lg md:text-xl shadow-lg shadow-emerald-200">
-              ح
-            </div>
-            <span className="text-lg md:text-xl font-bold text-gray-800">كُتّاب أبي عمرو الداني</span>
+          
+          {/* الشعار والعنوان */}
+          <div className="flex items-center gap-2 md:gap-3">
+            <img 
+              src={logoImage} 
+              alt="شعار الكتاب" 
+              className="w-9 h-9 md:w-11 md:h-11 object-contain drop-shadow-sm"
+            />
+            {/* إخفاء العنوان في الموبايل */}
+            <span className="hidden sm:block text-lg md:text-xl font-bold text-gray-800">
+              كُتّاب أبي عمرو الداني
+            </span>
           </div>
           
-          <div className="flex gap-3 md:gap-4">
+          {/* الأزرار */}
+          <div className="flex items-center gap-2 md:gap-4">
             {isLoggedIn ? (
-              <Link to="/dashboard" className="px-4 py-1.5 md:px-6 md:py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm md:text-base rounded-full font-bold shadow-sm transition-all">
+              <Link to="/dashboard" className="px-4 py-1.5 md:px-6 md:py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm md:text-base rounded-full font-bold shadow-sm transition-all whitespace-nowrap">
                 لوحة التحكم
               </Link>
             ) : (
               <>
-                <Link to="/login" className="px-3 py-1.5 md:px-5 md:py-2 text-gray-600 hover:text-emerald-600 text-sm md:text-base font-bold transition-colors">
+                <Link to="/login" className="px-3 py-1.5 md:px-5 md:py-2 text-gray-600 hover:text-emerald-600 text-sm md:text-base font-bold transition-colors whitespace-nowrap">
                   دخول
                 </Link>
-                <Link to="/register" className="px-4 py-1.5 md:px-5 md:py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm md:text-base rounded-full font-bold shadow-md hover:shadow-lg transition-all">
+                <Link to="/register" className="px-4 py-1.5 md:px-5 md:py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-base rounded-full font-bold shadow-md hover:shadow-lg transition-all whitespace-nowrap">
                   حساب جديد
                 </Link>
               </>
@@ -54,50 +63,43 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* --- 2. القسم الرئيسي (Hero) - مع الزخرفة الإسلامية وتقليل المسافات --- */}
-      <div className="relative overflow-hidden bg-gray-50 py-12 md:py-16 border-b border-gray-200">
+      {/* --- 2. القسم الرئيسي (Hero) --- */}
+      <div className="relative overflow-hidden bg-gray-50 py-16 md:py-20 border-b border-gray-200">
         
-        {/* زخرفة إسلامية خفيفة جداً (SVG Pattern) */}
-       <div 
+        {/* زخرفة خلفية: نمط الدوائر المتداخلة (Moroccan) */}
+        <div 
           className="absolute inset-0 z-0 pointer-events-none" 
           style={{
-             // استخدام المتغير المستورد
              backgroundImage: `url(${patternImage})`,
-             // التحكم في الشفافية (عدل الرقم حسب رغبتك: 0.05 خفيف جداً، 0.1 واضح)
-             opacity: 0.2, 
-             // حجم تكرار الصورة (عدله حسب حجم الزخرفة التي تريدها)
-             backgroundSize: '60px 60px', 
+             opacity: 0.2, // شفافية خفيفة
+             backgroundSize: '60px 60px', // حجم التكرار (عدله حسب حجم صورتك)
              backgroundRepeat: 'repeat'
           }}
         ></div>
 
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          
-          {/* الشارة العلوية */}
-          <div className="mb-4 flex justify-center">
-            <span className="bg-white/80 backdrop-blur-sm text-emerald-700 px-5 py-1.5 rounded-full text-xs md:text-sm font-bold border border-emerald-100 shadow-sm">
+          <div className="mb-6 flex justify-center">
+            <span className="bg-white text-emerald-700 px-6 py-2 rounded-full text-xs md:text-sm font-bold border border-gray-200 shadow-sm">
               مقرأة إلكترونية بمنهجية أصيلة
             </span>
           </div>
           
-          {/* صورة الآية (تم تقريبها من الشارة ومن النص) */}
-          <div className="mb-6 flex justify-center items-center">
+          {/* صورة الآية */}
+          <div className="mb-8 flex justify-center items-center">
              <img 
                src="/assets/images/quran-ayah.svg" 
                alt="وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا"
-               className="h-32 md:h-48 lg:h-64 w-auto object-contain drop-shadow-sm select-none" 
+               className="h-40 md:h-56 lg:h-72 w-auto object-contain drop-shadow-sm select-none" 
              />
           </div>
           
-          {/* النص الوصفي */}
           <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed font-medium max-w-xl mx-auto">
             بيئة قرآنية تعينك على ضبط الحفظ ومراجعته، وفق رواية ورش عن نافع،
             مع العناية بالمتون العلمية والتوجيه التربوي.
           </p>
           
-          {/* زر الإجراء */}
           {!isLoggedIn && (
-            <div className="flex justify-center pb-4">
+            <div className="flex justify-center">
               <Link to="/register" className="px-8 py-3.5 bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:bg-emerald-700 transition-all flex items-center gap-2 transform hover:-translate-y-1">
                 <Heart className="w-5 h-5" fill="currentColor" />
                 انضم لركب الحفاظ
@@ -108,7 +110,7 @@ export default function HomePage() {
       </div>
 
       {/* --- 3. قسم المنهجية --- */}
-      <div className="py-16 md:py-20 bg-white border-b border-gray-100">
+      <div className="py-16 md:py-24 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-extrabold text-gray-800 mb-3">منهجية الكُتّاب</h2>
@@ -150,7 +152,7 @@ export default function HomePage() {
       </div>
 
       {/* --- 4. برنامج الدروس --- */}
-      <div className="py-16 md:py-20 bg-gray-50">
+      <div className="py-16 md:py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-extrabold text-gray-800 mb-3">برنامج الدروس الأسبوعي</h2>
@@ -159,10 +161,7 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-6">
             {lessons.length > 0 ? lessons.map((lesson) => (
-              <div key={lesson.id} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 hover:border-emerald-300 hover:shadow-md transition-all group relative overflow-hidden">
-                {/* شريط زخرفي جانبي */}
-                <div className="absolute top-0 right-0 w-1 h-full bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                
+              <div key={lesson.id} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 hover:border-emerald-300 hover:shadow-md transition-all group">
                 <div className="flex items-center justify-between mb-6">
                   <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-lg text-sm font-bold">
                     {lesson.day_of_week}
@@ -182,7 +181,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* --- 5. حلقات الأطفال --- */}
+      {/* --- 5. حلقات التحفيظ للأطفال --- */}
       <div className="py-16 bg-emerald-900 text-white overflow-hidden relative">
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-800 rounded-full mix-blend-multiply filter blur-3xl opacity-20 translate-x-1/3 translate-y-1/3"></div>
         <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -translate-x-1/2 -translate-y-1/2"></div>
@@ -208,11 +207,9 @@ export default function HomePage() {
       </div>
 
       {/* التذييل */}
-      <footer className="bg-gray-50 border-t border-gray-200 py-10 text-center">
-        <div className="flex items-center justify-center gap-2 mb-4 opacity-60 hover:opacity-100 transition-opacity cursor-default">
-          <div className="w-6 h-6 bg-gray-400 rounded-md flex items-center justify-center text-white font-bold text-xs">
-            ح
-          </div>
+      <footer className="bg-gray-50 border-t border-gray-200 py-12 text-center">
+        <div className="flex items-center justify-center gap-3 mb-4 opacity-70">
+          <img src={logoImage} alt="Logo" className="w-6 h-6 object-contain grayscale" />
           <span className="font-bold text-gray-600">كُتّاب أبي عمرو الداني</span>
         </div>
         <p className="text-gray-400 text-xs font-medium">© {new Date().getFullYear()} جميع الحقوق محفوظة.</p>
