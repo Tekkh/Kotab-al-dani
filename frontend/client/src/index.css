@@ -1,3 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* تطبيق الخط على كامل التطبيق */
+body {
+  font-family: 'Cairo', sans-serif;
+}
+
+/* كلاس مخصص إذا أردنا استخدامه تحديداً */
+.font-cairo {
+  font-family: 'Cairo', sans-serif;
+}

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { BookOpen, Calendar, Clock, Star, Award, BarChart, LayoutDashboard } from 'lucide-react';
-import { useAuth } from '../context/AuthContext'; // 1. استيراد السياق
+import { BookOpen, Calendar, Clock, Users, Phone, Heart, CheckCircle2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface Lesson {
   id: number;
@@ -13,7 +13,7 @@ interface Lesson {
 
 export default function HomePage() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  const { isLoggedIn } = useAuth(); // 2. معرفة حالة المستخدم
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/lessons/')
@@ -22,32 +22,30 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white font-sans" dir="rtl">
-      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+    <div className="min-h-screen bg-white font-cairo" dir="rtl">
+      
+      {/* --- 1. رأس الصفحة --- */}
+      <nav className="bg-gray-50/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-200">
               ح
             </div>
-            <span className="text-xl font-bold text-gray-800">كتاب أبي عمرو الداني</span>
+            <span className="text-xl font-bold text-gray-800">كُتّاب أبي عمرو الداني</span>
           </div>
           
-          {/* 3. أزرار ديناميكية بناءً على حالة التسجيل */}
           <div className="flex gap-4">
             {isLoggedIn ? (
-              // إذا كان مسجلاً: زر واحد للذهاب للوحة التحكم
-              <Link to="/dashboard" className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold shadow-md transition-all">
-                <LayoutDashboard size={18} />
+              <Link to="/dashboard" className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold shadow-sm transition-all">
                 لوحة التحكم
               </Link>
             ) : (
-              // إذا لم يكن مسجلاً: أزرار التسجيل والدخول
               <>
-                <Link to="/login" className="px-5 py-2.5 text-gray-600 hover:text-emerald-600 font-medium transition-colors">
+                <Link to="/login" className="px-5 py-2 text-gray-600 hover:text-emerald-600 font-bold transition-colors">
                   تسجيل الدخول
                 </Link>
-                <Link to="/register" className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold shadow-md hover:shadow-lg transition-all">
-                  ابدأ رحلتك
+                <Link to="/register" className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold shadow-md hover:shadow-lg transition-all">
+                  التسجيل
                 </Link>
               </>
             )}
@@ -55,87 +53,153 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* ... (باقي الصفحة كما هو دون تغيير) ... */}
-      <div className="relative overflow-hidden bg-gradient-to-b from-emerald-50 to-white pt-20 pb-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-block py-1 px-3 rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold mb-6">
-            منصة تعليمية متكاملة
-          </span>
-          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight">
-            ورتّل القرآن <span className="text-emerald-600">ترتيلاً</span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-            "من قرأ حرفاً من كتاب الله فله به حسنة، والحسنة بعشر أمثالها".
-            انضم إلينا في رحلة ميسرة لحفظ كتاب الله، مع أدوات للمتابعة وبرنامج علمي متين.
+      {/* --- 2. القسم الرئيسي (تم تعديل الخلفية واستبدال النص بصورة) --- */}
+      {/* لاحظ التغيير هنا: bg-gray-50 بدلاً من الأبيض */}
+      <div className="relative overflow-hidden bg-gray-50 pt-24 pb-32 border-b border-gray-200">
+        
+        {/* زخرفة خلفية خفيفة (اختياري، يمكن إزالتها إذا أردت رمادي سادة تماماً) */}
+        <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')]"></div>
+
+        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+          <div className="mb-8 flex justify-center">
+            <span className="bg-white text-emerald-700 px-6 py-2 rounded-full text-sm font-bold border border-gray-200 shadow-sm">
+              مقرأة إلكترونية بمنهجية أصيلة
+            </span>
+          </div>
+          
+          {/* --- هنا مكان صورة الآية الكريمة --- */}
+          {/* استبدل الرابط في src بالصورة التي لديك */}
+          <div className="mb-10 flex justify-center items-center">
+  <img 
+    src="/assets/images/quran-ayah.svg" 
+    alt="وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا"
+    className="h-24 md:h-36 w-auto object-contain drop-shadow-sm select-none" 
+  />
+</div>
+          
+          <p className="text-xl text-gray-600 mb-12 leading-relaxed font-medium max-w-2xl mx-auto">
+            بيئة قرآنية تعينك على ضبط الحفظ ومراجعته، وفق رواية ورش عن نافع،
+            مع العناية بالمتون العلمية والتوجيه التربوي.
           </p>
-          <div className="flex justify-center gap-4">
-            {isLoggedIn ? (
-               <Link to="/dashboard" className="px-8 py-4 bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-xl hover:bg-emerald-700 transition-all">
-                 متابعة الحفظ
-               </Link>
-            ) : (
-               <Link to="/register" className="px-8 py-4 bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-xl hover:bg-emerald-700 transition-all">
-                 إنشاء حساب مجاني
-               </Link>
+          
+          {!isLoggedIn && (
+            <div className="flex justify-center">
+              <Link to="/register" className="px-8 py-4 bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:bg-emerald-700 transition-all flex items-center gap-2">
+                <Heart className="w-5 h-5" fill="currentColor" />
+                انضم لركب الحفاظ
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* --- 3. قسم المنهجية (خلفية بيضاء) --- */}
+      <div className="py-24 bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl font-extrabold text-gray-800 mb-4">منهجية الكُتّاب</h2>
+            <div className="w-24 h-1.5 bg-emerald-500 mx-auto rounded-full"></div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-12 text-center">
+            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-emerald-200 transition-all group">
+              <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mx-auto mb-8 text-emerald-600 shadow-sm group-hover:scale-110 transition-transform">
+                <BookOpen size={40} strokeWidth={2} />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">رواية ورش عن نافع</h3>
+              <p className="text-gray-600 leading-relaxed text-lg">
+                نعتمد في التحفيظ والتسميع رواية ورش من طريق الأزرق، مع العناية بأصول الرواية وتحريراتها.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-emerald-200 transition-all group">
+              <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mx-auto mb-8 text-emerald-600 shadow-sm group-hover:scale-110 transition-transform">
+                <CheckCircle2 size={40} strokeWidth={2} />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">مرونة في الحفظ</h3>
+              <p className="text-gray-600 leading-relaxed text-lg">
+                لا نلزمك بمقدار محدد؛ يمكنك الحفظ بالثمن، الربع، أو الحزب حسب طاقتك ووقتك.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-emerald-200 transition-all group">
+              <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mx-auto mb-8 text-emerald-600 shadow-sm group-hover:scale-110 transition-transform">
+                <Users size={40} strokeWidth={2} />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">صحبة القرآن</h3>
+              <p className="text-gray-600 leading-relaxed text-lg">
+                دروس أسبوعية في التفسير والمتون العلمية (كالدرر اللوامع) لربط الحفظ بالفهم والعمل.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* --- 4. برنامج الدروس (خلفية بيضاء أيضاً لزيادة التركيز على المحتوى) --- */}
+      <div className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-extrabold text-gray-800 mb-4">برنامج الدروس الأسبوعي</h2>
+            <p className="text-gray-500 font-medium text-lg">مجالس علمية عامة في رحاب الكتاب</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {lessons.length > 0 ? lessons.map((lesson) => (
+              <div key={lesson.id} className="bg-gray-50 p-8 rounded-3xl shadow-sm border border-gray-200 hover:border-emerald-300 hover:shadow-md transition-all group">
+                <div className="flex items-center justify-between mb-8">
+                  <span className="bg-emerald-100 text-emerald-800 px-5 py-2 rounded-xl text-sm font-bold">
+                    {lesson.day_of_week}
+                  </span>
+                  <Calendar className="w-7 h-7 text-gray-400 group-hover:text-emerald-600 transition-colors" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-6 min-h-[3.5rem] leading-snug">{lesson.lesson_title}</h3>
+                <div className="flex items-center gap-3 text-gray-600 font-medium border-t border-gray-200 pt-6">
+                  <Clock className="w-5 h-5 text-emerald-600" />
+                  <span>{lesson.time_description}</span>
+                </div>
+              </div>
+            )) : (
+              <p className="text-gray-500 col-span-3 text-center py-12 text-lg">جاري تحديث الجدول...</p>
             )}
           </div>
         </div>
       </div>
-      
-      {/* ... (تأكد من نسخ باقي الصفحة: قسم الدروس والميزات والتذييل) ... */}
-      <div className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">برنامج الدروس الأسبوعي</h2>
-            <p className="text-gray-500">دروس علمية منتظمة في التفسير والقراءات والمتون</p>
-          </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {lessons.map((lesson) => (
-              <div key={lesson.id} className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-shadow duration-300 group">
-                <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors duration-300">
-                  <Calendar className="w-6 h-6 text-emerald-600 group-hover:text-white transition-colors" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">{lesson.day_of_week}</h3>
-                <div className="flex items-center gap-2 text-gray-500 text-sm mb-4">
-                  <Clock className="w-4 h-4" />
-                  {lesson.time_description}
-                </div>
-                <div className="pt-4 border-t border-gray-100">
-                  <p className="text-gray-700 font-medium">{lesson.lesson_title}</p>
-                </div>
-              </div>
-            ))}
+      {/* --- 5. حلقات الأطفال (خلفية خضراء) --- */}
+      <div className="py-20 bg-emerald-900 text-white overflow-hidden relative">
+        {/* زخرفة خلفية */}
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-800 rounded-full mix-blend-multiply filter blur-3xl opacity-20 translate-x-1/3 translate-y-1/3"></div>
+        <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -translate-x-1/2 -translate-y-1/2"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <h2 className="text-4xl font-extrabold mb-6">حلقات التحفيظ للأطفال والناشئة</h2>
+          <p className="text-emerald-100 mb-12 max-w-3xl mx-auto text-xl font-medium leading-relaxed">
+            نولي عناية خاصة بالنشء لغرس حب القرآن في قلوبهم. تتوفر حلقات خاصة للأطفال بإشراف مباشر في جو آمن ومحفز.
+          </p>
+          
+          <div className="inline-flex flex-col md:flex-row items-center gap-8 bg-white/10 backdrop-blur-md p-10 rounded-3xl border border-white/20 shadow-2xl">
+            <div className="text-center md:text-right">
+              <p className="text-emerald-200 text-lg font-bold mb-3">للاستفسار والتسجيل في حلقات الأطفال</p>
+              <p className="text-white text-2xl font-extrabold">تواصل مباشرة مع الشيخ المشرف</p>
+            </div>
+            <div className="h-16 w-px bg-white/20 hidden md:block"></div>
+            <a href="tel:+212000000000" className="flex items-center gap-4 bg-white text-emerald-900 px-10 py-5 rounded-2xl font-bold hover:bg-emerald-50 transition-all shadow-lg hover:shadow-xl group">
+              <Phone size={28} className="group-hover:scale-110 transition-transform" />
+              <span dir="ltr" className="text-xl">+212 6 00 00 00 00</span>
+            </a>
           </div>
         </div>
       </div>
 
-      <div className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">كيف يساعدك التطبيق؟</h2>
+      {/* التذييل */}
+      <footer className="bg-gray-100 border-t border-gray-200 py-12 text-center">
+        <div className="flex items-center justify-center gap-3 mb-6 opacity-80">
+          <div className="w-8 h-8 bg-gray-400 rounded-xl flex items-center justify-center text-white font-bold">
+            ح
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { icon: BookOpen, title: "المصحف التفاعلي", desc: "تتبع حفظك آية بآية" },
-              { icon: BarChart, title: "إحصائيات دقيقة", desc: "راقب تقدمك بالرسوم البيانية" },
-              { icon: Award, title: "نظام التحفيز", desc: "أوسمة وجوائز للاستمرار" },
-              { icon: Star, title: "المكتبة العلمية", desc: "متون وتفاسير مساعدة" },
-            ].map((feature, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-xl text-center shadow-sm">
-                <div className="mx-auto w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
-                  <feature.icon className="w-7 h-7 text-emerald-600" />
-                </div>
-                <h3 className="font-bold text-gray-800 mb-2">{feature.title}</h3>
-                <p className="text-sm text-gray-500">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
+          <span className="font-bold text-gray-600 text-lg">كُتّاب أبي عمرو الداني</span>
         </div>
-      </div>
-
-      <footer className="bg-gray-900 text-gray-400 py-12 text-center">
-        <p>© 2025 تطبيق حفظ القرآن الكريم. جميع الحقوق محفوظة.</p>
+        <p className="text-gray-500 font-medium">© {new Date().getFullYear()} جميع الحقوق محفوظة.</p>
       </footer>
     </div>
   );
