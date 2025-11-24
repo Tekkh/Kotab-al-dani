@@ -12,9 +12,6 @@ class UserBadgeAdmin(admin.ModelAdmin):
 
 @admin.register(GamificationProfile)
 class GamificationProfileAdmin(admin.ModelAdmin):
-    # الأعمدة التي ستظهر في الجدول
     list_display = ('user', 'total_xp', 'level', 'initial_memorization_thumns')
-    # إمكانية البحث باسم المستخدم
     search_fields = ('user__username',)
-    # فلترة حسب المستوى
     list_filter = ('level',)
