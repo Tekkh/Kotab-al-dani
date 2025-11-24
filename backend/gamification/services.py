@@ -1,7 +1,7 @@
 from .models import Badge, UserBadge, GamificationProfile
 from progress.models import ThumnProgress
 
-# تعريف جدول المستويات (الحد الأدنى من النقاط لكل مستوى)
+# تعريف المستويات (الحد الأدنى من النقاط لكل مستوى)
 LEVEL_THRESHOLDS = {
     1: 0,      # مبتدئ
     2: 80,     # سالك (8 أحزاب)
