@@ -10,7 +10,6 @@ class UserBadgeAdmin(admin.ModelAdmin):
     list_display = ('user', 'badge', 'earned_at')
     list_filter = ('badge', 'user')
 
-# --- [الجديد] تسجيل بروفايل النقاط ---
 @admin.register(GamificationProfile)
 class GamificationProfileAdmin(admin.ModelAdmin):
     # الأعمدة التي ستظهر في الجدول
