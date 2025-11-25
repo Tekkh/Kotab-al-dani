@@ -1,8 +1,8 @@
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import UserBadge, GamificationProfile
-from .serializers import UserBadgeSerializer, GamificationProfileSerializer
+from .models import Badge, UserBadge, GamificationProfile
+from .serializers import UserBadgeSerializer, GamificationProfileSerializer, BadgeSerializer
 from .services import calculate_level, check_and_award_badges
 
 class UserBadgeViewSet(viewsets.ReadOnlyModelViewSet):
@@ -59,3 +59,8 @@ class SetPreviousProgressView(APIView):
         check_and_award_badges(request.user)
 
         return Response({"message": "تم تحديث الرصيد السابق بنجاح", "level": profile.level, "xp": profile.total_xp})
+
+class AllBadgesView(generics.ListAPIView):
+    queryset = Badge.objects.all().order_by('order')
+    serializer_class = BadgeSerializer
+    permission_classes = [permissions.IsAuthenticated]

@@ -50,10 +50,18 @@ export default function PreviousProgressModal({ isOpen, onRequestClose, onSucces
           </label>
           <input 
             type="number" 
-            min="0" max="60" 
+            min="0" 
+            max="60" 
             placeholder="مثال: 5"
             value={hizbCount}
-            onChange={(e) => setHizbCount(e.target.value)}
+            onKeyDown={(e) => {
+                if (e.key === '-' || e.key === 'e') e.preventDefault();
+            }}
+            onChange={(e) => {
+                const val = parseInt(e.target.value);
+                if (val > 60) return; 
+                setHizbCount(e.target.value)
+            }}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none mb-6"
             required
           />
