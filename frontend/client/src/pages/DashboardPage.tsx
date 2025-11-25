@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import apiClient from '../api/apiClient';
 import LogWirdModal from '../components/LogWirdModal';
 import MusafView from '../components/MusafView';
-import Layout from '../components/Layout'; // استيراد التخطيط
+import Layout from '../components/Layout';
+import { Trophy, Star, Zap } from 'lucide-react';
 
 interface ProgressLog {
   id: number;
@@ -12,66 +13,109 @@ interface ProgressLog {
   self_notes: string | null;
 }
 
+// واجهة بيانات البروفايل
+interface UserProfile {
+  username: string;
+  total_xp: number;
+  level: number;
+}
+
 export default function DashboardPage() {
   const [logs, setLogs] = useState<ProgressLog[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null); // حالة البروفايل
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchLogs = () => {
-    apiClient.get('/progress-logs/')
-      .then(response => {
-        setLogs(response.data);
-      })
-      .catch(err => {
-        console.error(err);
-        setError("فشل جلب البيانات.");
-      });
+  const fetchData = () => {
+    // 1. جلب السجلات
+    apiClient.get('/progress-logs/').then(res => setLogs(res.data));
+    // 2. جلب البروفايل (النقاط والمستوى)
+    apiClient.get('/my-profile/').then(res => setProfile(res.data));
   };
 
   useEffect(() => {
-    fetchLogs();
+    fetchData();
   }, []);
 
+  // دالة مساعدة لحساب النسبة المئوية للمستوى القادم (كل مستوى = 100 نقطة افتراضياً)
+  const getLevelProgress = () => {
+    if (!profile) return 0;
+    const currentLevelXP = (profile.level - 1) * 100;
+    const nextLevelXP = profile.level * 100;
+    const progress = ((profile.total_xp - currentLevelXP) / (nextLevelXP - currentLevelXP)) * 100;
+    return Math.min(100, Math.max(0, progress));
+  };
+
   const handleDeleteLog = async (id: number) => {
-    if (!window.confirm("هل أنت متأكد من حذف هذا السجل؟")) return;
+    if (!window.confirm("هل أنت متأكد؟")) return;
     try {
       await apiClient.delete(`/progress-logs/${id}/`);
       setLogs(logs.filter(log => log.id !== id));
-    } catch (err) {
-      console.error(err);
-      alert("فشل حذف السجل");
-    }
+      fetchData(); // تحديث النقاط أيضاً (إذا كنا سنخصم نقاطاً عند الحذف لاحقاً)
+    } catch (err) { console.error(err); }
   };
 
   return (
-    // نغلف الصفحة بـ Layout ونعطيها عنواناً
     <Layout title="لوحة التحكم">
       <LogWirdModal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        onLogCreated={fetchLogs} 
+        onLogCreated={fetchData} 
       />
 
-      {/* محتوى لوحة التحكم فقط */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* العمود الأيمن: الإجراءات والسجل */}
+        {/* --- العمود الأيمن --- */}
         <div className="space-y-6">
+          
+          {/* 1. بطاقة المستوى (الجديدة) */}
+          <div className="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+            {/* زخرفة خلفية خفيفة */}
+            <div className="absolute top-0 right-0 p-4 opacity-10"><Trophy size={120} /></div>
+            
+            <div className="relative z-10">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <p className="text-emerald-100 text-sm font-medium mb-1">المستوى الحالي</p>
+                  <h2 className="text-3xl font-bold">{profile?.level || 1}</h2>
+                  <p className="text-xs text-emerald-200 mt-1">طالب مجتهد</p> 
+                  {/* (يمكن تغيير اللقب ديناميكياً لاحقاً) */}
+                </div>
+                <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+                  <Star className="text-yellow-300 fill-yellow-300" size={24} />
+                </div>
+              </div>
+
+              <div className="mb-2 flex justify-between text-xs text-emerald-100">
+                <span>{profile?.total_xp || 0} XP</span>
+                <span>الهدف: {profile ? profile.level * 100 : 100} XP</span>
+              </div>
+              
+              {/* شريط التقدم */}
+              <div className="h-2 bg-black/20 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-yellow-400 transition-all duration-500"
+                  style={{ width: `${getLevelProgress()}%` }}
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. زر التسجيل */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center">
-            <p className="text-gray-500 mb-4 text-sm">سجل إنجازك اليومي</p>
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+              className="w-full bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-bold py-3 rounded-xl border border-emerald-200 transition-all flex items-center justify-center gap-2"
             >
-              + تسجيل وِرد
+              <Zap size={18} />
+              تسجيل وِرد جديد
             </button>
           </div>
 
+          {/* 3. سجل الأوراد */}
           <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
             <h3 className="font-bold text-gray-800 mb-3 border-b pb-2 px-2">آخر الأوراد</h3>
-            {error && <p className="text-red-500 text-xs">{error}</p>}
             
-            <div className="space-y-2 max-h-[400px] overflow-y-auto custom-scrollbar px-1">
+            <div className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar px-1">
               {logs.length === 0 ? (
                 <p className="text-gray-400 text-sm text-center py-4">لا توجد سجلات بعد</p>
               ) : (
@@ -80,11 +124,9 @@ export default function DashboardPage() {
                     <button
                       onClick={() => handleDeleteLog(log.id)}
                       className="absolute left-2 top-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                      title="حذف السجل"
                     >
                       🗑️
                     </button>
-
                     <div className="flex justify-between text-gray-500 text-xs mb-1 font-medium">
                       <span>{log.date}</span>
                       <span className={log.log_type === 'memorization' ? 'text-emerald-600' : 'text-blue-600'}>
@@ -99,7 +141,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* العمود الأيسر: المصحف (يأخذ مساحة أكبر) */}
+        {/* --- العمود الأيسر: المصحف --- */}
         <div className="lg:col-span-2">
           <MusafView />
         </div>

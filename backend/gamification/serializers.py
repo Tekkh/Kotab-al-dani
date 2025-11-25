@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import UserBadge, Badge
+from .models import UserBadge, Badge, GamificationProfile
 
 class BadgeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,3 +13,10 @@ class UserBadgeSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserBadge
         fields = ['id', 'badge', 'earned_at']
+
+class GamificationProfileSerializer(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField(source='user.username')
+    
+    class Meta:
+        model = GamificationProfile
+        fields = ['username', 'total_xp', 'level', 'initial_memorization_thumns']
