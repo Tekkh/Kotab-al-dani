@@ -3,14 +3,14 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
-from gamification.views import UserBadgeViewSet, MyProfileView
+
 
 
 # Imports
 from lessons.views import WeeklyLessonViewSet
 from progress.views import ProgressLogViewSet, ThumnProgressViewSet, QuranStructureViewSet
 from library.views import MatnViewSet, TajweedLessonViewSet, TafsirViewSet, quran_page_proxy
-from gamification.views import UserBadgeViewSet
+from gamification.views import UserBadgeViewSet, MyProfileView, SetPreviousProgressView
 
 # Router
 router = DefaultRouter()
@@ -31,6 +31,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/proxy/quran/pages/<int:page_number>/', quran_page_proxy, name='quran-proxy'),
     path('api/my-profile/', MyProfileView.as_view(), name='my-profile'),
+    path('api/set-previous-progress/', SetPreviousProgressView.as_view(), name='set-previous'),
 ]
 
 if settings.DEBUG:
