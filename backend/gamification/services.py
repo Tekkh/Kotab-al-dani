@@ -1,25 +1,13 @@
 from .models import Badge, UserBadge, GamificationProfile
 from progress.models import ThumnProgress
 
-# تعريف المستويات (الحد الأدنى من النقاط لكل مستوى)
+# --- ثوابت المستويات (كما هي) ---
 LEVEL_THRESHOLDS = {
-    1: 0,      # مبتدئ
-    2: 80,     # سالك (8 أحزاب)
-    3: 400,    # مجتهد (5 أحزاب)
-    4: 800,    # مرتق (10 أحزاب)
-    5: 1200,   # ناشط (15 حزباً)
-    6: 1600,   # مثابر (20 حزباً)
-    7: 2400,   # حافظ (30 حزباً - نصف القرآن)
-    8: 3200,   # متبحر (40 حزباً)
-    9: 4000,   # متقن (50 حزباً)
-    10: 4800,  # خاتم (60 حزباً)
+    1: 0, 2: 80, 3: 400, 4: 800, 5: 1200, 
+    6: 1600, 7: 2400, 8: 3200, 9: 4000, 10: 4800,
 }
 
 def calculate_level(total_xp):
-    """
-    دالة لحساب المستوى الحالي بناءً على مجموع النقاط
-    تعيد أعلى مستوى وصل إليه الطالب بناءً على نقاطه
-    """
     current_level = 1
     for level, threshold in LEVEL_THRESHOLDS.items():
         if total_xp >= threshold:
@@ -27,47 +15,80 @@ def calculate_level(total_xp):
     return current_level
 
 def add_xp(user, amount=10):
-    """
-    إضافة نقاط وتحديث المستوى
-    """
     profile, _ = GamificationProfile.objects.get_or_create(user=user)
-    
-    # إضافة النقاط
     profile.total_xp += amount
-    
-    # حساب المستوى الجديد
     new_level = calculate_level(profile.total_xp)
-    
     if new_level > profile.level:
-        print(f"🚀 ترقية! {user.username} وصل للمستوى {new_level}")
         profile.level = new_level
-        
     profile.save()
 
 def check_and_award_badges(user):
     """
-    فحص استحقاق الأوسمة
+    الدالة الرئيسية لفحص واستحقاق الأوسمة
     """
-    # 1. الحفظ الجديد المسجل في التطبيق
-    memorized_count = ThumnProgress.objects.filter(user=user, status='memorized').count()
+    # 1. البيانات: نحتاج معرفة كل ما حفظه الطالب (أثمان فردية + رصيد سابق)
+    memorized_thumns_qs = ThumnProgress.objects.filter(user=user, status='memorized')
+    memorized_count = memorized_thumns_qs.count()
     
-    # 2. الرصيد السابق (المسجل يدوياً)
     profile, _ = GamificationProfile.objects.get_or_create(user=user)
-    initial_count = profile.initial_memorization_thumns
+    total_thumns = memorized_count + profile.initial_memorization_thumns
     
-    # المجموع الكلي للأثمان المحفوظة
-    total_thumns = memorized_count + initial_count
+    # تحويل الأثمان إلى أحزاب (كل 8 أثمان = 1 حزب)
+    completed_hizbs = total_thumns // 8 
+
+    print(f"📊 المستخدم: {user.username} | إجمالي الأثمان: {total_thumns} | الأحزاب المكتملة: {completed_hizbs}")
+
+    # ---------------------------------------------------------
+    # أولاً: الأوسمة الكمية (بناءً على العدد الإجمالي)
+    # ---------------------------------------------------------
+    if total_thumns >= 1: assign_badge(user, 'first_thumn')
     
-    print(f"📊 إجمالي الأثمان للطالب {user.username}: {total_thumns}")
+    if completed_hizbs >= 1: assign_badge(user, 'first_hizb')   # رائحة الفجر
+    if completed_hizbs >= 3: assign_badge(user, 'hizb_3')       # خطوة السائر
+    if completed_hizbs >= 5: assign_badge(user, 'hizb_5')       # همة عالية
+    if completed_hizbs >= 7: assign_badge(user, 'hizb_7')       # زاد المسافر
+    if completed_hizbs >= 10: assign_badge(user, 'hizb_10')     # نفس المجتهد
+    if completed_hizbs >= 15: assign_badge(user, 'hizb_15')     # ربع القرآن
+    if completed_hizbs >= 20: assign_badge(user, 'hizb_20')     # عزيمة لا تلين
+    if completed_hizbs >= 30: assign_badge(user, 'hizb_30')     # نصف القرآن
+    if completed_hizbs >= 60: assign_badge(user, 'hizb_60')     # تاج الحافظ
 
-    # --- الشروط ---
-    if total_thumns >= 1:
-        assign_badge(user, 'first_thumn')
+    # ---------------------------------------------------------
+    # ثانياً: أوسمة السور والأجزاء (النوعية)
+    # يتم فحصها فقط من خلال "السجلات الفعلية" (ThumnProgress)
+    # (سنضيف لاحقاً منطقاً لمنحها عبر الرصيد السابق اليدوي)
+    # ---------------------------------------------------------
+    
+    # ننشئ مجموعة (Set) سريعة للبحث تحتوي على "رقم الحزب-رقم الثمن"
+    user_thumns_set = set(f"{t.hizb}-{t.thumn}" for t in memorized_thumns_qs)
 
-    if total_thumns >= 5 * 8: # (5 أحزاب * 8 أثمان = 40 ثمناً) - مثال للشرط
-        assign_badge(user, 'count_5_thumns')
-        
-    # يمكن إضافة بقية الشروط هنا (الحزب الأول، إلخ)
+    # 1. جزء عم (الحزبان 59 و 60)
+    if check_range(user_thumns_set, 59, 60): assign_badge(user, 'juz_amma')
+
+    # 2. جزء تبارك (الحزبان 57 و 58)
+    if check_range(user_thumns_set, 57, 58): assign_badge(user, 'juz_tabarak')
+
+    # 3. سورة البقرة (الأحزاب 1 إلى 5)
+    if check_range(user_thumns_set, 1, 5): assign_badge(user, 'surah_baqarah')
+    
+    # 4. سورة يس (تقع غالباً في الحزب 45)
+    # (للتبسيط سنفترض أن من حفظ الحزب 45 كاملاً فقد حفظ يس)
+    if check_range(user_thumns_set, 45, 45): assign_badge(user, 'surah_yasin')
+
+    # 5. سورة الملك (أول سورة في جزء تبارك - الحزب 57)
+    # (سنفترض حفظ الحزب 57 كاملاً أو النصف الأول منه)
+    if check_range(user_thumns_set, 57, 57): assign_badge(user, 'surah_mulk')
+
+
+def check_range(user_thumns_set, start_hizb, end_hizb):
+    """
+    دالة مساعدة للتأكد من أن الطالب سجل جميع أثمان الأحزاب المحددة
+    """
+    for h in range(start_hizb, end_hizb + 1):
+        for t in range(1, 9): # 8 أثمان في كل حزب
+            if f"{h}-{t}" not in user_thumns_set:
+                return False
+    return True
 
 def assign_badge(user, condition_type):
     try:
