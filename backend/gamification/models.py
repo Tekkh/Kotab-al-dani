@@ -6,14 +6,38 @@ from django.dispatch import receiver
 # 1. موديل الأوسمة (سنضيف الأوسمة لاحقاً في Admin)
 class Badge(models.Model):
     CONDITION_TYPES = [
-        ('first_thumn', 'أول ثمن محفوظ'),
-        ('first_hizb', 'أول حزب كامل'),
-        ('count_5_thumns', 'حفظ 5 أثمان'),
-        # ... سنضيف المزيد لاحقاً
+        # --- البدايات ---
+        ('first_thumn', 'بداية الغيث (أول ثمن)'),
+        
+        # --- الكمية (بالأحزاب) ---
+        ('first_hizb', 'رائحة الفجر (أول حزب)'),
+        ('hizb_3', 'خطوة السائر (3 أحزاب)'),
+        ('hizb_5', 'همة عالية (5 أحزاب)'),
+        ('hizb_7', 'زاد المسافر (7 أحزاب)'),
+        ('hizb_10', 'نفس المجتهد (10 أحزاب)'),
+        ('hizb_15', 'ربع القرآن (15 حزب)'),
+        ('hizb_20', 'عزيمة لا تلين (20 حزب)'),
+        ('hizb_30', 'نصف القرآن (30 حزب)'),
+        ('hizb_60', 'تاج الحافظ (الختمة)'),
+
+        # --- السور والأجزاء ---
+        ('juz_amma', 'نور عم (جزء 30)'),
+        ('juz_tabarak', 'تبارك البركة (جزء 29)'),
+        ('surah_mulk', 'المُنجيَة (سورة الملك)'),
+        ('surah_yasin', 'القلب الحي (سورة يس)'),
+        ('surah_baqarah', 'سيدة السور (سورة البقرة)'),
+        ('surah_rahman', 'درر الرحمن (سورة الرحمن)'),
+        ('surah_kahf', 'نور الكهف (سورة الكهف)'),
+
+        # --- الاستمرارية (المداومة) ---
+        ('streak_7', 'خطوة كل يوم (7 أيام)'),
+        ('streak_30', 'طريق النور (30 يوم)'),
+        ('streak_100', 'روح المثابر (100 يوم)'),
     ]
+
     name = models.CharField(max_length=100)
     description = models.TextField()
-    icon_name = models.CharField(max_length=50)
+    icon_name = models.CharField(max_length=50, help_text="اسم الأيقونة (مثال: star, award, crown)")
     condition_type = models.CharField(max_length=50, choices=CONDITION_TYPES, unique=True)
     order = models.PositiveIntegerField(default=0)
 
