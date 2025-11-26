@@ -1,22 +1,32 @@
 import { useEffect, useState } from 'react';
-import { Star, Award, Trophy, Medal, Lock, CheckCircle2, Target } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import apiClient from '../api/apiClient';
 import Layout from '../components/Layout';
 import { getLevelData, getNextLevelData } from '../utils/levels';
+import { 
+  Star, Award, Trophy, Medal, Lock, CheckCircle2, Target,
+  Sunrise, Footprints, ArrowUp, Backpack, Wind, 
+  PieChart, Dumbbell, CircleDot, Sparkles, Moon, 
+  Castle, Heart, Gem, Mountain, CalendarCheck, Flame, Crown,
+  ArrowRight 
+} from 'lucide-react';
 
-// واجهات البيانات
+interface UserBadge {
+  id: number;
+  earned_at: string;
+  badge: {
+    id: number;
+    name: string;
+    description: string;
+    icon_name: string;
+  };
+}
+
 interface Badge {
   id: number;
   name: string;
   description: string;
   icon_name: string;
-  condition_type: string;
-}
-
-interface UserBadge {
-  id: number;
-  earned_at: string;
-  badge: Badge;
 }
 
 interface UserProfile {
@@ -34,13 +44,11 @@ export default function BadgesPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // جلب البيانات الثلاثة بالتوازي
         const [badgesRes, myBadgesRes, profileRes] = await Promise.all([
           apiClient.get('/all-badges/'),
           apiClient.get('/my-badges/'),
           apiClient.get('/my-profile/')
         ]);
-
         setAllBadges(badgesRes.data);
         setMyBadges(myBadgesRes.data);
         setProfile(profileRes.data);
@@ -53,7 +61,6 @@ export default function BadgesPage() {
     fetchData();
   }, []);
 
-  // دالة للتحقق هل الطالب يملك هذا الوسام؟
   const getEarnedBadge = (badgeId: number) => {
     return myBadges.find(ub => ub.badge.id === badgeId);
   };
@@ -71,23 +78,46 @@ export default function BadgesPage() {
     return Math.min(100, Math.max(0, progress));
   };
 
+  // قاموس الأيقونات
   const getIcon = (iconName: string, isLocked: boolean) => {
-    const className = isLocked ? "text-gray-300" : "text-yellow-500 drop-shadow-sm";
+    const className = isLocked ? "text-gray-300" : "text-emerald-600 drop-shadow-sm";
+    const size = 32;
+
     switch (iconName) {
-      case 'star': return <Star size={40} className={isLocked ? "text-gray-300" : "text-yellow-400 fill-yellow-400"} />;
-      case 'trophy': return <Trophy size={40} className={isLocked ? "text-gray-300" : "text-yellow-600"} />;
-      case 'medal': return <Medal size={40} className={isLocked ? "text-gray-300" : "text-emerald-500"} />;
-      default: return <Award size={40} className={isLocked ? "text-gray-300" : "text-blue-500"} />;
+      case 'star': return <Star size={size} className={isLocked ? "text-gray-300" : "text-yellow-400 fill-yellow-400"} />;
+      case 'sunrise': return <Sunrise size={size} className={isLocked ? "text-gray-300" : "text-orange-400"} />;
+      case 'footprints': return <Footprints size={size} className={className} />;
+      case 'arrow-up': return <ArrowUp size={size} className={className} />;
+      case 'backpack': return <Backpack size={size} className={className} />;
+      case 'wind': return <Wind size={size} className={className} />;
+      case 'pie-chart': return <PieChart size={size} className={className} />;
+      case 'dumbbell': return <Dumbbell size={size} className={className} />;
+      case 'circle-half': return <CircleDot size={size} className={className} />;
+      
+      case 'sparkles': return <Sparkles size={size} className={isLocked ? "text-gray-300" : "text-yellow-500"} />;
+      case 'moon': return <Moon size={size} className={className} />;
+      case 'castle': return <Castle size={size} className={className} />;
+      case 'heart': return <Heart size={size} className={isLocked ? "text-gray-300" : "text-red-500"} />;
+      case 'gem': return <Gem size={size} className={isLocked ? "text-gray-300" : "text-purple-500"} />;
+      case 'mountain': return <Mountain size={size} className={className} />;
+      
+      case 'check-circle': return <CheckCircle2 size={size} className={className} />;
+      case 'calendar': return <CalendarCheck size={size} className={className} />;
+      case 'fire': return <Flame size={size} className={isLocked ? "text-gray-300" : "text-orange-500"} />;
+      case 'crown': return <Crown size={size} className={isLocked ? "text-gray-300" : "text-yellow-600 fill-yellow-100"} />;
+      
+      case 'trophy': return <Trophy size={size} className={isLocked ? "text-gray-300" : "text-yellow-600"} />;
+      case 'medal': return <Medal size={size} className={isLocked ? "text-gray-300" : "text-emerald-500"} />;
+      
+      default: return <Award size={size} className={className} />;
     }
   };
 
-  if (loading) return <Layout title="إنجازاتي"><div className="text-center py-10">جاري تحميل الإنجازات...</div></Layout>;
-
   return (
     <Layout title="إنجازاتي">
-      <div className="space-y-8 max-w-5xl mx-auto">
+      <div className="space-y-8 max-w-6xl mx-auto">
         
-        {/* 1. قسم المستوى (Hero) */}
+        {/* --- 1. قسم المستوى (البطاقة الخضراء الكبيرة) - تمت إعادتها --- */}
         <div className="bg-gradient-to-r from-emerald-800 to-teal-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
           <div className="absolute top-0 left-0 p-4 opacity-10 transform -translate-y-1/2 translate-x-1/4">
             <Trophy size={300} />
@@ -135,62 +165,71 @@ export default function BadgesPage() {
             </div>
           </div>
         </div>
+        {/* -------------------------------------------------------- */}
 
-        {/* 2. قسم الأوسمة (Badges Grid) */}
+
+        {/* --- 2. قسم الأوسمة (الشبكة) --- */}
         <div>
           <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
             <Award className="text-emerald-600" />
             خارطة الأوسمة
           </h3>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {allBadges.map((badge) => {
-              const earnedData = getEarnedBadge(badge.id);
-              const isUnlocked = !!earnedData;
+          {loading ? (
+            <div className="text-center py-10 text-gray-500">جاري تحميل الأوسمة...</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {allBadges.map((badge) => {
+                const earnedData = getEarnedBadge(badge.id);
+                const isUnlocked = !!earnedData;
 
-              return (
-                <div 
-                  key={badge.id} 
-                  className={`relative p-6 rounded-2xl border transition-all duration-300 group ${
-                    isUnlocked 
-                      ? 'bg-white border-emerald-100 shadow-sm hover:shadow-md hover:border-emerald-300' 
-                      : 'bg-gray-50 border-gray-200 opacity-70 hover:opacity-100'
-                  }`}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`p-3 rounded-2xl ${isUnlocked ? 'bg-yellow-50' : 'bg-gray-200 grayscale'}`}>
-                      {getIcon(badge.icon_name, !isUnlocked)}
+                return (
+                  <div 
+                    key={badge.id} 
+                    className={`relative p-6 rounded-2xl border transition-all duration-300 group ${
+                      isUnlocked 
+                        ? 'bg-white border-emerald-100 shadow-sm hover:shadow-md hover:border-emerald-300' 
+                        : 'bg-gray-50 border-gray-200 opacity-80 hover:opacity-100'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className={`p-3 rounded-2xl ${isUnlocked ? 'bg-emerald-50' : 'bg-gray-200/50 grayscale'}`}>
+                        {getIcon(badge.icon_name, !isUnlocked)}
+                      </div>
+                      {isUnlocked ? (
+                        <span className="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-1 rounded-full font-bold flex items-center gap-1">
+                          <CheckCircle2 size={10} /> مكتسب
+                        </span>
+                      ) : (
+                        <Lock size={16} className="text-gray-400" />
+                      )}
                     </div>
-                    {isUnlocked ? (
-                      <span className="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-full font-bold flex items-center gap-1">
-                        <CheckCircle2 size={12} /> مكتسب
-                      </span>
-                    ) : (
-                      <Lock size={18} className="text-gray-400" />
+                    
+                    <h4 className={`text-lg font-bold mb-2 ${isUnlocked ? 'text-gray-800' : 'text-gray-500'}`}>
+                      {badge.name}
+                    </h4>
+                    <p className="text-xs text-gray-500 leading-relaxed h-12 overflow-hidden">
+                      {badge.description}
+                    </p>
+                    
+                    {isUnlocked && (
+                      <div className="mt-4 pt-3 border-t border-gray-50 text-[10px] text-emerald-600 font-medium flex justify-between">
+                        <span>تاريخ الحصول:</span>
+                        <span dir="ltr">
+                          {new Date(earnedData.earned_at).toLocaleDateString('ar-MA', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric',
+                            numberingSystem: 'latn' 
+                          })}
+                        </span>
+                      </div>
                     )}
                   </div>
-                  
-                  <h4 className={`text-lg font-bold mb-2 ${isUnlocked ? 'text-gray-800' : 'text-gray-500'}`}>
-                    {badge.name}
-                  </h4>
-                  <p className="text-sm text-gray-500 leading-relaxed h-10">
-                    {badge.description}
-                  </p>
-                  
-                  {isUnlocked && (
-                    <div className="mt-4 pt-3 border-t border-gray-50 text-xs text-emerald-600 font-medium">
-                      تاريخ الحصول: {new Date(earnedData.earned_at).toLocaleDateString('ar-MA', { 
-                                        year: 'numeric', 
-                                        month: 'long', 
-                                        day: 'numeric',
-                                        numberingSystem: 'latn' 
-                                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
       </div>
