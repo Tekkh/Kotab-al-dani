@@ -44,7 +44,7 @@ class SetPreviousProgressView(APIView):
             except ValueError:
                 pass
 
-        # 2. حساب قيمة "الإضافة الجديدة" فقط
+        # 2. حساب قيمة "الإضافة الجديدة"
         BADGE_THUMN_VALUES = {
             'juz_amma': 16,
             'juz_tabarak': 16,
