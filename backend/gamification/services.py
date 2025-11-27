@@ -1,3 +1,5 @@
+from django.utils import timezone
+from datetime import timedelta
 from .models import Badge, UserBadge, GamificationProfile
 from progress.models import ThumnProgress
 
@@ -13,6 +15,49 @@ def calculate_level(total_xp):
         if total_xp >= threshold:
             current_level = level
     return current_level
+
+def update_streak(user):
+    """
+    دالة لتحديث عداد المداومة بناءً على تاريخ اليوم
+    """
+    profile, _ = GamificationProfile.objects.get_or_create(user=user)
+    today = timezone.now().date()
+    last_date = profile.last_activity_date
+
+    # الحالة 1: أول مرة يحفظ فيها الطالب
+    if last_date is None:
+        profile.current_streak = 1
+        profile.last_activity_date = today
+    
+    # الحالة 2: حفظ اليوم مرة أخرى (لا نغير العداد)
+    elif last_date == today:
+        pass 
+    
+    # الحالة 3: حفظ بالأمس (سلسلة متصلة) -> نزيد العداد
+    elif last_date == today - timedelta(days=1):
+        profile.current_streak += 1
+        profile.last_activity_date = today
+        print(f"🔥 مداومة مستمرة! العداد وصل إلى {profile.current_streak}")
+
+    # الحالة 4: انقطاع (أكثر من يوم) -> تصفير العداد
+    else:
+        profile.current_streak = 1
+        profile.last_activity_date = today
+        print("⚠️ انقطعت السلسلة. العودة إلى 1.")
+
+    profile.save()
+    
+    # فحص أوسمة المداومة فوراً
+    check_streak_badges(user, profile.current_streak)
+
+
+def check_streak_badges(user, streak):
+    """
+    منح أوسمة المداومة
+    """
+    if streak >= 7: assign_badge(user, 'streak_7')
+    if streak >= 30: assign_badge(user, 'streak_30')
+    if streak >= 100: assign_badge(user, 'streak_100')
 
 def add_xp(user, amount=10):
     profile, _ = GamificationProfile.objects.get_or_create(user=user)
@@ -53,7 +98,7 @@ def check_and_award_badges(user):
     if completed_hizbs >= 30: assign_badge(user, 'hizb_30')     # نصف القرآن
     if completed_hizbs >= 60: assign_badge(user, 'hizb_60')     # تاج الحافظ
 
-    # ---------------------------------------------------------
+# ---------------------------------------------------------
     # ثانياً: أوسمة السور والأجزاء (النوعية)
     # يتم فحصها فقط من خلال "السجلات الفعلية" (ThumnProgress)
     # (سنضيف لاحقاً منطقاً لمنحها عبر الرصيد السابق اليدوي)

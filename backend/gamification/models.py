@@ -65,6 +65,8 @@ class GamificationProfile(models.Model):
     
     # هنا نخزن "الحفظ السابق" (محولاً إلى أثمان) ليتم إضافته للحساب
     initial_memorization_thumns = models.IntegerField(default=0, verbose_name="رصيد الحفظ السابق (أثمان)")
+    current_streak = models.IntegerField(default=0, verbose_name="أيام المداومة الحالية")
+    last_activity_date = models.DateField(null=True, blank=True, verbose_name="تاريخ آخر نشاط")
 
     def __str__(self):
         return f"{self.user.username} - Lv.{self.level} ({self.total_xp} XP)"
