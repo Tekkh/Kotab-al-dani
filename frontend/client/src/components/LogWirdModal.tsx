@@ -8,9 +8,11 @@ interface LogWirdModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   onLogCreated: () => void;
+  // [جديد] دالة لاستقبال الأوسمة الجديدة وتمريرها للصفحة الرئيسية
+  onBadgesEarned?: (badges: any[]) => void;
 }
 
-export default function LogWirdModal({ isOpen, onRequestClose, onLogCreated }: LogWirdModalProps) {
+export default function LogWirdModal({ isOpen, onRequestClose, onLogCreated, onBadgesEarned }: LogWirdModalProps) {
   const [logType, setLogType] = useState('memorization');
   
   const [juz, setJuz] = useState(1);
@@ -21,17 +23,15 @@ export default function LogWirdModal({ isOpen, onRequestClose, onLogCreated }: L
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // --- [منطق جديد] حساب الأحزاب التابعة للجزء ---
   const getHizbsForJuz = (juzNum: number) => {
     const startHizb = (juzNum - 1) * 2 + 1;
     return [startHizb, startHizb + 1];
   };
 
-  // عند تغيير الجزء، نقوم بتحديث الحزب تلقائياً لأول حزب في هذا الجزء
   const handleJuzChange = (newJuz: number) => {
     setJuz(newJuz);
     const availableHizbs = getHizbsForJuz(newJuz);
-    setHizb(availableHizbs[0]); // اختيار أول حزب افتراضياً
+    setHizb(availableHizbs[0]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,20 +42,28 @@ export default function LogWirdModal({ isOpen, onRequestClose, onLogCreated }: L
     try {
       const quantityDesc = `الحزب ${hizb} - الثمن ${thumn} (الجزء ${juz})`;
 
+      // 1. تسجيل السجل التاريخي
       await apiClient.post('/progress-logs/', {
         log_type: logType,
         quantity_description: quantityDesc,
         self_notes: notes,
       });
 
+      // 2. تسجيل الثمن (والحصول على الأوسمة)
       if (logType === 'memorization') {
         try {
-          await apiClient.post('/thumn-progress/', {
-            juz,
-            hizb,
-            thumn,
-            status: 'memorized'
+          const response = await apiClient.post('/thumn-progress/', {
+            juz, hizb, thumn, status: 'memorized'
           });
+          
+          // [جديد] التحقق هل هناك أوسمة جديدة في الرد؟
+          if (response.data.new_earned_badges && response.data.new_earned_badges.length > 0) {
+            // نمرر الأوسمة للأب (Dashboard) ليشغل الاحتفال
+            if (onBadgesEarned) {
+               onBadgesEarned(response.data.new_earned_badges);
+            }
+          }
+
         } catch (ignoreErr) {
           console.log("Thumn update skipped", ignoreErr);
         }
@@ -73,7 +81,6 @@ export default function LogWirdModal({ isOpen, onRequestClose, onLogCreated }: L
     }
   };
 
-  // القائمة الحالية للأحزاب المتاحة بناءً على الجزء المختار
   const currentHizbs = getHizbsForJuz(juz);
 
   return (
@@ -123,12 +130,10 @@ export default function LogWirdModal({ isOpen, onRequestClose, onLogCreated }: L
             </div>
             
             <div className="grid grid-cols-3 gap-3">
-              {/* 1. قائمة الجزء */}
               <div>
                 <label className="block text-xs font-bold text-gray-500 mb-1">الجزء</label>
                 <select 
-                  value={juz} 
-                  onChange={(e) => handleJuzChange(Number(e.target.value))}
+                  value={juz} onChange={(e) => handleJuzChange(Number(e.target.value))}
                   className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 bg-white"
                 >
                   {Array.from({ length: 30 }, (_, i) => i + 1).map(n => (
@@ -136,23 +141,17 @@ export default function LogWirdModal({ isOpen, onRequestClose, onLogCreated }: L
                   ))}
                 </select>
               </div>
-
-              {/* 2. قائمة الحزب (ديناميكية) */}
               <div>
                 <label className="block text-xs font-bold text-gray-500 mb-1">الحزب</label>
                 <select 
-                  value={hizb} 
-                  onChange={(e) => setHizb(Number(e.target.value))}
+                  value={hizb} onChange={(e) => setHizb(Number(e.target.value))}
                   className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 bg-white"
                 >
-                  {/* نعرض فقط الحزبين التابعين للجزء المختار */}
                   {currentHizbs.map(n => (
                     <option key={n} value={n}>{n}</option>
                   ))}
                 </select>
               </div>
-
-              {/* 3. قائمة الثمن */}
               <div>
                 <label className="block text-xs font-bold text-gray-500 mb-1">الثمن</label>
                 <select 

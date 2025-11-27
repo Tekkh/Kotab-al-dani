@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import apiClient from '../api/apiClient';
 import LogWirdModal from '../components/LogWirdModal';
-import PreviousProgressModal from '../components/PreviousProgressModal'; // تأكد من الاستيراد
+import PreviousProgressModal from '../components/PreviousProgressModal';
+import CelebrationModal, { type NewBadge } from '../components/CelebrationModal'; // [جديد] استيراد
 import MusafView from '../components/MusafView';
 import Layout from '../components/Layout';
 import { Trophy, Star, Zap, History } from 'lucide-react';
-// استيراد منطق المستويات الجديد
 import { getLevelData, getNextLevelData } from '../utils/levels';
 
 interface ProgressLog {
@@ -29,6 +29,10 @@ export default function DashboardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPrevModalOpen, setIsPrevModalOpen] = useState(false);
 
+  // [جديد] حالات الاحتفال
+  const [isCelebrationOpen, setIsCelebrationOpen] = useState(false);
+  const [newEarnedBadges, setNewEarnedBadges] = useState<NewBadge[]>([]);
+
   const fetchData = () => {
     apiClient.get('/progress-logs/').then(res => setLogs(res.data));
     apiClient.get('/my-profile/').then(res => setProfile(res.data));
@@ -37,6 +41,13 @@ export default function DashboardPage() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // [جديد] دالة التعامل مع الأوسمة الجديدة القادمة من LogWirdModal
+  const handleBadgesEarned = (badges: NewBadge[]) => {
+    setNewEarnedBadges(badges);
+    setIsCelebrationOpen(true); // فتح نافذة الاحتفال
+    // تشغيل صوت احتفال اختياري هنا مستقبلاً
+  };
 
   const handleDeleteLog = async (id: number) => {
     if (!window.confirm("هل أنت متأكد؟")) return;
@@ -47,29 +58,27 @@ export default function DashboardPage() {
     } catch (err) { console.error(err); }
   };
 
-  // --- [منطق العرض الجديد] ---
   const currentLevelData = profile ? getLevelData(profile.level) : getLevelData(1);
   const nextLevelData = profile ? getNextLevelData(profile.level) : getNextLevelData(1);
   
-  // حساب النسبة المئوية الحقيقية
   const calculateProgress = () => {
-    if (!profile || !nextLevelData) return 100; // إذا ختم، الشريط 100%
-    
+    if (!profile || !nextLevelData) return 100;
     const currentPoints = profile.total_xp;
-    const startPoints = currentLevelData.minPoints; // نقاط بداية المستوى الحالي
-    const endPoints = nextLevelData.minPoints;      // نقاط الهدف القادم
-    
-    // المعادلة: (نقاطي - نقطة البداية) / (نقطة النهاية - نقطة البداية) * 100
+    const startPoints = currentLevelData.minPoints;
+    const endPoints = nextLevelData.minPoints;
     const progress = ((currentPoints - startPoints) / (endPoints - startPoints)) * 100;
     return Math.min(100, Math.max(0, progress));
   };
 
   return (
     <Layout title="لوحة التحكم">
+      
+      {/* 1. نافذة تسجيل الورد (تم ربطها بـ handleBadgesEarned) */}
       <LogWirdModal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        onLogCreated={fetchData} 
+        onLogCreated={fetchData}
+        onBadgesEarned={handleBadgesEarned} 
       />
 
       <PreviousProgressModal 
@@ -78,12 +87,19 @@ export default function DashboardPage() {
         onSuccess={fetchData} 
       />
 
+      {/* 2. [جديد] نافذة الاحتفال */}
+      <CelebrationModal 
+        isOpen={isCelebrationOpen}
+        onRequestClose={() => setIsCelebrationOpen(false)}
+        newBadges={newEarnedBadges}
+      />
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* --- العمود الأيمن --- */}
         <div className="space-y-6">
           
-          {/* 1. بطاقة المستوى (المصححة) */}
+          {/* بطاقة المستوى */}
           <div className="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-10"><Trophy size={120} /></div>
             
@@ -92,7 +108,6 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-emerald-100 text-sm font-medium mb-1">المستوى الحالي</p>
                   <h2 className="text-4xl font-bold">{profile?.level || 1}</h2>
-                  {/* الاسم الديناميكي الصحيح */}
                   <p className="text-sm text-emerald-100 mt-1 font-bold bg-white/20 px-2 py-0.5 rounded-lg w-fit">
                     {currentLevelData.name}
                   </p> 
@@ -103,7 +118,6 @@ export default function DashboardPage() {
               </div>
 
               <div className="mb-2 flex justify-between text-xs text-emerald-100 font-mono">
-                {/* تغيير XP إلى نقطة */}
                 <span>{profile?.total_xp || 0} نقطة</span>
                 <span>الهدف: {nextLevelData ? nextLevelData.minPoints : 'ختم القرآن'}</span>
               </div>
@@ -122,7 +136,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* 2. أزرار الإجراءات (تم نقل زر الرصيد السابق هنا) */}
+          {/* أزرار الإجراءات */}
           <div className="grid grid-cols-2 gap-3">
             <button 
               onClick={() => setIsModalOpen(true)}
@@ -132,7 +146,6 @@ export default function DashboardPage() {
               تسجيل وِرد جديد
             </button>
             
-            {/* زر الرصيد السابق (واضح الآن) */}
             <button 
               onClick={() => setIsPrevModalOpen(true)}
               className="col-span-2 flex items-center justify-center gap-2 py-3 text-sm text-gray-500 hover:text-emerald-600 hover:bg-white rounded-xl border border-transparent hover:border-gray-200 transition-all"
@@ -142,7 +155,7 @@ export default function DashboardPage() {
             </button>
           </div>
 
-          {/* 3. سجل الأوراد */}
+          {/* سجل الأوراد */}
           <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
             <h3 className="font-bold text-gray-800 mb-3 border-b pb-2 px-2">آخر الأوراد</h3>
             <div className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar px-1">
