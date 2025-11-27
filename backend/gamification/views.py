@@ -31,61 +31,72 @@ class SetPreviousProgressView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        # 1. معالجة عدد الأحزاب (الكمية)
-        hizb_count = request.data.get('hizb_count', 0)
-        
-        try:
-            hizb_count = int(hizb_count)
-            if hizb_count < 0 or hizb_count > 60:
-                return Response({"error": "عدد الأحزاب غير منطقي"}, status=status.HTTP_400_BAD_REQUEST)
-        except ValueError:
-            return Response({"error": "يجب إدخال رقم صحيح"}, status=status.HTTP_400_BAD_REQUEST)
-
-        # تحديث البروفايل بالكمية
-        profile, _ = GamificationProfile.objects.get_or_create(user=request.user)
-        thumns_count = hizb_count * 8
-        profile.initial_memorization_thumns = thumns_count
-        
-        # إعادة حساب النقاط والمستوى
-        from progress.models import ThumnProgress
-        actual_memorized = ThumnProgress.objects.filter(user=request.user, status='memorized').count()
-        total_thumns = actual_memorized + thumns_count
-        
-        profile.total_xp = total_thumns * 10
-        profile.level = calculate_level(profile.total_xp)
-        profile.save()
-
-        # منح أوسمة الكمية تلقائياً
-        check_and_award_badges(request.user)
-
-        # ---------------------------------------------------------
-        # 2. [جديد] معالجة الأوسمة النوعية (Checkboxes)
-        # ---------------------------------------------------------
-        # نستقبل قائمة بأسماء الشروط التي اختارها الطالب
-        # مثال: specific_badges = ['juz_amma', 'surah_baqarah']
+        # 1. استلام البيانات الجديدة
+        hizb_count_input = request.data.get('hizb_count', 0)
         specific_badges = request.data.get('specific_badges', [])
 
-        # قائمة الأوسمة المسموح باختيارها يدوياً (للأمان)
-        ALLOWED_MANUAL_BADGES = [
-            'juz_amma', 'juz_tabarak', 
-            'surah_baqarah', 'surah_yasin', 
-            'surah_mulk', 'surah_rahman', 'surah_kahf'
-        ]
+        # معالجة الرقم اليدوي
+        manual_hizbs = 0
+        if hizb_count_input:
+            try:
+                manual_hizbs = int(hizb_count_input)
+                if manual_hizbs < 0: manual_hizbs = 0
+            except ValueError:
+                pass
 
+        # 2. حساب قيمة "الإضافة الجديدة" فقط
+        BADGE_THUMN_VALUES = {
+            'juz_amma': 16,
+            'juz_tabarak': 16,
+            'surah_baqarah': 40,
+            'surah_kahf': 8,
+            'surah_yasin': 4,
+            'surah_mulk': 2,
+            'surah_rahman': 2,
+        }
+
+        badges_thumns_value = 0
         new_badges_names = []
 
         if isinstance(specific_badges, list):
             for badge_code in specific_badges:
-                if badge_code in ALLOWED_MANUAL_BADGES:
-                    # نمنح الوسام فوراً
-                    assign_badge(request.user, badge_code)
-                    new_badges_names.append(badge_code)
+                # نجمع قيمة السورة فقط إذا كانت في القاموس
+                if badge_code in BADGE_THUMN_VALUES:
+                    badges_thumns_value += BADGE_THUMN_VALUES[badge_code]
+                
+                # نمنح الوسام
+                assign_badge(request.user, badge_code)
+                new_badges_names.append(badge_code)
+
+        # مجموع الأثمان *الجديدة* المراد إضافتها
+        new_thumns_to_add = (manual_hizbs * 8) + badges_thumns_value
+
+        # 3. التحديث التراكمي في قاعدة البيانات
+        profile, _ = GamificationProfile.objects.get_or_create(user=request.user)
+        
+        # [تعديل جوهري]: نستخدم += للإضافة بدلاً من = للاستبدال
+        profile.initial_memorization_thumns += new_thumns_to_add
+        
+        # 4. إعادة حساب النقاط والمستوى الكلي
+        from progress.models import ThumnProgress
+        actual_memorized = ThumnProgress.objects.filter(user=request.user, status='memorized').count()
+        
+        # المجموع الكلي = المحفوظ فعلياً + (الرصيد السابق القديم + الإضافة الجديدة)
+        grand_total = actual_memorized + profile.initial_memorization_thumns
+        
+        profile.total_xp = grand_total * 10
+        profile.level = calculate_level(profile.total_xp)
+        profile.save()
+
+        # فحص أوسمة الكمية
+        check_and_award_badges(request.user)
 
         return Response({
-            "message": "تم تحديث الرصيد والأوسمة بنجاح", 
+            "message": "تمت إضافة الرصيد بنجاح", 
             "level": profile.level, 
             "xp": profile.total_xp,
-            "awarded_manual": new_badges_names
+            "added_thumns": new_thumns_to_add,
+            "total_initial": profile.initial_memorization_thumns
         })
 class AllBadgesView(generics.ListAPIView):
     queryset = Badge.objects.all().order_by('order')
