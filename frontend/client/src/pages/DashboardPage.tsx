@@ -6,7 +6,7 @@ import CelebrationModal, { type NewBadge } from '../components/CelebrationModal'
 import DeleteConfirmModal from '../components/DeleteConfirmModal'; // [جديد] استيراد
 import MusafView from '../components/MusafView';
 import Layout from '../components/Layout';
-import { Trophy, Star, Zap, History, Flame } from 'lucide-react';
+import { Trophy, Star, Zap, History, Flame, Trash2 } from 'lucide-react';
 import { getLevelData, getNextLevelData } from '../utils/levels';
 
 interface ProgressLog {
@@ -212,21 +212,46 @@ export default function DashboardPage() {
                 <p className="text-gray-400 text-sm text-center py-4">لا توجد سجلات بعد</p>
               ) : (
                 logs.map(log => (
-                  <div key={log.id} className="group relative bg-gray-50 hover:bg-emerald-50 p-3 rounded-xl transition-colors border border-transparent hover:border-emerald-100">
-                    {/* [تحديث] الزر الآن يستدعي confirmDelete */}
-                    <button 
-                      onClick={() => confirmDelete(log.id)} 
-                      className="absolute left-2 top-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-50 rounded-full"
-                    >
-                      🗑️
-                    </button>
-                    <div className="flex justify-between text-gray-500 text-xs mb-1 font-medium">
-                      <span>{log.date}</span>
-                      <span className={log.log_type === 'memorization' ? 'text-emerald-600' : 'text-blue-600'}>
-                        {log.log_type === 'memorization' ? 'حفظ' : 'مراجعة'}
-                      </span>
+                  <div key={log.id} className="bg-gray-50 hover:bg-emerald-50 p-3 rounded-xl transition-colors border border-transparent hover:border-emerald-100">
+                    
+                    {/* السطر العلوي: التاريخ يمين، والحالة والحذف يسار */}
+                    <div className="flex justify-between items-center mb-1">
+                      
+                      {/* التاريخ */}
+                      <span className="text-gray-400 text-[10px] font-mono">{log.date}</span>
+
+                      {/* تجميعة زر الحذف والحالة معاً */}
+                      <div className="flex items-center gap-2">
+
+                        {/* شارة الحالة (حفظ / مراجعة) */}
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                          log.log_type === 'memorization' 
+                            ? 'bg-emerald-100 text-emerald-700' 
+                            : 'bg-blue-100 text-blue-700'
+                        }`}>
+                          {log.log_type === 'memorization' ? 'حفظ' : 'مراجعة'}
+                        </span>
+                        <button 
+                          onClick={() => confirmDelete(log.id)} 
+                          className="text-gray-400 hover:text-red-500 transition-colors p-1 hover:bg-red-50 rounded-md"
+                          title="حذف السجل"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
                     </div>
-                    <p className="text-gray-800 text-sm">{log.quantity_description}</p>
+
+                    {/* تفاصيل الكمية */}
+                    <p className="text-gray-800 text-sm font-medium leading-relaxed">
+                      {log.quantity_description}
+                    </p>
+                    
+                    {/* الملاحظات الذاتية (تظهر فقط إن وجدت) */}
+                    {log.self_notes && (
+                      <p className="text-xs text-gray-500 mt-1 pr-2 border-r-2 border-gray-200 line-clamp-1">
+                        {log.self_notes}
+                      </p>
+                    )}
                   </div>
                 ))
               )}
