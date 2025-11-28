@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import apiClient from '../api/apiClient';
 import LogWirdModal from '../components/LogWirdModal';
 import PreviousProgressModal from '../components/PreviousProgressModal';
-import CelebrationModal, { type NewBadge } from '../components/CelebrationModal'; // [جديد] استيراد
+import CelebrationModal, { type NewBadge } from '../components/CelebrationModal';
+import DeleteConfirmModal from '../components/DeleteConfirmModal'; // [جديد] استيراد
 import MusafView from '../components/MusafView';
 import Layout from '../components/Layout';
 import { Trophy, Star, Zap, History, Flame } from 'lucide-react';
@@ -29,10 +30,12 @@ export default function DashboardPage() {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPrevModalOpen, setIsPrevModalOpen] = useState(false);
-
-  // [جديد] حالات الاحتفال
   const [isCelebrationOpen, setIsCelebrationOpen] = useState(false);
   const [newEarnedBadges, setNewEarnedBadges] = useState<NewBadge[]>([]);
+
+  // [جديد] حالة الحذف
+  const [logToDelete, setLogToDelete] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchData = () => {
     apiClient.get('/progress-logs/').then(res => setLogs(res.data));
@@ -43,20 +46,31 @@ export default function DashboardPage() {
     fetchData();
   }, []);
 
-  // [جديد] دالة التعامل مع الأوسمة الجديدة القادمة من LogWirdModal
   const handleBadgesEarned = (badges: NewBadge[]) => {
     setNewEarnedBadges(badges);
-    setIsCelebrationOpen(true); // فتح نافذة الاحتفال
-    // تشغيل صوت احتفال اختياري هنا مستقبلاً
+    setIsCelebrationOpen(true);
   };
 
-  const handleDeleteLog = async (id: number) => {
-    if (!window.confirm("هل أنت متأكد؟")) return;
+  // 1. بدلاً من الحذف فوراً، نفتح النافذة ونحفظ الـ ID
+  const confirmDelete = (id: number) => {
+    setLogToDelete(id);
+  };
+
+  // 2. تنفيذ الحذف الفعلي عند الضغط على "نعم" في النافذة
+  const executeDelete = async () => {
+    if (!logToDelete) return;
+    setIsDeleting(true);
     try {
-      await apiClient.delete(`/progress-logs/${id}/`);
-      setLogs(logs.filter(log => log.id !== id));
+      await apiClient.delete(`/progress-logs/${logToDelete}/`);
+      setLogs(logs.filter(log => log.id !== logToDelete));
       fetchData(); 
-    } catch (err) { console.error(err); }
+      setLogToDelete(null); // إغلاق النافذة
+    } catch (err) { 
+      console.error(err); 
+      alert("فشل الحذف");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const currentLevelData = profile ? getLevelData(profile.level) : getLevelData(1);
@@ -73,8 +87,6 @@ export default function DashboardPage() {
 
   return (
     <Layout title="لوحة التحكم">
-      
-      {/* 1. نافذة تسجيل الورد (تم ربطها بـ handleBadgesEarned) */}
       <LogWirdModal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
@@ -88,16 +100,22 @@ export default function DashboardPage() {
         onSuccess={fetchData} 
       />
 
-      {/* 2. [جديد] نافذة الاحتفال */}
       <CelebrationModal 
         isOpen={isCelebrationOpen}
         onRequestClose={() => setIsCelebrationOpen(false)}
         newBadges={newEarnedBadges}
       />
 
+      {/* [جديد] نافذة تأكيد الحذف */}
+      <DeleteConfirmModal 
+        isOpen={!!logToDelete} // تفتح إذا كان هناك ID
+        onRequestClose={() => setLogToDelete(null)}
+        onConfirm={executeDelete}
+        loading={isDeleting}
+      />
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* --- العمود الأيمن --- */}
         <div className="space-y-6">
           
           {/* بطاقة المستوى */}
@@ -105,7 +123,7 @@ export default function DashboardPage() {
             <div className="absolute top-0 right-0 p-4 opacity-10"><Trophy size={120} /></div>
             
             <div className="relative z-10">
-              <div className="flex justify-between items-start mb-4">
+              <div className="flex justify-between items-start mb-6">
                 <div>
                   <p className="text-emerald-100 text-sm font-medium mb-1">المستوى الحالي</p>
                   <h2 className="text-4xl font-bold">{profile?.level || 1}</h2>
@@ -113,6 +131,7 @@ export default function DashboardPage() {
                     {currentLevelData.name}
                   </p> 
                 </div>
+
                 <div className="flex flex-col items-end gap-2">
                    {/* أيقونة المستوى القديمة */}
                    <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm mb-1">
@@ -149,15 +168,24 @@ export default function DashboardPage() {
                   style={{ width: `${calculateProgress()}%` }}
                 ></div>
               </div>
-              <p className="text-[10px] text-right text-emerald-200">
-                {nextLevelData 
-                  ? `متبقي ${nextLevelData.minPoints - (profile?.total_xp || 0)} نقطة للترقية` 
-                  : 'ما شاء الله، لقد أتممت المستويات!'}
-              </p>
+              
+              <div className="flex justify-between items-center mt-1">
+                <button 
+                 onClick={() => setIsPrevModalOpen(true)}
+                 className="text-[10px] text-emerald-200 hover:text-white underline opacity-80 hover:opacity-100 transition-opacity"
+                >
+                 + رصيد سابق
+                </button>
+                
+                <p className="text-[10px] text-right text-emerald-200">
+                  {nextLevelData 
+                    ? `باقي ${nextLevelData.minPoints - (profile?.total_xp || 0)} للترقية` 
+                    : 'مبارك الختم!'}
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* أزرار الإجراءات */}
           <div className="grid grid-cols-2 gap-3">
             <button 
               onClick={() => setIsModalOpen(true)}
@@ -185,7 +213,13 @@ export default function DashboardPage() {
               ) : (
                 logs.map(log => (
                   <div key={log.id} className="group relative bg-gray-50 hover:bg-emerald-50 p-3 rounded-xl transition-colors border border-transparent hover:border-emerald-100">
-                    <button onClick={() => handleDeleteLog(log.id)} className="absolute left-2 top-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">🗑️</button>
+                    {/* [تحديث] الزر الآن يستدعي confirmDelete */}
+                    <button 
+                      onClick={() => confirmDelete(log.id)} 
+                      className="absolute left-2 top-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-50 rounded-full"
+                    >
+                      🗑️
+                    </button>
                     <div className="flex justify-between text-gray-500 text-xs mb-1 font-medium">
                       <span>{log.date}</span>
                       <span className={log.log_type === 'memorization' ? 'text-emerald-600' : 'text-blue-600'}>
@@ -200,7 +234,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* --- العمود الأيسر: المصحف --- */}
         <div className="lg:col-span-2">
           <MusafView />
         </div>
