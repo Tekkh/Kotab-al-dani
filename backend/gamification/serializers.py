@@ -19,4 +19,4 @@ class GamificationProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = GamificationProfile
-        fields = ['username', 'total_xp', 'level', 'initial_memorization_thumns']
+        fields = ['username', 'total_xp', 'level', 'initial_memorization_thumns', 'current_streak']

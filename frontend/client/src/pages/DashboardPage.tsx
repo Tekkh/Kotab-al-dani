@@ -5,7 +5,7 @@ import PreviousProgressModal from '../components/PreviousProgressModal';
 import CelebrationModal, { type NewBadge } from '../components/CelebrationModal'; // [جديد] استيراد
 import MusafView from '../components/MusafView';
 import Layout from '../components/Layout';
-import { Trophy, Star, Zap, History } from 'lucide-react';
+import { Trophy, Star, Zap, History, Flame } from 'lucide-react';
 import { getLevelData, getNextLevelData } from '../utils/levels';
 
 interface ProgressLog {
@@ -20,6 +20,7 @@ interface UserProfile {
   username: string;
   total_xp: number;
   level: number;
+  current_streak: number;
 }
 
 export default function DashboardPage() {
@@ -112,8 +113,28 @@ export default function DashboardPage() {
                     {currentLevelData.name}
                   </p> 
                 </div>
-                <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-                  <Star className="text-yellow-300 fill-yellow-300" size={28} />
+                <div className="flex flex-col items-end gap-2">
+                   {/* أيقونة المستوى القديمة */}
+                   <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm mb-1">
+                      <Star className="text-yellow-300 fill-yellow-300" size={24} />
+                   </div>
+                   
+                   {/* شارة المداومة */}
+                   <div className="flex flex-col items-end gap-1">
+                      <span className="text-[12px] text-emerald-200 font-medium opacity-90">
+                       أيام متواصلة من الحفظ
+                      </span>
+                      
+                      <div 
+                        className="flex items-center gap-2 bg-orange-300/20 px-3 py-1.5 rounded-lg border border-orange-400/30 backdrop-blur-sm min-w-[80px] justify-center" 
+                        title={`لديك ${profile?.current_streak || 0} أيام متواصلة من الحفظ`}
+                      >
+                        <Flame size={22} className="text-orange-400 fill-orange-400 animate-pulse shrink-0" />
+                        <span className="text-base font-bold text-orange-100 font-mono leading-none pt-1">
+                          {profile?.current_streak || 0}
+                        </span>
+                      </div>
+                   </div>
                 </div>
               </div>
 
