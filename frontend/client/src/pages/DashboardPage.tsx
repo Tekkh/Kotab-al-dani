@@ -220,7 +220,7 @@ export default function DashboardPage() {
                       {/* التاريخ */}
                       <span className="text-gray-400 text-[10px] font-mono">{log.date}</span>
 
-                      {/* تجميعة زر الحذف والحالة معاً */}
+                      {/* تجميعة زر الحذف والحالة */}
                       <div className="flex items-center gap-2">
 
                         {/* شارة (حفظ / مراجعة) */}
