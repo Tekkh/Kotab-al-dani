@@ -135,7 +135,6 @@ export default function ProfilePage() {
                 <label className="block text-sm font-medium text-gray-500 mb-1">تاريخ الانضمام</label>
                 <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-500 cursor-not-allowed">
                   <Calendar size={18} />
-                  {/* عرض التاريخ مع معالجة الحالة الفارغة */}
                   <span>
                     {profile?.date_joined ? new Date(profile.date_joined).toLocaleDateString('ar-MA') : '...'}
                   </span>
