@@ -59,7 +59,7 @@ class UserBadge(models.Model):
 # 3. [الجديد] بروفايل الألعاب (النقاط والمستوى)
 class GamificationProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='game_profile')
-    
+
     total_xp = models.IntegerField(default=0, verbose_name="مجموع نقاط الخبرة")
     level = models.IntegerField(default=1, verbose_name="المستوى الحالي")
     
@@ -67,6 +67,12 @@ class GamificationProfile(models.Model):
     initial_memorization_thumns = models.IntegerField(default=0, verbose_name="رصيد الحفظ السابق (أثمان)")
     current_streak = models.IntegerField(default=0, verbose_name="أيام المداومة الحالية")
     last_activity_date = models.DateField(null=True, blank=True, verbose_name="تاريخ آخر نشاط")
+    profile_picture = models.ImageField(
+        upload_to='profile_pics/', 
+        null=True, 
+        blank=True, 
+        verbose_name="الصورة الشخصية"
+    )
 
     def __str__(self):
         return f"{self.user.username} - Lv.{self.level} ({self.total_xp} XP)"
