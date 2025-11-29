@@ -16,16 +16,11 @@ class UserBadgeViewSet(viewsets.ReadOnlyModelViewSet):
 class MyProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = GamificationProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
+    # حذفنا parser_classes (سيعود للافتراضي JSON)
 
     def get_object(self):
-        # إرجاع بروفايل المستخدم الحالي (أو إنشاؤه إذا لم يوجد)
         profile, _ = GamificationProfile.objects.get_or_create(user=self.request.user)
         return profile
-
-# تأكد من وجود هذا الاستيراد في الأعلى
-from .services import calculate_level, check_and_award_badges, assign_badge 
-
-# ... (الكلاسات الأخرى)
 
 class SetPreviousProgressView(APIView):
     permission_classes = [permissions.IsAuthenticated]

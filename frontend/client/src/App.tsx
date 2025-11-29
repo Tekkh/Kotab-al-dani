@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LibraryPage from './pages/LibraryPage';
 import SupervisorPage from './pages/SupervisorPage';
 import BadgesPage from './pages/BadgesPage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/library" element={<LibraryPage />} />
         <Route path="/supervisor" element={<SupervisorPage />} />
         <Route path="/badges" element={<BadgesPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Route>
     </Routes>
   );

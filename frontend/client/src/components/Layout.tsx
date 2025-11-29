@@ -8,7 +8,8 @@ import {
   Award, 
   Shield, 
   LogOut, 
-  Home
+  Home, 
+  User
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -33,6 +34,7 @@ export default function Layout({ children, title }: LayoutProps) {
     { name: 'المكتبة', path: '/library', icon: BookOpen, show: true },
     { name: 'إنجازاتي', path: '/badges', icon: Award, show: !isStaff }, // مخفي للمشرف
     { name: 'إشراف', path: '/supervisor', icon: Shield, show: isStaff }, // خاص بالمشرف
+    { name: 'حسابي', path: '/profile', icon: User, show: true },
   ];
 
   const isActive = (path: string) => location.pathname === path;
