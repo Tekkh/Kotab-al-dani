@@ -13,7 +13,7 @@ class UserBadgeViewSet(viewsets.ReadOnlyModelViewSet):
         # إرجاع أوسمة المستخدم الحالي فقط
         return UserBadge.objects.filter(user=self.request.user).order_by('-earned_at')
 
-class MyProfileView(generics.RetrieveAPIView):
+class MyProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = GamificationProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
