@@ -58,20 +58,30 @@ class UserBadge(models.Model):
 
 # 3. [الجديد] بروفايل الألعاب (النقاط والمستوى)
 class GamificationProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='game_profile')
+    # خيارات الهدف اليومي (جديد)
+    DAILY_GOAL_CHOICES = [
+        ('thumn', 'ثمن واحد/يوم'),
+        ('rub', 'ربع حزب/يوم'),
+        ('page', 'صفحة/يوم'),
+    ]
 
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='game_profile')
+    
+    # --- البيانات القديمة (يجب الحفاظ عليها) ---
     total_xp = models.IntegerField(default=0, verbose_name="مجموع نقاط الخبرة")
     level = models.IntegerField(default=1, verbose_name="المستوى الحالي")
+    initial_memorization_thumns = models.IntegerField(default=0, verbose_name="رصيد الحفظ السابق")
     
-    # هنا نخزن "الحفظ السابق" (محولاً إلى أثمان) ليتم إضافته للحساب
-    initial_memorization_thumns = models.IntegerField(default=0, verbose_name="رصيد الحفظ السابق (أثمان)")
     current_streak = models.IntegerField(default=0, verbose_name="أيام المداومة الحالية")
     last_activity_date = models.DateField(null=True, blank=True, verbose_name="تاريخ آخر نشاط")
-    profile_picture = models.ImageField(
-        upload_to='profile_pics/', 
-        null=True, 
-        blank=True, 
-        verbose_name="الصورة الشخصية"
+    # ------------------------------------------
+
+    # --- البيانات الجديدة ---
+    daily_goal = models.CharField(
+        max_length=20, 
+        choices=DAILY_GOAL_CHOICES, 
+        default='thumn', 
+        verbose_name="الهدف اليومي"
     )
 
     def __str__(self):

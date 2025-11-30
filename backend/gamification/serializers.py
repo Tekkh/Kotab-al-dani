@@ -27,7 +27,8 @@ class GamificationProfileSerializer(serializers.ModelSerializer):
         model = GamificationProfile
         fields = [
             'username', 'email', 'first_name', 'last_name', 'date_joined',
-            'total_xp', 'level'
+            'total_xp', 'level', 'initial_memorization_thumns', 'current_streak',
+            'daily_goal'
         ]
         read_only_fields = ['total_xp', 'level']
 
