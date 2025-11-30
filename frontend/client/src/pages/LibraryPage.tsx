@@ -1,153 +1,196 @@
 import { useState, useEffect } from 'react';
-import { FileText, BookOpen, Download, Book } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { FileText, BookOpen, Download, ArrowRight, Book, Search, Loader2 } from 'lucide-react';
 import apiClient from '../api/apiClient';
-import Layout from '../components/Layout'; // 1. استيراد التخطيط
+import Layout from '../components/Layout';
+import axios from 'axios'; // نحتاج axios لجلب قائمة السور
 
-// (الواجهات interfaces تبقى كما هي...)
+// ... (واجهات Matn و TajweedLesson كما هي) ...
 interface Matn { id: number; title: string; author: string; description: string; pdf_file: string; }
 interface TajweedLesson { id: number; title: string; content: string; }
-interface Tafsir { id: number; surah_id: number; surah_name: string; text: string; }
+
+// واجهة التفسير (آية واحدة)
+interface TafsirAyah {
+  tafseer_id: number;
+  tafseer_name: string;
+  ayah_url: string;
+  ayah_number: number;
+  text: string; 
+  ayah_text: string;
+}
+
+interface Chapter {
+  id: number;
+  name_arabic: string;
+  verses_count: number;
+}
 
 export default function LibraryPage() {
   const [activeTab, setActiveTab] = useState<'tafsir' | 'tajweed' | 'matoon'>('tafsir');
+  
+  // بيانات التفسير
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [selectedSurah, setSelectedSurah] = useState<number>(1);
+  const [selectedAyah, setSelectedAyah] = useState<number>(1);
+  const [tafsirResult, setTafsirResult] = useState<TafsirAyah | null>(null);
+  const [tafsirLoading, setTafsirLoading] = useState(false);
+
+  // بيانات أخرى
   const [matoon, setMatoon] = useState<Matn[]>([]);
   const [tajweedLessons, setTajweedLessons] = useState<TajweedLesson[]>([]);
-  const [tafsirList, setTafsirList] = useState<Tafsir[]>([]);
-  const [selectedTafsir, setSelectedTafsir] = useState<Tafsir | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const matoonRes = await apiClient.get('/library/matoon/');
-        setMatoon(matoonRes.data);
-        const tajweedRes = await apiClient.get('/library/tajweed/');
-        setTajweedLessons(tajweedRes.data);
-        const tafsirRes = await apiClient.get('/library/tafsir/');
-        setTafsirList(tafsirRes.data);
-        if (tafsirRes.data.length > 0) setSelectedTafsir(tafsirRes.data[0]);
-      } catch (error) {
-        console.error("فشل جلب بيانات المكتبة:", error);
-      }
-    };
-    fetchData();
+    // جلب قائمة السور (مرة واحدة)
+    axios.get('https://api.quran.com/api/v4/chapters?language=ar')
+      .then(res => setChapters(res.data.chapters))
+      .catch(console.error);
+
+    // جلب بيانات المكتبة الأخرى
+    apiClient.get('/library/matoon/').then(res => setMatoon(res.data));
+    apiClient.get('/library/tajweed/').then(res => setTajweedLessons(res.data));
   }, []);
 
+  const handleFetchTafsir = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setTafsirLoading(true);
+    setTafsirResult(null);
+    try {
+      const res = await apiClient.get(`/proxy/tafsir/${selectedSurah}/${selectedAyah}/`);
+      setTafsirResult(res.data);
+    } catch (err) {
+      console.error(err);
+      alert("فشل جلب التفسير (تأكد من رقم الآية)");
+    } finally {
+      setTafsirLoading(false);
+    }
+  };
+
   return (
-    // 2. تغليف الصفحة بـ Layout
     <Layout title="المكتبة العلمية">
       <div className="space-y-6">
         
-        {/* (تم حذف زر العودة لأنه موجود في القائمة الآن) */}
-
+        {/* ... (العنوان والتبويبات كما هي) ... */}
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-800">المكتبة العلمية</h2>
           <p className="text-gray-500 text-sm">مصادر مساعدة لرحلة الحفظ والفهم</p>
         </div>
 
-        {/* شريط التبويبات */}
         <div className="bg-white rounded-2xl shadow-sm p-1.5 flex gap-2 overflow-x-auto border border-gray-100">
-          {[
-            { id: 'tafsir', label: 'التفسير', icon: BookOpen },
-            { id: 'tajweed', label: 'التجويد', icon: FileText },
-            { id: 'matoon', label: 'المتون', icon: Book },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`flex-1 min-w-[100px] py-2.5 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-sm ${
-                activeTab === tab.id 
-                  ? 'bg-emerald-100 text-emerald-700 shadow-sm' 
-                  : 'text-gray-500 hover:bg-gray-50'
-              }`}
-            >
-              <tab.icon size={18} />
-              {tab.label}
+            {/* ... أزرار التبويبات ... */}
+             <button onClick={() => setActiveTab('tafsir')} className={`flex-1 min-w-[100px] py-2.5 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-sm ${activeTab === 'tafsir' ? 'bg-emerald-100 text-emerald-700 shadow-sm' : 'text-gray-500 hover:bg-gray-50'}`}>
+              <BookOpen size={18} /> التفسير
             </button>
-          ))}
+            <button onClick={() => setActiveTab('tajweed')} className={`flex-1 min-w-[100px] py-2.5 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-sm ${activeTab === 'tajweed' ? 'bg-emerald-100 text-emerald-700 shadow-sm' : 'text-gray-500 hover:bg-gray-50'}`}>
+              <FileText size={18} /> التجويد
+            </button>
+            <button onClick={() => setActiveTab('matoon')} className={`flex-1 min-w-[100px] py-2.5 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-sm ${activeTab === 'matoon' ? 'bg-emerald-100 text-emerald-700 shadow-sm' : 'text-gray-500 hover:bg-gray-50'}`}>
+              <Book size={18} /> المتون
+            </button>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 min-h-[400px] p-6">
-          {/* 1. محتوى التفسير */}
+          
+          {/* 1. محتوى التفسير (المحدث) */}
           {activeTab === 'tafsir' && (
-            <div>
-              {tafsirList.length > 0 ? (
-                <>
-                  <div className="flex gap-4 mb-6 items-center">
-                    <label className="text-gray-700 font-bold whitespace-nowrap">اختر السورة:</label>
+            <div className="max-w-2xl mx-auto">
+              <form onSubmit={handleFetchTafsir} className="bg-gray-50 p-6 rounded-2xl border border-gray-100 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">السورة</label>
                     <select 
-                      className="w-full md:w-1/2 p-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
-                      onChange={(e) => {
-                        const selected = tafsirList.find(t => t.id === Number(e.target.value));
-                        setSelectedTafsir(selected || null);
-                      }}
-                      value={selectedTafsir?.id}
+                      value={selectedSurah}
+                      onChange={(e) => setSelectedSurah(Number(e.target.value))}
+                      className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
                     >
-                      {tafsirList.map(t => (
-                        <option key={t.id} value={t.id}>{t.surah_name}</option>
+                      {chapters.map(ch => (
+                        <option key={ch.id} value={ch.id}>{ch.id}. {ch.name_arabic}</option>
                       ))}
                     </select>
                   </div>
-                  <div className="prose max-w-none bg-gray-50 p-6 rounded-xl border border-gray-100">
-                    <h3 className="text-lg font-bold text-emerald-800 mb-3">تفسير {selectedTafsir?.surah_name}</h3>
-                    <p className="leading-relaxed text-gray-700 whitespace-pre-line">
-                      {selectedTafsir?.text}
-                    </p>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">رقم الآية</label>
+                    <input 
+                      type="number" min="1"
+                      value={selectedAyah}
+                      onChange={(e) => setSelectedAyah(Number(e.target.value))}
+                      className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-center"
+                    />
                   </div>
-                </>
-              ) : (
-                <p className="text-center text-gray-400 py-10">لا توجد تفاسير متاحة حالياً.</p>
+                </div>
+                <button 
+                  type="submit" 
+                  disabled={tafsirLoading}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm"
+                >
+                  {tafsirLoading ? <Loader2 className="animate-spin" /> : <Search size={18} />}
+                  عرض التفسير الميسر
+                </button>
+              </form>
+
+              {/* عرض النتيجة */}
+              {tafsirResult && (
+                <div className="animate-fade-in mt-8">
+                  
+                  {/* رأس البطاقة: معلومات السورة */}
+                  <div className="text-center mb-6">
+                    <h3 className="text-2xl font-bold text-emerald-800 mb-2 font-cairo">
+                      سورة {chapters.find(c => c.id === selectedSurah)?.name_arabic}
+                    </h3>
+                    <span className="bg-emerald-50 text-emerald-700 px-4 py-1 rounded-full text-sm font-bold border border-emerald-100">
+                      الآية {tafsirResult.ayah_number}
+                    </span>
+                  </div>
+                  
+                  {/* بطاقة المحتوى */}
+                  <div className="bg-white rounded-2xl border border-emerald-100 shadow-sm overflow-hidden">
+                    
+                    {/* 1. نص الآية القرآني */}
+                    <div className="bg-[#fffdf5] p-8 border-b border-emerald-50 text-center relative">
+                      {/* زخرفة خفيفة */}
+                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-200 via-emerald-400 to-emerald-200"></div>
+                      
+                      <p className="text-3xl leading-loose text-gray-800 font-amiri" dir="rtl">
+                        {tafsirResult.ayah_text}
+                      </p>
+                    </div>
+
+                    {/* 2. نص التفسير */}
+                    <div className="p-8 bg-white relative">
+                       <div className="absolute top-4 right-4 text-emerald-100 opacity-50 text-6xl font-serif leading-none">“</div>
+                       <h4 className="text-sm font-bold text-gray-400 mb-2">التفسير الميسر:</h4>
+                       <p className="text-lg leading-relaxed text-gray-600 font-medium relative z-10 text-justify">
+                         {tafsirResult.text}
+                       </p>
+                    </div>
+                    
+                  </div>
+                </div>
               )}
             </div>
           )}
 
-          {/* 2. محتوى التجويد */}
+          {/* ... (محتوى التجويد والمتون يبقى كما هو في الكود السابق) ... */}
           {activeTab === 'tajweed' && (
-            <div className="space-y-3">
-              {tajweedLessons.length > 0 ? (
-                tajweedLessons.map((lesson) => (
-                  <details key={lesson.id} className="group border border-gray-200 rounded-xl open:bg-emerald-50/50 transition-colors">
-                    <summary className="flex justify-between items-center p-4 cursor-pointer font-bold text-gray-800 group-open:text-emerald-800 select-none">
-                      {lesson.title}
-                      <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
-                    </summary>
-                    <div className="p-4 pt-0 text-gray-600 leading-relaxed border-t border-gray-100 mt-2">
-                      {lesson.content}
-                    </div>
-                  </details>
-                ))
-              ) : (
-                <p className="text-center text-gray-400 py-10">لا توجد دروس تجويد متاحة حالياً.</p>
-              )}
-            </div>
+             <div className="space-y-3">
+               {tajweedLessons.length > 0 ? tajweedLessons.map(l => (
+                 <div key={l.id} className="p-4 border rounded-lg">
+                    <h3 className="font-bold">{l.title}</h3>
+                    <p className="text-sm text-gray-600 mt-2">{l.content}</p>
+                 </div>
+               )) : <p className="text-center py-10 text-gray-400">لا توجد دروس.</p>}
+             </div>
+          )}
+          {activeTab === 'matoon' && (
+             <div className="grid md:grid-cols-2 gap-4">
+                {matoon.length > 0 ? matoon.map(m => (
+                  <div key={m.id} className="p-4 border rounded-lg flex justify-between">
+                     <div><h3 className="font-bold">{m.title}</h3><p className="text-xs">{m.author}</p></div>
+                     <a href={m.pdf_file} target="_blank" className="text-emerald-600"><Download /></a>
+                  </div>
+                )) : <p className="text-center py-10 text-gray-400 col-span-2">لا توجد متون.</p>}
+             </div>
           )}
 
-          {/* 3. محتوى المتون */}
-          {activeTab === 'matoon' && (
-            <div className="grid md:grid-cols-2 gap-4">
-              {matoon.length > 0 ? (
-                matoon.map((book) => (
-                  <div key={book.id} className="border border-gray-200 rounded-xl p-5 flex justify-between items-center hover:shadow-md transition-shadow bg-white">
-                    <div>
-                      <h3 className="font-bold text-gray-800 mb-1">{book.title}</h3>
-                      <p className="text-sm text-emerald-600 mb-1">{book.author}</p>
-                      <span className="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded">PDF</span>
-                    </div>
-                    <a 
-                      href={book.pdf_file} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="p-2.5 bg-emerald-50 text-emerald-600 rounded-full hover:bg-emerald-100 transition-colors flex items-center gap-2"
-                      title="تحميل"
-                    >
-                      <Download size={18} />
-                    </a>
-                  </div>
-                ))
-              ) : (
-                <p className="text-center text-gray-400 py-10 col-span-2">لا توجد متون متاحة حالياً.</p>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </Layout>

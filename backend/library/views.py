@@ -44,3 +44,39 @@ def quran_page_proxy(request, page_number):
     except Exception as e:
         print(f"Proxy Error: {str(e)}")
         return Response({"error": str(e)}, status=500)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def tafsir_proxy_view(request, surah_id, ayah_number):
+    """
+    جلب التفسير + نص الآية ودمجهما في رد واحد
+    """
+    try:
+        # 1. رابط التفسير (الميسر ID=1)
+        tafsir_url = f"http://api.quran-tafseer.com/tafsir/1/{surah_id}/{ayah_number}"
+        
+        # 2. رابط نص الآية (من نفس المصدر لضمان التوافق)
+        quran_url = f"http://api.quran-tafseer.com/quran/{surah_id}/{ayah_number}"
+        
+        # تنفيذ الطلبين
+        tafsir_response = requests.get(tafsir_url)
+        quran_response = requests.get(quran_url)
+        
+        if tafsir_response.status_code == 200 and quran_response.status_code == 200:
+            # دمج البيانات
+            data = tafsir_response.json() # يحتوي على التفسير ورقم الآية
+            quran_data = quran_response.json() # يحتوي على نص الآية
+            
+            # إضافة نص الآية للرد النهائي
+            # الحقل القادم من المصدر اسمه 'text'، سنسميه 'ayah_text' لعدم الخلط مع نص التفسير
+            data['ayah_text'] = quran_data.get('text', '')
+            
+            return Response(data)
+        else:
+            return Response(
+                {"error": "فشل جلب البيانات من المصدر الخارجي"}, 
+                status=404
+            )
+            
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)

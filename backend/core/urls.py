@@ -9,7 +9,7 @@ from django.conf.urls.static import static
 # Imports
 from lessons.views import WeeklyLessonViewSet
 from progress.views import ProgressLogViewSet, ThumnProgressViewSet, QuranStructureViewSet
-from library.views import MatnViewSet, TajweedLessonViewSet, TafsirViewSet, quran_page_proxy
+from library.views import MatnViewSet, TajweedLessonViewSet, TafsirViewSet, quran_page_proxy, tafsir_proxy_view
 from gamification.views import UserBadgeViewSet, MyProfileView, SetPreviousProgressView, AllBadgesView
 
 # Router
@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/auth/', include('users.urls')),
     path('api/', include(router.urls)),
     path('api/proxy/quran/pages/<int:page_number>/', quran_page_proxy, name='quran-proxy'),
+    path('api/proxy/tafsir/<int:surah_id>/<int:ayah_number>/', tafsir_proxy_view, name='tafsir-proxy'),
     path('api/my-profile/', MyProfileView.as_view(), name='my-profile'),
     path('api/set-previous-progress/', SetPreviousProgressView.as_view(), name='set-previous'),
     path('api/all-badges/', AllBadgesView.as_view(), name='all-badges'),
