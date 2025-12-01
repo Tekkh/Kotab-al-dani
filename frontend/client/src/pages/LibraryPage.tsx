@@ -1,6 +1,5 @@
-import { useState, useEffect, useMemo } from 'react'; // أضفنا useMemo للأداء
-import { Link } from 'react-router-dom';
-import { FileText, BookOpen, Download, ArrowRight, Book, Search, Loader2 } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { FileText, BookOpen, Download, Book, Search, Loader2 } from 'lucide-react';
 import apiClient from '../api/apiClient';
 import Layout from '../components/Layout';
 import axios from 'axios';
