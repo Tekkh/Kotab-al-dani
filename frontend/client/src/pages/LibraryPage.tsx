@@ -181,7 +181,7 @@ export default function LibraryPage() {
           {activeTab === 'tajweed' && (
             <div className="space-y-3">
               {tajweedLessons.length > 0 ? (
-                tajweedLessons.map((lesson) => (
+                tajweedLessons.map((lesson, index) => (
                   <details 
                     key={lesson.id} 
                     className="group border border-gray-200 rounded-xl bg-white overflow-hidden transition-all duration-300 hover:shadow-md open:shadow-md open:border-emerald-200 open:bg-emerald-50/30 w-full"
@@ -190,7 +190,7 @@ export default function LibraryPage() {
                     <summary className="flex justify-between items-center p-4 md:p-5 cursor-pointer font-bold text-gray-800 group-open:text-emerald-800 select-none list-none gap-3">
                       <div className="flex items-center gap-3 min-w-0"> {/* min-w-0 يسمح بتقليص النص */}
                         <span className="w-8 h-8 md:w-10 md:h-10 bg-gray-100 group-open:bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-700 font-bold text-sm shrink-0 transition-colors">
-                          {lesson.id}
+                          {index + 1}
                         </span>
                         <span className="text-base md:text-lg truncate">{lesson.title}</span>
                       </div>
