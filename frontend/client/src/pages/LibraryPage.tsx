@@ -184,25 +184,33 @@ export default function LibraryPage() {
                 tajweedLessons.map((lesson) => (
                   <details 
                     key={lesson.id} 
-                    className="group border border-gray-200 rounded-xl bg-white overflow-hidden transition-all duration-300 hover:shadow-md open:shadow-md open:border-emerald-200 open:bg-emerald-50/30"
+                    className="group border border-gray-200 rounded-xl bg-white overflow-hidden transition-all duration-300 hover:shadow-md open:shadow-md open:border-emerald-200 open:bg-emerald-50/30 w-full"
                   >
-                    {/* العنوان (القابل للضغط) */}
-                    <summary className="flex justify-between items-center p-5 cursor-pointer font-bold text-gray-800 group-open:text-emerald-800 select-none list-none">
-                      <div className="flex items-center gap-3">
-                        <span className="w-8 h-8 bg-gray-100 group-open:bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-700 font-bold text-sm transition-colors">
+                    {/* العنوان */}
+                    <summary className="flex justify-between items-center p-4 md:p-5 cursor-pointer font-bold text-gray-800 group-open:text-emerald-800 select-none list-none gap-3">
+                      <div className="flex items-center gap-3 min-w-0"> {/* min-w-0 يسمح بتقليص النص */}
+                        <span className="w-8 h-8 md:w-10 md:h-10 bg-gray-100 group-open:bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-700 font-bold text-sm shrink-0 transition-colors">
                           {lesson.id}
                         </span>
-                        <span className="text-lg">{lesson.title}</span>
+                        <span className="text-base md:text-lg truncate">{lesson.title}</span>
                       </div>
-                      <span className="text-gray-400 group-open:text-emerald-600 group-open:rotate-180 transition-transform duration-300">
+                      <span className="text-gray-400 group-open:text-emerald-600 group-open:rotate-180 transition-transform duration-300 shrink-0">
                         ▼
                       </span>
                     </summary>
                     
                     {/* المحتوى المنسدل */}
-                    <div className="px-6 pb-6 pt-2 text-gray-600 leading-relaxed border-t border-gray-100/50 animate-fade-in">
+                    <div className="px-4 pb-6 pt-2 md:px-6 md:pt-2 text-gray-600 leading-relaxed border-t border-gray-100/50 animate-fade-in w-full overflow-hidden">
+                      
+                      {/* [هام] تنسيق المحتوى الداخلي ليحترم الموبايل */}
                       <div 
-                        className="prose max-w-none font-medium"
+                        className="
+                          prose max-w-none font-medium text-sm md:text-base
+                          prose-p:my-2 prose-ul:my-2 prose-li:my-1
+                          prose-headings:text-emerald-800 prose-headings:text-base md:prose-headings:text-lg
+                          prose-span:break-words prose-span:inline-block
+                          [&_*]:max-w-full [&_span.font-amiri]:text-lg md:[&_span.font-amiri]:text-xl [&_span.font-amiri]:leading-loose
+                        "
                         dangerouslySetInnerHTML={{ __html: lesson.content }} 
                       />
                     </div>
