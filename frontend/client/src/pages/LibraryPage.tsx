@@ -179,14 +179,39 @@ export default function LibraryPage() {
 
           {/* المحتويات الأخرى (التجويد والمتون) تبقى كما هي */}
           {activeTab === 'tajweed' && (
-             <div className="space-y-3">
-               {tajweedLessons.length > 0 ? tajweedLessons.map(l => (
-                 <div key={l.id} className="p-4 border rounded-lg">
-                    <h3 className="font-bold">{l.title}</h3>
-                    <p className="text-sm text-gray-600 mt-2">{l.content}</p>
-                 </div>
-               )) : <p className="text-center py-10 text-gray-400">لا توجد دروس.</p>}
-             </div>
+            <div className="space-y-3">
+              {tajweedLessons.length > 0 ? (
+                tajweedLessons.map((lesson) => (
+                  <details 
+                    key={lesson.id} 
+                    className="group border border-gray-200 rounded-xl bg-white overflow-hidden transition-all duration-300 hover:shadow-md open:shadow-md open:border-emerald-200 open:bg-emerald-50/30"
+                  >
+                    {/* العنوان (القابل للضغط) */}
+                    <summary className="flex justify-between items-center p-5 cursor-pointer font-bold text-gray-800 group-open:text-emerald-800 select-none list-none">
+                      <div className="flex items-center gap-3">
+                        <span className="w-8 h-8 bg-gray-100 group-open:bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-700 font-bold text-sm transition-colors">
+                          {lesson.id}
+                        </span>
+                        <span className="text-lg">{lesson.title}</span>
+                      </div>
+                      <span className="text-gray-400 group-open:text-emerald-600 group-open:rotate-180 transition-transform duration-300">
+                        ▼
+                      </span>
+                    </summary>
+                    
+                    {/* المحتوى المنسدل */}
+                    <div className="px-6 pb-6 pt-2 text-gray-600 leading-relaxed border-t border-gray-100/50 animate-fade-in">
+                      <div 
+                        className="prose max-w-none font-medium"
+                        dangerouslySetInnerHTML={{ __html: lesson.content }} 
+                      />
+                    </div>
+                  </details>
+                ))
+              ) : (
+                <p className="text-center py-10 text-gray-400">لا توجد دروس تجويد متاحة حالياً.</p>
+              )}
+            </div>
           )}
           {activeTab === 'matoon' && (
              <div className="grid md:grid-cols-2 gap-4">
