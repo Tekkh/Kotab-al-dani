@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import axios from 'axios';
+import logoImage from '../assets/Logo.svg'; 
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { ArrowLeft } from 'lucide-react';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -33,6 +35,17 @@ export default function LoginPage() {
       {/* 2. البطاقة البيضاء */}
       <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
         
+      <div className="flex justify-between items-center mb-8 border-b border-gray-50 pb-4">
+          <div className="flex items-center gap-2">
+            <img src={logoImage} alt="Logo" className="w-8 h-8" />
+            <span className="font-bold text-gray-600 text-sm hidden sm:block">كُتّاب أبي عمرو الداني</span>
+          </div>
+          
+          <Link to="/" className="flex items-center gap-1 text-gray-400 hover:text-emerald-600 transition-colors text-sm font-medium">
+            <span>الرئيسية</span>
+            <ArrowLeft size={16} />
+          </Link>
+        </div>
         {/* رأس البطاقة */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-emerald-800 mb-2">تسجيل الدخول</h2>
