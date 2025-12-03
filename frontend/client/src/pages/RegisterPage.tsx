@@ -19,7 +19,7 @@ export default function RegisterPage() {
     setError(null);
 
     
-    // 1. التحقق من اسم المستخدم
+    // 1. التحقق من المستخدم
     if (username.length < 4) {
       setError('اسم المستخدم قصير جداً (4 أحرف على الأقل).');
       return;
