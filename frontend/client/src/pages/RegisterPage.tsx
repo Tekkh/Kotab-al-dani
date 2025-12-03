@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import logoImage from '../assets/Logo.svg'; // استيراد اللوغو
+import logoImage from '../assets/Logo.svg'; // استيراد 
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 
 export default function RegisterPage() {
