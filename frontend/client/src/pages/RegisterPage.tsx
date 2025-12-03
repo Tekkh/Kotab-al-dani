@@ -18,7 +18,6 @@ export default function RegisterPage() {
     e.preventDefault();
     setError(null);
 
-    // --- التحقق في الواجهة الأمامية (Frontend Validation) ---
     
     // 1. التحقق من اسم المستخدم
     if (username.length < 4) {
