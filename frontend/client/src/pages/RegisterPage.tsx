@@ -8,7 +8,7 @@ export default function RegisterPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState(''); // حقل جديد
+  const [confirmPassword, setConfirmPassword] = useState(''); 
   
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
