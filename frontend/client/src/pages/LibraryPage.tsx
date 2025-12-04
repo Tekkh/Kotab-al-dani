@@ -221,13 +221,45 @@ export default function LibraryPage() {
             </div>
           )}
           {activeTab === 'matoon' && (
-             <div className="grid md:grid-cols-2 gap-4">
+             <div className="grid md:grid-cols-2 gap-6">
                 {matoon.length > 0 ? matoon.map(m => (
-                  <div key={m.id} className="p-4 border rounded-lg flex justify-between">
-                     <div><h3 className="font-bold">{m.title}</h3><p className="text-xs">{m.author}</p></div>
-                     <a href={m.pdf_file} target="_blank" className="text-emerald-600"><Download /></a>
+                  <div key={m.id} className="flex flex-col p-6 border border-gray-200 rounded-2xl hover:shadow-lg transition-all bg-white group h-full">
+                     
+                     {/* المحتوى العلوي (يأخذ المساحة المتبقية) */}
+                     <div className="flex-1 mb-6">
+                        <div className="flex justify-between items-start mb-2">
+                           <h3 className="font-bold text-gray-800 text-lg group-hover:text-emerald-700 transition-colors">
+                             {m.title}
+                           </h3>
+                           <div className="p-2 bg-gray-50 rounded-lg text-gray-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors">
+                             <Book size={20} />
+                           </div>
+                        </div>
+                        
+                        <p className="text-sm text-emerald-600 font-medium mb-3 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+                          {m.author}
+                        </p>
+                        
+                        {m.description && (
+                          <p className="text-gray-500 text-sm leading-relaxed">
+                            {m.description}
+                          </p>
+                        )}
+                     </div>
+                     
+                     {/* زر التحميل (في الأسفل دائماً) */}
+                     <a 
+                       href={m.pdf_file} 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       className="w-full py-3 bg-gray-50 hover:bg-emerald-600 text-gray-600 hover:text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 border border-gray-100 hover:border-transparent group-hover:shadow-sm"
+                     >
+                       <Download size={18} />
+                       <span>تحميل نسخة PDF</span>
+                     </a>
                   </div>
-                )) : <p className="text-center py-10 text-gray-400 col-span-2">لا توجد متون.</p>}
+                )) : <p className="text-center py-10 text-gray-400 col-span-full">لا توجد متون متاحة حالياً.</p>}
              </div>
           )}
         </div>

@@ -9,6 +9,9 @@ class Matn(models.Model):
     pdf_file = models.FileField(upload_to='matoon/', verbose_name="ملف PDF")
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return self.title
 

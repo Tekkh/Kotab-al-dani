@@ -5,6 +5,7 @@ from .models import Matn, TajweedLesson, Tafsir
 class MatnAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'created_at')
     search_fields = ('title', 'author')
+    ordering = ('-id',)
 
 @admin.register(TajweedLesson)
 class TajweedLessonAdmin(admin.ModelAdmin):
