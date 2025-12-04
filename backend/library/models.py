@@ -5,7 +5,6 @@ class Matn(models.Model):
     title = models.CharField(max_length=200, verbose_name="اسم المتن")
     author = models.CharField(max_length=200, verbose_name="المؤلف", blank=True)
     description = models.TextField(verbose_name="وصف قصير", blank=True)
-    # سنحتاج لإعداد MEDIA_ROOT لرفع الملفات، لكن مبدئياً سنستخدم رابط خارجي أو ملف محلي
     pdf_file = models.FileField(upload_to='matoon/', verbose_name="ملف PDF")
     created_at = models.DateTimeField(auto_now_add=True)
 
