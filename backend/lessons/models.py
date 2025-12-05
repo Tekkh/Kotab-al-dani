@@ -1,25 +1,29 @@
 from django.db import models
 
 class WeeklyLesson(models.Model):
-    # اليوم (مثل: "الثلاثاء", "الأحد")
-    day_of_week = models.CharField(max_length=100)
-
-    # التوقيت (مثل: "بعد العشاءين", "بعد صلاة الصبح")
-    time_description = models.CharField(max_length=100)
-
-    # عنوان الدرس (مثل: "شرح متن الدرر اللوامع...")
-    lesson_title = models.CharField(max_length=255)
-
-    # حقل إضافي للترتيب (حتى نتحكم في أي درس يظهر أولاً)
-    order = models.PositiveIntegerField(default=0)
-
-    # حقل للتحكم (هل الدرس نشط أم مخفي)
-    is_active = models.BooleanField(default=True)
+    day_of_week = models.CharField(max_length=20, verbose_name="اليوم")
+    time_description = models.CharField(max_length=100, verbose_name="التوقيت")
+    lesson_title = models.CharField(max_length=200, verbose_name="عنوان الدرس")
+    order = models.PositiveIntegerField(default=0, verbose_name="الترتيب")
+    is_active = models.BooleanField(default=True, verbose_name="نشط؟")
 
     class Meta:
-        # ترتيب الدروس الافتراضي بناءً على الحقل 'order'
         ordering = ['order']
 
     def __str__(self):
-        # هذا ما سيظهر في لوحة تحكم المشرف (Admin Panel)
-        return f"{self.day_of_week}: {self.lesson_title}"
+        return self.lesson_title
+
+# --- [جديد] إعدادات الموقع العامة ---
+class SiteSetting(models.Model):
+    # الإعلان العاجل
+    announcement_text = models.CharField(max_length=255, blank=True, verbose_name="نص الإعلان")
+    is_announcement_active = models.BooleanField(default=False, verbose_name="تفعيل الإعلان؟")
+    
+    def __str__(self):
+        return "إعدادات الموقع العامة"
+
+    def save(self, *args, **kwargs):
+        if not self.pk and SiteSetting.objects.exists():
+            # إذا كان هناك إعداد موجود، نمنع إنشاء جديد (يجب تعديل الموجود)
+            return
+        return super(SiteSetting, self).save(*args, **kwargs)
