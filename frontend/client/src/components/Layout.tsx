@@ -9,7 +9,8 @@ import {
   Shield, 
   LogOut, 
   Home, 
-  User
+  User, 
+  Settings
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -35,6 +36,7 @@ export default function Layout({ children, title }: LayoutProps) {
     { name: 'إنجازاتي', path: '/badges', icon: Award, show: !isStaff }, // مخفي للمشرف
     { name: 'إشراف', path: '/supervisor', icon: Shield, show: isStaff }, // خاص بالمشرف
     { name: 'حسابي', path: '/profile', icon: User, show: true },
+    { name: 'الإعدادات', path: '/settings', icon: Settings, show: isStaff },
   ];
 
   const isActive = (path: string) => location.pathname === path;

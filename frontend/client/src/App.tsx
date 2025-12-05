@@ -8,6 +8,7 @@ import LibraryPage from './pages/LibraryPage';
 import SupervisorPage from './pages/SupervisorPage';
 import BadgesPage from './pages/BadgesPage';
 import ProfilePage from './pages/ProfilePage';
+import SettingsPage from './pages/SettingsPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/supervisor" element={<SupervisorPage />} />
         <Route path="/badges" element={<BadgesPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Route>
     </Routes>
   );
