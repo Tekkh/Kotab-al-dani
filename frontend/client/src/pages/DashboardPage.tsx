@@ -223,7 +223,7 @@ export default function DashboardPage() {
                       {/* تجميعة زر الحذف والحالة */}
                       <div className="flex items-center gap-2">
 
-                        {/* شارة (حفظ / مراجعة) */}
+                        {/*  (حفظ / مراجعة) */}
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
                           log.log_type === 'memorization' 
                             ? 'bg-emerald-100 text-emerald-700' 
