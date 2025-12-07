@@ -225,7 +225,7 @@ export default function LibraryPage() {
                 {matoon.length > 0 ? matoon.map(m => (
                   <div key={m.id} className="flex flex-col p-6 border border-gray-200 rounded-2xl hover:shadow-lg transition-all bg-white group h-full">
                      
-                     {/* المحتوى العلوي (يأخذ المساحة المتبقية) */}
+                     {/* المحتوى العلوي المساحة المتبقية) */}
                      <div className="flex-1 mb-6">
                         <div className="flex justify-between items-start mb-2">
                            <h3 className="font-bold text-gray-800 text-lg group-hover:text-emerald-700 transition-colors">
