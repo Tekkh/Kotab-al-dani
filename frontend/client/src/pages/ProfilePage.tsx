@@ -116,7 +116,7 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* [جديد] قسم الهدف اليومي */}
+            {/*  قسم الهدف اليومي */}
             <div>
               <label className="flex items-center gap-2 text-sm font-bold text-emerald-700 mb-2">
                 <Target size={18} />
