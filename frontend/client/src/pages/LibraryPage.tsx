@@ -176,7 +176,7 @@ export default function LibraryPage() {
             </div>
           )}
 
-          {/* المحتويات الأخرى (التجويد والمتون) تبقى كما هي */}
+          {/* المحتويات الأخرى (التجويد والمتون) كما هي */}
           {activeTab === 'tajweed' && (
             <div className="space-y-3">
               {tajweedLessons.length > 0 ? (
