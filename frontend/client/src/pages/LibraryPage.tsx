@@ -201,7 +201,7 @@ export default function LibraryPage() {
                     {/* المحتوى المنسدل */}
                     <div className="px-4 pb-6 pt-2 md:px-6 md:pt-2 text-gray-600 leading-relaxed border-t border-gray-100/50 animate-fade-in w-full overflow-hidden">
                       
-                      {/* [هام] تنسيق المحتوى الداخلي ليحترم الموبايل */}
+                      {/* تنسيق المحتوى الداخلي ليحترم الموبايل */}
                       <div 
                         className="
                           prose max-w-none font-medium text-sm md:text-base
