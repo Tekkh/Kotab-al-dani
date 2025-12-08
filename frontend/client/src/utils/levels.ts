@@ -23,6 +23,6 @@ export const getLevelData = (level: number) => {
 };
 
 export const getNextLevelData = (level: number) => {
-  //    نعيد نفس المستوى
+  //     نفس المستوى
   return LEVEL_SYSTEM.find(l => l.level === level + 1) || null;
 };
