@@ -35,7 +35,7 @@ export default function Layout({ children, title }: LayoutProps) {
     { name: 'المكتبة', path: '/library', icon: BookOpen, show: true },
     { name: 'إنجازاتي', path: '/badges', icon: Award, show: !isStaff }, // مخفي للمشرف
     { name: 'إشراف', path: '/supervisor', icon: Shield, show: isStaff }, // خاص بالمشرف
-    { name: 'حسابي', path: '/profile', icon: User, show: true },
+    { name: 'حسابي', path: '/profile', icon: User, show: !isStaff },
     { name: 'الإعدادات', path: '/settings', icon: Settings, show: isStaff },
   ];
 
