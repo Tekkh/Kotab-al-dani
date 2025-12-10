@@ -267,59 +267,111 @@ export default function SettingsPage() {
               <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                 <h3 className="font-bold text-gray-800 flex items-center gap-2">
                   <Calendar size={20} className="text-emerald-600" />
-                  إدارة الجدول الأسبوعي
+                  <span className="hidden sm:inline">إدارة الجدول الأسبوعي</span>
+                  <span className="sm:hidden">جدول الدروس الأسبوعي</span>
                 </h3>
                 <button 
                   onClick={() => openLessonModal()}
                   className="flex items-center gap-1 text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg transition-colors font-bold"
                 >
-                  <Plus size={16} /> إضافة درس
+                  <Plus size={16} /> <span className="hidden sm:inline">إضافة درس</span><span className="sm:hidden">إضافة</span>
                 </button>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm text-right">
-                  <thead className="bg-gray-50 text-gray-600 font-bold border-b border-gray-100">
-                    <tr>
-                      <th className="px-6 py-3">اليوم</th>
-                      <th className="px-6 py-3">التوقيت</th>
-                      <th className="px-6 py-3">عنوان الدرس</th>
-                      <th className="px-6 py-3 text-center">الحالة</th>
-                      <th className="px-6 py-3 text-center">إجراءات</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-50">
-                    {lessons.length > 0 ? lessons.map((lesson) => (
-                      <tr key={lesson.id} className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-6 py-4 font-bold text-gray-800">{lesson.day_of_week}</td>
-                        <td className="px-6 py-4 text-gray-600 dir-ltr text-right">{lesson.time_description}</td>
-                        <td className="px-6 py-4 text-emerald-700 font-medium">{lesson.lesson_title}</td>
-                        <td className="px-6 py-4 text-center">
-                          <button 
-                            onClick={() => handleToggleLessonActive(lesson)}
-                            className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${lesson.is_active ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
-                          >
-                            {lesson.is_active ? 'نشط' : 'معطل'}
-                          </button>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center justify-center gap-2">
-                            <button onClick={() => openLessonModal(lesson)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="تعديل">
-                              <Edit2 size={16} />
-                            </button>
-                            <button onClick={() => handleDeleteLesson(lesson.id!)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="حذف">
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    )) : (
+              <div className="p-0">
+                {/* 1. عرض الموبايل (بطاقات) - يظهر فقط في الشاشات الصغيرة */}
+                <div className="md:hidden space-y-4 p-4">
+                  {lessons.length > 0 ? lessons.map((lesson) => (
+                    <div key={lesson.id} className="border border-gray-200 rounded-xl p-4 bg-white shadow-sm flex flex-col gap-3">
+                      
+                      {/* رأس البطاقة: اليوم والحالة */}
+                      <div className="flex justify-between items-center border-b border-gray-100 pb-2">
+                        <span className="font-bold text-gray-800 bg-gray-100 px-3 py-1 rounded-lg text-sm">
+                          {lesson.day_of_week}
+                        </span>
+                        <button 
+                          onClick={() => handleToggleLessonActive(lesson)}
+                          className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${lesson.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}
+                        >
+                          {lesson.is_active ? 'نشط' : 'معطل'}
+                        </button>
+                      </div>
+
+                      {/* محتوى الدرس */}
+                      <div>
+                        <h4 className="font-bold text-emerald-700 text-lg mb-1">{lesson.lesson_title}</h4>
+                        <div className="flex items-center gap-2 text-gray-500 text-sm">
+                          <Clock size={14} />
+                          <span>{lesson.time_description}</span>
+                        </div>
+                      </div>
+
+                      {/* أزرار التحكم */}
+                      <div className="flex gap-2 pt-2 border-t border-gray-100">
+                        <button 
+                          onClick={() => openLessonModal(lesson)} 
+                          className="flex-1 flex items-center justify-center gap-2 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-bold hover:bg-blue-100 transition-colors"
+                        >
+                          <Edit2 size={16} /> تعديل
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteLesson(lesson.id!)} 
+                          className="flex-1 flex items-center justify-center gap-2 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-bold hover:bg-red-100 transition-colors"
+                        >
+                          <Trash2 size={16} /> حذف
+                        </button>
+                      </div>
+                    </div>
+                  )) : (
+                    <p className="text-center text-gray-400 py-4">لا توجد دروس حالياً</p>
+                  )}
+                </div>
+
+                {/* 2. عرض الحاسوب (جدول) - يظهر فقط في الشاشات المتوسطة والكبيرة */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="w-full text-sm text-right">
+                    <thead className="bg-gray-50 text-gray-600 font-bold border-b border-gray-100">
                       <tr>
-                        <td colSpan={5} className="px-6 py-8 text-center text-gray-400">لا توجد دروس مضافة حالياً</td>
+                        <th className="px-6 py-3">اليوم</th>
+                        <th className="px-6 py-3">التوقيت</th>
+                        <th className="px-6 py-3">عنوان الدرس</th>
+                        <th className="px-6 py-3 text-center">الحالة</th>
+                        <th className="px-6 py-3 text-center">إجراءات</th>
                       </tr>
-                    )}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-gray-50">
+                      {lessons.length > 0 ? lessons.map((lesson) => (
+                        <tr key={lesson.id} className="hover:bg-gray-50/50 transition-colors">
+                          <td className="px-6 py-4 font-bold text-gray-800">{lesson.day_of_week}</td>
+                          <td className="px-6 py-4 text-gray-600">{lesson.time_description}</td>
+                          <td className="px-6 py-4 text-emerald-700 font-medium">{lesson.lesson_title}</td>
+                          <td className="px-6 py-4 text-center">
+                            <button 
+                              onClick={() => handleToggleLessonActive(lesson)}
+                              className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${lesson.is_active ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                            >
+                              {lesson.is_active ? 'نشط' : 'معطل'}
+                            </button>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center justify-center gap-2">
+                              <button onClick={() => openLessonModal(lesson)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="تعديل">
+                                <Edit2 size={16} />
+                              </button>
+                              <button onClick={() => handleDeleteLesson(lesson.id!)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="حذف">
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      )) : (
+                        <tr>
+                          <td colSpan={5} className="px-6 py-8 text-center text-gray-400">لا توجد دروس مضافة حالياً</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 

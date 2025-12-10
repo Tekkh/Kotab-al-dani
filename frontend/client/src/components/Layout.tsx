@@ -107,14 +107,17 @@ export default function Layout({ children, title }: LayoutProps) {
           </h2>
 
           {/* يسار: زر الخروج (موحد للجميع هنا لسهولة الوصول) */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center">
             <button 
               onClick={() => { logout(); navigate('/login'); }}
-              className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              className="group flex items-center gap-2 px-3 py-2 rounded-xl text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
               title="تسجيل الخروج"
             >
+              {/* النص: يظهر فقط في الشاشات الكبيرة */}
               <span className="hidden lg:block font-bold text-sm">تسجيل الخروج</span>
-              <LogOut size={20} />
+              
+              {/* الأيقونة: ظاهرة دائماً، وتتحرك قليلاً عند التحويم */}
+              <LogOut size={22} className="transform transition-transform group-hover:-translate-x-1" />
             </button>
           </div>
         </header>
