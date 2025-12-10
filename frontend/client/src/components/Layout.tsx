@@ -1,128 +1,147 @@
-import React from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import logoImage from '../assets/Logo.svg'; // تأكد أن اللوغو هنا
 import { 
-  LayoutDashboard, 
-  BookOpen, 
-  Award, 
-  Shield, 
-  LogOut, 
-  Home, 
-  User, 
-  Settings
+  Home, LayoutDashboard, BookOpen, 
+  Award, User, LogOut, Shield, Settings, Megaphone 
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import apiClient from '../api/apiClient';
 
 interface LayoutProps {
-  children: React.ReactNode;
-  title: string;
+  children: ReactNode;
+  title?: string;
 }
 
 export default function Layout({ children, title }: LayoutProps) {
   const { logout, isStaff } = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [announcement, setAnnouncement] = useState<string | null>(null);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  // جلب الإعدادات (للإعلان)
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await apiClient.get('/site-settings/');
+        if (res.data.is_announcement_active && res.data.announcement_text) {
+          setAnnouncement(res.data.announcement_text);
+        } else {
+          setAnnouncement(null);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchSettings();
+  }, [location.pathname]);
 
-  // تعريف الروابط
   const navItems = [
     { name: 'الرئيسية', path: '/', icon: Home, show: true },
-    { name: 'لوحة التحكم', path: '/dashboard', icon: LayoutDashboard, show: true },
+    { name: 'لوحتي', path: '/dashboard', icon: LayoutDashboard, show: true },
     { name: 'المكتبة', path: '/library', icon: BookOpen, show: true },
-    { name: 'إنجازاتي', path: '/badges', icon: Award, show: !isStaff }, // مخفي للمشرف
-    { name: 'إشراف', path: '/supervisor', icon: Shield, show: isStaff }, // خاص بالمشرف
+    // عناصر الطالب
+    { name: 'إنجازاتي', path: '/badges', icon: Award, show: !isStaff },
     { name: 'حسابي', path: '/profile', icon: User, show: !isStaff },
+    // عناصر المشرف
+    { name: 'إشراف', path: '/supervisor', icon: Shield, show: isStaff },
     { name: 'الإعدادات', path: '/settings', icon: Settings, show: isStaff },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const activeItems = navItems.filter(item => item.show);
 
   return (
-    <div className="min-h-screen bg-gray-50 font-cairo flex flex-col" dir="rtl">
+    <div className="min-h-screen bg-[#f8f9fa] flex font-cairo" dir="rtl">
       
-      {/* --- 1. الشريط العلوي (Header) --- */}
-      <header className="bg-white shadow-sm sticky top-0 z-20 h-16 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
-          
-          {/* الشعار والعنوان */}
-          <div className="flex items-center gap-3">
-            <img 
-              src={logoImage} 
-              alt="شعار الكتاب" 
-              className="w-9 h-9 object-contain drop-shadow-sm"
-            />
-            {/* إخفاء العنوان في الموبايل (hidden) وإظهاره في الشاشات الأكبر (sm:block) */}
-            <h1 className="hidden sm:block text-lg font-bold text-gray-800">
-              كُتّاب أبي عمرو الداني
-            </h1>
-          </div>
-          
-          {/* زر الخروج */}
-          <button 
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-            title="تسجيل الخروج"
-          >
-            <LogOut size={18} />
-            <span className="hidden sm:inline">خروج</span>
-          </button>
+      {/* 1. Sidebar (للشاشات الكبيرة فقط - Desktop) */}
+      <aside className="hidden lg:flex fixed inset-y-0 right-0 z-50 w-64 bg-white border-l border-gray-200 flex-col">
+        <div className="h-16 flex items-center justify-center border-b border-gray-100 shrink-0">
+          <h1 className="text-xl font-bold text-emerald-800 flex items-center gap-2">
+            <BookOpen className="text-emerald-600" />
+            كُتّاب الداني
+          </h1>
         </div>
-      </header>
 
-      <div className="flex-1 max-w-7xl mx-auto w-full flex items-start gap-6 p-4 pb-24 md:pb-8">
-        
-        {/* --- 2. الشريط الجانبي (Sidebar) - للشاشات المتوسطة والكبيرة --- */}
-        <aside className="hidden md:block w-64 sticky top-24 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden shrink-0">
-          <div className="p-4 border-b border-gray-50 mb-2">
-            <h2 className="text-sm font-bold text-gray-400">{title}</h2>
-          </div>
-          <nav className="p-2 space-y-1">
-            {navItems.filter(i => i.show).map((item) => (
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+          {activeItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.path;
+            return (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                  isActive(item.path) 
-                    ? 'bg-emerald-50 text-emerald-700 font-bold shadow-sm' 
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-emerald-600'
-                }`}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive ? 'bg-emerald-50 text-emerald-700 font-bold shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
               >
-                <item.icon size={20} />
+                <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
                 <span>{item.name}</span>
               </Link>
-            ))}
-          </nav>
-        </aside>
+            );
+          })}
+        </nav>
+      </aside>
 
-        {/* --- 3. المحتوى الرئيسي --- */}
-        <main className="flex-1 w-full min-w-0">
+      {/* 2. Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 lg:mr-64 mb-16 lg:mb-0">
+        
+        {/* شريط الإعلانات (يظهر للكل) */}
+        {announcement && (
+          <div className="bg-amber-500 text-white px-4 py-2 text-center text-sm font-bold shadow-sm relative z-40">
+            <div className="flex items-center justify-center gap-2">
+              <Megaphone size={16} className="animate-pulse" />
+              <span>{announcement}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Top Header (للموبايل والديسك توب) */}
+        <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-30 shadow-sm">
+          
+          {/* يمين: اللوجو (يظهر فقط في الموبايل لأن الديسك توب لديه السايدبار) */}
+          <div className="lg:hidden flex items-center gap-2">
+            <BookOpen className="text-emerald-600" size={24} />
+            <span className="font-bold text-gray-800 text-lg">كُتّاب الداني</span>
+          </div>
+
+          {/* عنوان الصفحة (للديسك توب) */}
+          <h2 className="hidden lg:block text-lg font-bold text-gray-800">
+            {title || 'الرئيسية'}
+          </h2>
+
+          {/* يسار: زر الخروج (موحد للجميع هنا لسهولة الوصول) */}
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => { logout(); navigate('/login'); }}
+              className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              title="تسجيل الخروج"
+            >
+              <span className="hidden lg:block font-bold text-sm">تسجيل الخروج</span>
+              <LogOut size={20} />
+            </button>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto p-4 lg:p-8">
           {children}
         </main>
       </div>
 
-      {/* --- 4. الشريط السفلي (Bottom Navigation) - للموبايل فقط --- */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-30 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <nav className="flex justify-around items-center">
-          {navItems.filter(i => i.show).map((item) => (
+      {/* 3. Bottom Navigation Bar (للموبايل فقط - Mobile First PWA) */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16 z-50 flex justify-around items-center shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        {activeItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.path;
+          return (
             <Link
               key={item.path}
               to={item.path}
-              className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${
-                isActive(item.path) 
-                  ? 'text-emerald-600' 
-                  : 'text-gray-400 hover:text-gray-600'
-              }`}
+              className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive ? 'text-emerald-600' : 'text-gray-400 hover:text-gray-600'}`}
             >
-              <item.icon size={isActive(item.path) ? 24 : 22} strokeWidth={isActive(item.path) ? 2.5 : 2} />
+              <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
               <span className="text-[10px] font-medium">{item.name}</span>
             </Link>
-          ))}
-        </nav>
-      </div>
+          );
+        })}
+      </nav>
 
     </div>
   );
