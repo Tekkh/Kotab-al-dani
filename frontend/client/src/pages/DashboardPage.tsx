@@ -5,6 +5,8 @@ import PreviousProgressModal from '../components/PreviousProgressModal';
 import CelebrationModal, { type NewBadge } from '../components/CelebrationModal';
 import DeleteConfirmModal from '../components/DeleteConfirmModal'; // [جديد] استيراد
 import MusafView from '../components/MusafView';
+import { useAuth } from '../context/AuthContext';
+import SupervisorDashboard from './SupervisorDashboard';
 import Layout from '../components/Layout';
 import { Trophy, Star, Zap, History, Flame, Trash2 } from 'lucide-react';
 import { getLevelData, getNextLevelData } from '../utils/levels';
@@ -25,6 +27,8 @@ interface UserProfile {
 }
 
 export default function DashboardPage() {
+
+  const { isStaff } = useAuth();
   const [logs, setLogs] = useState<ProgressLog[]>([]);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   
@@ -84,6 +88,14 @@ export default function DashboardPage() {
     const progress = ((currentPoints - startPoints) / (endPoints - startPoints)) * 100;
     return Math.min(100, Math.max(0, progress));
   };
+
+  if (isStaff) {
+    return (
+      <Layout title="مركز القيادة">
+        <SupervisorDashboard />
+      </Layout>
+    );
+  }
 
   return (
     <Layout title="لوحة التحكم">

@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 
 # Imports
 from lessons.views import WeeklyLessonViewSet, SiteSettingView
-from progress.views import ProgressLogViewSet, ThumnProgressViewSet, QuranStructureViewSet
+from progress.views import ProgressLogViewSet, ThumnProgressViewSet, QuranStructureViewSet, SupervisorDashboardView
 from library.views import MatnViewSet, TajweedLessonViewSet, TafsirViewSet, quran_page_proxy, tafsir_proxy_view
 from gamification.views import UserBadgeViewSet, MyProfileView, SetPreviousProgressView, AllBadgesView
 
@@ -35,6 +35,7 @@ urlpatterns = [
     path('api/set-previous-progress/', SetPreviousProgressView.as_view(), name='set-previous'),
     path('api/all-badges/', AllBadgesView.as_view(), name='all-badges'),
     path('api/site-settings/', SiteSettingView.as_view(), name='site-settings'),
+    path('api/supervisor/dashboard/', SupervisorDashboardView.as_view(), name='supervisor-dashboard'),
 ]
 
 if settings.DEBUG:

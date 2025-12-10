@@ -1,8 +1,13 @@
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
+from django.contrib.auth.models import User
+from django.db.models import Sum, Count
+from django.utils import timezone
+from datetime import timedelta
 from rest_framework import viewsets, permissions
 from .models import ProgressLog, ThumnProgress, QuranStructure
 from .serializers import ProgressLogSerializer, ThumnProgressSerializer, QuranStructureSerializer
-
-# [جديد] استيراد موديل أوسمة المستخدم للتحقق
 from gamification.models import UserBadge 
 
 class ProgressLogViewSet(viewsets.ModelViewSet):
@@ -57,3 +62,65 @@ class QuranStructureViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = QuranStructure.objects.all()
     serializer_class = QuranStructureSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+class SupervisorDashboardView(APIView):
+    permission_classes = [IsAdminUser] # للمشرفين فقط
+
+    def get(self, request):
+        # 1. حساب العدادات العلوية
+        # ------------------------
+        
+        # أ) إجمالي الطلاب (نستثني المشرفين)
+        total_students = User.objects.filter(is_staff=False).count()
+
+        # ب) الطلاب النشطين اليوم (من سجلوا حفظاً أو نالوا وساماً في آخر 24 ساعة)
+        last_24h = timezone.now() - timedelta(hours=24)
+        active_students_count = UserProgress.objects.filter(
+            updated_at__gte=last_24h
+        ).values('user').distinct().count()
+
+        # ج) حصاد الكُتّاب (إجمالي الأحزاب المحفوظة)
+        # نحسب عدد الأثمان المحفوظة كلياً ونقسمها على 8
+        total_athman = UserProgress.objects.filter(is_completed=True).count()
+        total_ahzab = round(total_athman / 8, 1) # تقريب لرقم عشري واحد
+
+        # 2. سجل النشاطات الحية (Feed)
+        # ---------------------------
+        # سنجلب آخر 10 إنجازات (حفظ) وآخر 5 أوسمة وندمجهم
+        
+        activities = []
+
+        # جلب أحدث عمليات الحفظ
+        recent_progress = UserProgress.objects.filter(is_completed=True).select_related('user').order_by('-updated_at')[:10]
+        for p in recent_progress:
+            activities.append({
+                'type': 'progress',
+                'student_name': f"{p.user.first_name} {p.user.last_name}",
+                'description': f"أتم حفظ {p.get_hifz_type_display()}: {p.amount_description}",
+                'timestamp': p.updated_at
+            })
+
+        # جلب أحدث الأوسمة
+        recent_badges = UserBadge.objects.select_related('user', 'badge').order_by('-earned_at')[:5]
+        for b in recent_badges:
+            activities.append({
+                'type': 'badge',
+                'student_name': f"{b.user.first_name} {b.user.last_name}",
+                'description': f"نال وسام: {b.badge.name} 🥇",
+                'timestamp': b.earned_at
+            })
+
+        # دمج وترتيب القائمة حسب الوقت (الأحدث أولاً)
+        activities.sort(key=lambda x: x['timestamp'], reverse=True)
+        
+        # نأخذ أحدث 10 نشاطات فقط للعرض
+        final_feed = activities[:10]
+
+        return Response({
+            "stats": {
+                "total_students": total_students,
+                "active_today": active_students_count,
+                "total_ahzab": total_ahzab
+            },
+            "feed": final_feed
+        })

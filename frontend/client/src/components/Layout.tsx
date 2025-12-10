@@ -37,7 +37,7 @@ export default function Layout({ children, title }: LayoutProps) {
 
   const navItems = [
     { name: 'الرئيسية', path: '/', icon: Home, show: true },
-    { name: 'لوحتي', path: '/dashboard', icon: LayoutDashboard, show: true },
+    { name: 'لوحة التحكم', path: '/dashboard', icon: LayoutDashboard, show: true },
     { name: 'المكتبة', path: '/library', icon: BookOpen, show: true },
     // عناصر الطالب
     { name: 'إنجازاتي', path: '/badges', icon: Award, show: !isStaff },
