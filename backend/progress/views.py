@@ -124,12 +124,10 @@ class SupervisorDashboardView(APIView):
             activities.append({
                 'type': icon_type,
                 'student_name': student_name,
-                'description': f"قام بـ{action_text}: {log.quantity_description}", # استخدام الحقل الصحيح
-                # بما أن date ليس فيه وقت، سنحوله لـ string بصيغة ISO لتقبله الواجهة
+                'description': f"قام بـ{action_text}: {log.quantity_description}", 
                 'timestamp': log.date.isoformat() 
             })
 
-        # 2. جلب آخر الأوسمة (UserBadge)
         # هذا الموديل عادة يحتوي على timestamp دقيق (earned_at)
         recent_badges = UserBadge.objects.all().select_related('user', 'badge').order_by('-earned_at')[:5]
         
