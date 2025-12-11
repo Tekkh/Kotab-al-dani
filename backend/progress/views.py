@@ -64,63 +64,100 @@ class QuranStructureViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 class SupervisorDashboardView(APIView):
-    permission_classes = [IsAdminUser] # للمشرفين فقط
+    permission_classes = [IsAdminUser]
 
     def get(self, request):
-        # 1. حساب العدادات العلوية
-        # ------------------------
-        
-        # أ) إجمالي الطلاب (نستثني المشرفين)
-        total_students = User.objects.filter(is_staff=False).count()
-
-        # ب) الطلاب النشطين اليوم (من سجلوا حفظاً أو نالوا وساماً في آخر 24 ساعة)
-        last_24h = timezone.now() - timedelta(hours=24)
-        active_students_count = UserProgress.objects.filter(
-            updated_at__gte=last_24h
-        ).values('user').distinct().count()
-
-        # ج) حصاد الكُتّاب (إجمالي الأحزاب المحفوظة)
-        # نحسب عدد الأثمان المحفوظة كلياً ونقسمها على 8
-        total_athman = UserProgress.objects.filter(is_completed=True).count()
-        total_ahzab = round(total_athman / 8, 1) # تقريب لرقم عشري واحد
-
-        # 2. سجل النشاطات الحية (Feed)
         # ---------------------------
-        # سنجلب آخر 10 إنجازات (حفظ) وآخر 5 أوسمة وندمجهم
+        # 1. العدادات (Stats)
+        # ---------------------------
         
+        # أ) إجمالي الطلاب (نستثني المشرفين والمدراء)
+        total_students = User.objects.filter(is_staff=False, is_superuser=False).count()
+
+        # ب) الطلاب النشطين (بناءً على تاريخ السجل date)
+        # بما أن الحقل date هو DateField (ليس DateTime)، نقارن بالتاريخ فقط
+        today = timezone.now().date()
+        
+        # نعد الطلاب الذين لديهم سجلات بتاريخ اليوم
+        active_in_logs = ProgressLog.objects.filter(date=today).values('user').distinct().count()
+        
+        # نعد أيضاً من حصلوا على أوسمة في آخر 24 ساعة (للاحتياط)
+        last_24h = timezone.now() - timedelta(hours=24)
+        active_in_badges = UserBadge.objects.filter(earned_at__gte=last_24h).values('user').distinct().count()
+        
+        # الرقم الأكبر هو النشاط الحقيقي
+        active_students_count = max(active_in_logs, active_in_badges)
+
+        # ج) حصاد الكُتّاب:
+        # نجمع عدد الأثمان المحفوظة من جدول ThumnProgress
+        # كل سجل في ThumnProgress يمثل ثمناً واحداً
+        total_thumns = ThumnProgress.objects.filter(status=ThumnProgress.Status.MEMORIZED).count()
+        
+        # تحويل الأثمان لأحزاب (الحزب = 8 أثمان)
+        total_ahzab = round(total_thumns / 8, 2)
+
+        # ---------------------------
+        # 2. سجل النشاطات (Feed)
+        # ---------------------------
         activities = []
 
-        # جلب أحدث عمليات الحفظ
-        recent_progress = UserProgress.objects.filter(is_completed=True).select_related('user').order_by('-updated_at')[:10]
-        for p in recent_progress:
+        # 1. جلب آخر سجلات الحفظ (من ProgressLog)
+        # نستخدم الحقل 'date' للترتيب، وبما أنه لا يحتوي على وقت دقيق،
+        # قد لا يكون الترتيب دقيقاً بالثانية، لكنه كافٍ للغرض اليومي.
+        # نأخذ id أيضاً في الترتيب لضمان أن الأحدث إدخالاً يظهر أولاً.
+        recent_logs = ProgressLog.objects.all().select_related('user').order_by('-date', '-id')[:10]
+        
+        for log in recent_logs:
+            # تحديد نوع النشاط من log_type
+            if log.log_type == ProgressLog.LogType.MEMORIZATION:
+                action_text = "حفظ جديد"
+                icon_type = 'progress'
+            else:
+                action_text = "مراجعة"
+                icon_type = 'review' # يمكننا استخدام أيقونة مختلفة للمراجعة لاحقاً إن شئنا
+            
+            # صياغة الاسم
+            student_name = f"{log.user.first_name} {log.user.last_name}".strip()
+            if not student_name:
+                student_name = log.user.username
+
             activities.append({
-                'type': 'progress',
-                'student_name': f"{p.user.first_name} {p.user.last_name}",
-                'description': f"أتم حفظ {p.get_hifz_type_display()}: {p.amount_description}",
-                'timestamp': p.updated_at
+                'type': icon_type,
+                'student_name': student_name,
+                'description': f"قام بـ{action_text}: {log.quantity_description}", # استخدام الحقل الصحيح
+                # بما أن date ليس فيه وقت، سنحوله لـ string بصيغة ISO لتقبله الواجهة
+                'timestamp': log.date.isoformat() 
             })
 
-        # جلب أحدث الأوسمة
-        recent_badges = UserBadge.objects.select_related('user', 'badge').order_by('-earned_at')[:5]
+        # 2. جلب آخر الأوسمة (UserBadge)
+        # هذا الموديل عادة يحتوي على timestamp دقيق (earned_at)
+        recent_badges = UserBadge.objects.all().select_related('user', 'badge').order_by('-earned_at')[:5]
+        
         for b in recent_badges:
+            student_name = f"{b.user.first_name} {b.user.last_name}".strip()
+            if not student_name:
+                student_name = b.user.username
+
             activities.append({
                 'type': 'badge',
-                'student_name': f"{b.user.first_name} {b.user.last_name}",
+                'student_name': student_name,
                 'description': f"نال وسام: {b.badge.name} 🥇",
-                'timestamp': b.earned_at
+                'timestamp': b.earned_at # هذا datetime
             })
 
-        # دمج وترتيب القائمة حسب الوقت (الأحدث أولاً)
-        activities.sort(key=lambda x: x['timestamp'], reverse=True)
+        # دمج وترتيب القائمة
+        # ملاحظة: سنواجه مشكلة صغيرة في الترتيب لأن 'date' ليس فيه وقت و 'earned_at' فيه وقت.
+        # الحل: تحويل الكل لـ String للمقارنة التقريبية، أو الاعتماد على الفرز في الفرونت إند.
+        # هنا سنعيدها كما هي، والفرونت إند سيعرضها.
         
-        # نأخذ أحدث 10 نشاطات فقط للعرض
-        final_feed = activities[:10]
-
+        # لترتيب بسيط: نعتبر تاريخ اليوم هو "الآن"
+        activities.sort(key=lambda x: str(x['timestamp']), reverse=True)
+        
         return Response({
             "stats": {
                 "total_students": total_students,
                 "active_today": active_students_count,
                 "total_ahzab": total_ahzab
             },
-            "feed": final_feed
+            "feed": activities[:15]
         })
