@@ -101,10 +101,6 @@ class SupervisorDashboardView(APIView):
         # ---------------------------
         activities = []
 
-        # 1. جلب آخر سجلات الحفظ (من ProgressLog)
-        # نستخدم الحقل 'date' للترتيب، وبما أنه لا يحتوي على وقت دقيق،
-        # قد لا يكون الترتيب دقيقاً بالثانية، لكنه كافٍ للغرض اليومي.
-        # نأخذ id أيضاً في الترتيب لضمان أن الأحدث إدخالاً يظهر أولاً.
         recent_logs = ProgressLog.objects.all().select_related('user').order_by('-date', '-id')[:10]
         
         for log in recent_logs:
