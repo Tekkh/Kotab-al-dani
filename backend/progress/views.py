@@ -145,10 +145,7 @@ class SupervisorDashboardView(APIView):
                 'timestamp': b.earned_at # هذا datetime
             })
 
-        # دمج وترتيب القائمة
-        # ملاحظة: سنواجه مشكلة صغيرة في الترتيب لأن 'date' ليس فيه وقت و 'earned_at' فيه وقت.
-        # الحل: تحويل الكل لـ String للمقارنة التقريبية، أو الاعتماد على الفرز في الفرونت إند.
-        # هنا سنعيدها كما هي، والفرونت إند سيعرضها.
+        # دم
         
         # لترتيب بسيط: نعتبر تاريخ اليوم هو "الآن"
         activities.sort(key=lambda x: str(x['timestamp']), reverse=True)
