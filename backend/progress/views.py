@@ -145,9 +145,7 @@ class SupervisorDashboardView(APIView):
                 'timestamp': b.earned_at # هذا datetime
             })
 
-        # دم
         
-        # لترتيب بسيط: نعتبر تاريخ اليوم هو "الآن"
         activities.sort(key=lambda x: str(x['timestamp']), reverse=True)
         
         return Response({
