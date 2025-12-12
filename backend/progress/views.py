@@ -76,7 +76,6 @@ class SupervisorDashboardView(APIView):
         # بما أن الحقل date هو DateField (ليس DateTime)، نقارن بالتاريخ فقط
         today = timezone.now().date()
         
-        # نعد الطلاب الذين لديهم سجلات بتاريخ اليوم
         active_in_logs = ProgressLog.objects.filter(date=today).values('user').distinct().count()
         
         # نعد أيضاً من حصلوا على أوسمة في آخر 24 ساعة (للاحتياط)
