@@ -88,7 +88,7 @@ class SupervisorDashboardView(APIView):
         # الرقم الأكبر هو النشاط الحقيقي
         active_students_count = max(active_in_logs, active_in_badges)
 
-        # ج) حصاد الكُتّاب:
+        :
         # نجمع عدد الأثمان المحفوظة من جدول ThumnProgress
         # كل سجل في ThumnProgress يمثل ثمناً واحداً
         total_thumns = ThumnProgress.objects.filter(status=ThumnProgress.Status.MEMORIZED).count()
