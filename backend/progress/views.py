@@ -67,7 +67,6 @@ class SupervisorDashboardView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request):
-        # 1. العدادات (Stats)
         
         # أ) إجمالي الطلاب (نستثني المشرفين والمدراء)
         total_students = User.objects.filter(is_staff=False, is_superuser=False).count()
