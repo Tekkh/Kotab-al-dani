@@ -7,7 +7,6 @@ class ProgressLogSerializer(serializers.ModelSerializer):
         model = ProgressLog
         fields = ['id', 'user', 'log_type', 'date', 'quantity_description', 'self_notes']
 
-# [تحديث] Serializer للموديل الجديد
 class ThumnProgressSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
     class Meta:
