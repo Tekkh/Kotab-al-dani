@@ -72,8 +72,6 @@ class SupervisorDashboardView(APIView):
         # أ) إجمالي الطلاب (نستثني المشرفين والمدراء)
         total_students = User.objects.filter(is_staff=False, is_superuser=False).count()
 
-        # ب) الطلاب النشطين (بناءً على تاريخ السجل date)
-        # بما أن الحقل date هو DateField (ليس DateTime)، نقارن بالتاريخ فقط
         today = timezone.now().date()
         
         active_in_logs = ProgressLog.objects.filter(date=today).values('user').distinct().count()
