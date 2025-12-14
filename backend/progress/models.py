@@ -27,7 +27,6 @@ class ThumnProgress(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='thumn_progress')
     
-    # بدلاً من ربط بآية، نربط بوحدة (جزء/حزب/ثمن)
     juz = models.IntegerField(verbose_name="الجزء")
     hizb = models.IntegerField(verbose_name="الحزب")
     thumn = models.IntegerField(verbose_name="رقم الثمن في الحزب") # 1 إلى 8
