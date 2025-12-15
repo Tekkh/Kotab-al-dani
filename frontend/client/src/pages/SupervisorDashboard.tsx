@@ -99,7 +99,6 @@ export default function SupervisorDashboard() {
     fetchData();
   }, []);
 
-  // تخصيص التلميح (Tooltip) في المبيان ليظهر بالعربية
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -202,7 +201,6 @@ export default function SupervisorDashboard() {
           </div>
         </div>
 
-        {/* اليسار (الثلث): سجل النشاطات */}
         <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col h-[400px]">
           <div className="p-4 border-b border-gray-100 bg-gray-50/50 rounded-t-2xl flex justify-between items-center">
             <h3 className="font-bold text-gray-800 flex items-center gap-2">
