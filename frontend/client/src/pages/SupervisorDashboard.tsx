@@ -282,7 +282,6 @@ export default function SupervisorDashboard() {
   );
 }
 
-// مكون مساعد لبطاقات الإحصائيات (معدل لاستقبال النص الكامل)
 function StatsCard({ title, value, subLabel, icon: Icon, color }: any) {
   const colorClasses = {
     blue: 'bg-blue-50 text-blue-600',
