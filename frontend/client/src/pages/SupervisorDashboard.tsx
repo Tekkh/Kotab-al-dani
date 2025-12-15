@@ -271,8 +271,6 @@ export default function SupervisorDashboard() {
                 <X size={20} />
               </button>
             </div>
-            
-            {/* قمنا بتغيير overflow-hidden إلى overflow-y-auto */}
             <div className="flex-1 overflow-y-auto bg-white custom-scrollbar p-2">
               <MushafView />
             </div>
