@@ -272,7 +272,6 @@ export default function SupervisorDashboard() {
               </button>
             </div>
             
-            {/* جسم النافذة (المصحف) - التعديل هنا */}
             {/* قمنا بتغيير overflow-hidden إلى overflow-y-auto */}
             <div className="flex-1 overflow-y-auto bg-white custom-scrollbar p-2">
               <MushafView />
