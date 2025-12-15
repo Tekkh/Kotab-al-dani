@@ -63,7 +63,6 @@ export default function SupervisorDashboard() {
 
     // 3. حالة الصفحات (للمبيان)
     if (type === 'page') {
-      // القاعدة: من 3 إلى 10 (صفحات)، ما فوق 11 (صفحة)
       if (count <= 10) return `${count} صفحات`;
       return `${count} صفحة`;
     }
