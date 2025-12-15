@@ -91,7 +91,7 @@ export default function DashboardPage() {
 
   if (isStaff) {
     return (
-      <Layout title="مركز القيادة">
+      <Layout title="لوحة التحكم">
         <SupervisorDashboard />
       </Layout>
     );
