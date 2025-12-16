@@ -71,7 +71,7 @@ export default function HomePage() {
           className="absolute inset-0 z-0 pointer-events-none" 
           style={{
              backgroundImage: `url(${patternImage})`,
-             opacity: 0.2, // شفافية خفيفة
+             opacity: 0.2,
              backgroundSize: '60px 60px', // حجم التكرار (عدله حسب حجم صورتك)
              backgroundRepeat: 'repeat'
           }}
