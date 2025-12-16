@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import apiClient from '../api/apiClient';
 import Layout from '../components/Layout';
 import { getLevelData, getNextLevelData } from '../utils/levels';
@@ -8,7 +8,7 @@ import {
   Sunrise, Footprints, ArrowUp, Backpack, Wind, 
   PieChart, Dumbbell, CircleDot, Sparkles, Moon, 
   Castle, Heart, Gem, Mountain, CalendarCheck, Flame, Crown,
-  ArrowRight 
+  //ArrowRight 
 } from 'lucide-react';
 
 interface UserBadge {
@@ -78,7 +78,6 @@ export default function BadgesPage() {
     return Math.min(100, Math.max(0, progress));
   };
 
-  // قاموس الأيقونات
   const getIcon = (iconName: string, isLocked: boolean) => {
     const className = isLocked ? "text-gray-300" : "text-emerald-600 drop-shadow-sm";
     const size = 32;
