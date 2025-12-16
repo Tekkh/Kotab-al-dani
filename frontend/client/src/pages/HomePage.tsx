@@ -72,7 +72,7 @@ export default function HomePage() {
           style={{
              backgroundImage: `url(${patternImage})`,
              opacity: 0.2,
-             backgroundSize: '60px 60px', // حجم التكرار (عدله حسب حجم صورتك)
+             backgroundSize: '60px 60px',
              backgroundRepeat: 'repeat'
           }}
         ></div>
