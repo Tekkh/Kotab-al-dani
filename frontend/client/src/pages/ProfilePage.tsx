@@ -21,8 +21,8 @@ export default function ProfilePage() {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [dailyGoal, setDailyGoal] = useState('thumn'); // [جديد] حالة الهدف
-
+  const [dailyGoal, setDailyGoal] = useState('thumn'); 
+  
   useEffect(() => {
     apiClient.get('/my-profile/')
       .then(res => {
