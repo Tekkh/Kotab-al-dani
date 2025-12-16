@@ -115,8 +115,6 @@ export default function BadgesPage() {
   return (
     <Layout title="إنجازاتي">
       <div className="space-y-8 max-w-6xl mx-auto">
-        
-        {/* --- 1. قسم المستوى (البطاقة الخضراء الكبيرة) - تمت إعادتها --- */}
         <div className="bg-gradient-to-r from-emerald-800 to-teal-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
           <div className="absolute top-0 left-0 p-4 opacity-10 transform -translate-y-1/2 translate-x-1/4">
             <Trophy size={300} />
