@@ -2,7 +2,8 @@ import { useState, useEffect, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, LayoutDashboard, BookOpen, 
-  Award, User, LogOut, Shield, Settings, Megaphone 
+  Award, User, LogOut, Shield, Settings, Megaphone,
+  Mic // 1. تمت إضافة أيقونة الميكروفون
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../api/apiClient';
@@ -39,6 +40,10 @@ export default function Layout({ children, title }: LayoutProps) {
     { name: 'الرئيسية', path: '/', icon: Home, show: true },
     { name: 'لوحة التحكم', path: '/dashboard', icon: LayoutDashboard, show: true },
     { name: 'المكتبة', path: '/library', icon: BookOpen, show: true },
+    
+    // 2. تمت إضافة عنصر المقرأة هنا (يظهر للطالب فقط)
+    { name: 'تلاواتي', path: '/recitations', icon: Mic, show: !isStaff },
+
     // عناصر الطالب
     { name: 'إنجازاتي', path: '/badges', icon: Award, show: !isStaff },
     { name: 'حسابي', path: '/profile', icon: User, show: !isStaff },
@@ -140,7 +145,10 @@ export default function Layout({ children, title }: LayoutProps) {
               className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive ? 'text-emerald-600' : 'text-gray-400 hover:text-gray-600'}`}
             >
               <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
-              <span className="text-[10px] font-medium">{item.name}</span>
+              {/* تعديل صغير: إذا كان الرابط هو التلاوات، نعرض "تلاواتي" بدلاً من الاسم الطويل */}
+              <span className="text-[10px] font-medium">
+                {item.path === '/recitations' ? 'تلاواتي' : item.name}
+              </span>
             </Link>
           );
         })}

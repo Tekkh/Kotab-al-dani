@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'progress',
     'library',
     'gamification',
+    'reviews',
 ]
 
 MIDDLEWARE = [

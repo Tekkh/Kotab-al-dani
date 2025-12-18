@@ -9,6 +9,7 @@ import SupervisorPage from './pages/SupervisorPage';
 import BadgesPage from './pages/BadgesPage';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
+import RecitationsPage from './pages/RecitationsPage';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/badges" element={<BadgesPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/recitations" element={<RecitationsPage />} />
       </Route>
     </Routes>
   );

@@ -36,6 +36,7 @@ urlpatterns = [
     path('api/all-badges/', AllBadgesView.as_view(), name='all-badges'),
     path('api/site-settings/', SiteSettingView.as_view(), name='site-settings'),
     path('api/supervisor/dashboard/', SupervisorDashboardView.as_view(), name='supervisor-dashboard'),
+    path('api/reviews/', include('reviews.urls')),
 ]
 
 if settings.DEBUG:
