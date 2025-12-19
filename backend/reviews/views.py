@@ -35,7 +35,6 @@ class SubmitFeedbackView(UpdateAPIView):
     serializer_class = FeedbackSerializer
     lookup_field = 'id'
 
-# 4. (للطالب) عرض طلباتي وحالتها
 class StudentSubmissionsView(ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = RecitationSubmissionSerializer
