@@ -47,5 +47,4 @@ class DeleteSubmissionView(DestroyAPIView):
     lookup_field = 'id'
 
     def get_queryset(self):
-        # يسمح للطالب بحذف تلاواته الخاصة فقط
         return RecitationSubmission.objects.filter(student=self.request.user)
