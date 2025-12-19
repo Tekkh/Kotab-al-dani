@@ -17,7 +17,6 @@ class SubmitRecitationView(ListCreateAPIView):
         # نربط التلاوة بالطالب الحالي تلقائياً
         serializer.save(student=self.request.user)
 
-# 2. (للمشرف) صندوق الوارد - الطلبات المعلقة
 class PendingReviewsView(ListAPIView):
     permission_classes = [IsAdminUser] # للمشرفين فقط
     serializer_class = RecitationSubmissionSerializer
