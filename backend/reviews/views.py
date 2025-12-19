@@ -41,7 +41,6 @@ class StudentSubmissionsView(ListAPIView):
     serializer_class = RecitationSubmissionSerializer
 
     def get_queryset(self):
-        # يعرض للطالب تلاواته الخاصة فقط، مرتبة من الأحدث للأقدم
         return RecitationSubmission.objects.filter(student=self.request.user).order_by('-created_at')
 class DeleteSubmissionView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
