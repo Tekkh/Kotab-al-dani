@@ -14,7 +14,6 @@ class SubmitRecitationView(ListCreateAPIView):
         return RecitationSubmission.objects.none() # لا نحتاج عرض شيء هنا، فقط الرفع
 
     def perform_create(self, serializer):
-        # نربط التلاوة بالطالب الحالي تلقائياً
         serializer.save(student=self.request.user)
 
 class PendingReviewsView(ListAPIView):
