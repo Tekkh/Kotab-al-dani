@@ -72,7 +72,6 @@ export default function RecitationsPage() {
 
   // --- المنطق (Logic) ---
 
-  // حساب عدد الآيات ديناميكياً
   const currentSurahVerseCount = useMemo(() => {
     const surah = chapters.find(c => c.id === selectedSurahId);
     return surah ? surah.verses_count : 7;
