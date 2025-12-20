@@ -49,7 +49,7 @@ export default function RecitationsPage() {
 
   // --- التأثيرات (Effects) ---
   useEffect(() => {
-    // 1. جلب قائمة السور
+
     axios.get('https://api.quran.com/api/v4/chapters?language=ar')
       .then(res => setChapters(res.data.chapters))
       .catch(err => console.error("فشل جلب السور:", err));
@@ -67,6 +67,7 @@ export default function RecitationsPage() {
       console.error(err);
     } finally {
       setLoadingHistory(false);
+
     }
   };
 
