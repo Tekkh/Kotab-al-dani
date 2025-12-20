@@ -54,7 +54,6 @@ export default function RecitationsPage() {
       .then(res => setChapters(res.data.chapters))
       .catch(err => console.error("فشل جلب السور:", err));
 
-    // 2. جلب السجل
     fetchHistory();
   }, []);
 
