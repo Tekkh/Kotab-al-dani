@@ -1,18 +1,20 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Mic, History, Star, CheckCircle2, Clock, AlertCircle, Trash2, PlayCircle, User } from 'lucide-react';
 import axios from 'axios';
-import AudioRecorder from '../components/AudioRecorder';
+import AudioRecorder from '../components/AudioRecorder'; // تأكد من مسار المسجل
 import apiClient from '../api/apiClient';
 import Layout from '../components/Layout';
+import Toast from '../components/Toast'; // تأكد من مسار Toast
+import ConfirmModal from '../components/ConfirmModal'; // تأكد من مسار ConfirmModal
 
-// 1. تعريف واجهة السورة (مطابق للمكتبة)
+// 1. واجهة السورة (من API المصحف)
 interface Chapter {
   id: number;
   name_arabic: string;
   verses_count: number;
 }
 
-// 2. تحديث واجهة التلاوة لتشمل روابط الصوت
+// 2. واجهة التلاوة (من الباك إند)
 interface Submission {
   id: number;
   surah_name: string;
@@ -27,27 +29,32 @@ interface Submission {
 }
 
 export default function RecitationsPage() {
+  // --- إدارة الحالة (State Management) ---
   const [activeTab, setActiveTab] = useState<'new' | 'history'>('new');
   const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [chapters, setChapters] = useState<Chapter[]>([]); // قائمة السور من API
+  const [chapters, setChapters] = useState<Chapter[]>([]); 
   const [loadingHistory, setLoadingHistory] = useState(false);
   
-  // بيانات النموذج
-  const [selectedSurahId, setSelectedSurahId] = useState<number>(1); // الفاتحة افتراضياً
+  // حالات التفاعل (إشعارات وحذف)
+  const [notification, setNotification] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+
+  // بيانات نموذج التسجيل
+  const [selectedSurahId, setSelectedSurahId] = useState<number>(1);
   const [fromAyah, setFromAyah] = useState<number>(1);
   const [toAyah, setToAyah] = useState<number>(7);
   
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  // جلب البيانات عند التحميل
+  // --- التأثيرات (Effects) ---
   useEffect(() => {
-    // 1. جلب قائمة السور من API الخارجي
+    // 1. جلب قائمة السور
     axios.get('https://api.quran.com/api/v4/chapters?language=ar')
       .then(res => setChapters(res.data.chapters))
       .catch(err => console.error("فشل جلب السور:", err));
 
-    // 2. جلب سجل التلاوات
+    // 2. جلب السجل
     fetchHistory();
   }, []);
 
@@ -63,18 +70,18 @@ export default function RecitationsPage() {
     }
   };
 
-  // حساب عدد آيات السورة المختارة حالياً (مثل المكتبة تماماً)
+  // --- المنطق (Logic) ---
+
+  // حساب عدد الآيات ديناميكياً
   const currentSurahVerseCount = useMemo(() => {
     const surah = chapters.find(c => c.id === selectedSurahId);
     return surah ? surah.verses_count : 7;
   }, [selectedSurahId, chapters]);
 
-  // عند تغيير السورة، نصفر الآيات
+  // تغيير السورة وتصفير العدادات
   const handleSurahChange = (id: number) => {
     setSelectedSurahId(id);
     setFromAyah(1);
-    
-    // محاولة ضبط "إلى الآية" ليكون منطقياً (مثلاً الآية الأخيرة أو 10 آيات)
     const surah = chapters.find(c => c.id === id);
     const max = surah ? surah.verses_count : 7;
     setToAyah(max > 10 ? 10 : max); 
@@ -83,7 +90,10 @@ export default function RecitationsPage() {
   // إرسال التلاوة
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!audioFile) return alert("الرجاء تسجيل التلاوة أولاً");
+    if (!audioFile) {
+      //setNotification({ msg: "الرجاء تسجيل التلاوة أولاً", type: 'error' });
+      return;
+    }
 
     setUploading(true);
     try {
@@ -99,31 +109,40 @@ export default function RecitationsPage() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      alert("تم إرسال تلاوتك بنجاح! 🎉");
-      setAudioFile(null); // تصفير المسجل
-      setActiveTab('history'); // الانتقال للسجل
-      fetchHistory(); // تحديث القائمة
+      setNotification({ msg: "تم إرسال تلاوتك بنجاح! 🎉", type: 'success' });
+      setAudioFile(null);
+      setActiveTab('history');
+      fetchHistory();
     } catch (err) {
       console.error(err);
-      alert("حدث خطأ أثناء الرفع، حاول مرة أخرى.");
+      setNotification({ msg: "حدث خطأ أثناء الرفع، حاول مرة أخرى", type: 'error' });
     } finally {
       setUploading(false);
     }
   };
 
-  // حذف التلاوة
-  const handleDelete = async (id: number) => {
-    if (!window.confirm("هل أنت متأكد من حذف هذه التلاوة؟ لا يمكن التراجع عن هذا الإجراء.")) return;
+  // بدء عملية الحذف (فتح المودال)
+  const initiateDelete = (id: number) => {
+    setDeleteId(id);
+  };
+
+  // تأكيد الحذف (تنفيذ الطلب)
+  const confirmDelete = async () => {
+    if (!deleteId) return;
 
     try {
-      await apiClient.delete(`/reviews/delete-submission/${id}/`);
-      setSubmissions(prev => prev.filter(sub => sub.id !== id)); // تحديث الواجهة فوراً
+      await apiClient.delete(`/reviews/delete-submission/${deleteId}/`);
+      setSubmissions(prev => prev.filter(sub => sub.id !== deleteId));
+      setNotification({ msg: "تم حذف التلاوة بنجاح", type: 'success' });
     } catch (err) {
       console.error(err);
-      alert("فشل الحذف، حاول مرة أخرى.");
+      setNotification({ msg: "فشل الحذف، حاول مرة أخرى", type: 'error' });
+    } finally {
+      setDeleteId(null);
     }
   };
 
+  // --- الواجهة (JSX) ---
   return (
     <Layout title="تلاواتي">
       <div className="max-w-3xl mx-auto space-y-6">
@@ -154,7 +173,7 @@ export default function RecitationsPage() {
           </button>
         </div>
 
-        {/* --- تبويب: تسجيل جديد --- */}
+        {/* === تبويب: تسجيل جديد === */}
         {activeTab === 'new' && (
           <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-100 shadow-sm animate-fade-in">
             <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
@@ -164,7 +183,7 @@ export default function RecitationsPage() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               
-              {/* اختيار السورة (ديناميكي) */}
+              {/* اختيار السورة */}
               <div className="space-y-2">
                 <label className="block text-sm font-bold text-gray-700">السورة</label>
                 <select
@@ -180,7 +199,7 @@ export default function RecitationsPage() {
                 </select>
               </div>
 
-              {/* نطاق الآيات (ديناميكي) */}
+              {/* نطاق الآيات */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="block text-sm font-bold text-gray-700">من الآية</label>
@@ -228,7 +247,7 @@ export default function RecitationsPage() {
           </div>
         )}
 
-        {/* --- تبويب: السجل --- */}
+        {/* === تبويب: السجل === */}
         {activeTab === 'history' && (
           <div className="space-y-4 animate-fade-in">
             {submissions.length === 0 && !loadingHistory ? (
@@ -258,9 +277,8 @@ export default function RecitationsPage() {
                     </div>
                     <div className="flex items-center gap-2">
                        <StatusBadge status={sub.status} />
-                       {/* زر الحذف */}
                        <button 
-                         onClick={() => handleDelete(sub.id)}
+                         onClick={() => initiateDelete(sub.id)}
                          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                          title="حذف التلاوة"
                        >
@@ -269,7 +287,7 @@ export default function RecitationsPage() {
                     </div>
                   </div>
 
-                  {/* مشغل صوت الطالب (تلاوتي) */}
+                  {/* مشغل صوت الطالب */}
                   <div className="bg-gray-50 rounded-xl p-3 mb-4 flex items-center gap-3 border border-gray-200">
                     <div className="p-2 bg-white rounded-full text-emerald-600 shadow-sm">
                       <PlayCircle size={20} />
@@ -280,7 +298,7 @@ export default function RecitationsPage() {
                     </div>
                   </div>
 
-                  {/* منطقة ملاحظات المشرف */}
+                  {/* ملاحظات المشرف */}
                   {sub.status === 'completed' && (
                     <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 relative overflow-hidden mt-4">
                       <div className="flex items-center gap-2 mb-3 border-b border-emerald-100 pb-2">
@@ -296,14 +314,14 @@ export default function RecitationsPage() {
                         </div>
                       </div>
 
-                      {/* الملاحظات النصية */}
+                      {/* نص الملاحظة */}
                       {sub.instructor_notes && (
                         <p className="text-sm text-gray-700 leading-relaxed mb-3 bg-white p-3 rounded-lg border border-emerald-100/50 shadow-sm">
                           "{sub.instructor_notes}"
                         </p>
                       )}
 
-                      {/* الملاحظات الصوتية (للمشرف) */}
+                      {/* صوت المشرف */}
                       {sub.instructor_audio && (
                         <div className="bg-white rounded-lg p-2 border border-emerald-100/50 flex items-center gap-2">
                           <span className="text-[10px] font-bold text-emerald-600 px-2">رد صوتي:</span>
@@ -323,11 +341,31 @@ export default function RecitationsPage() {
           </div>
         )}
       </div>
+
+      {/* --- نوافذ التفاعل (Toast & Modal) --- */}
+      {notification && (
+        <Toast 
+          message={notification.msg} 
+          type={notification.type} 
+          onClose={() => setNotification(null)} 
+        />
+      )}
+
+      <ConfirmModal
+        isOpen={!!deleteId}
+        title="حذف التلاوة"
+        message="هل أنت متأكد أنك تريد حذف هذه التلاوة؟ سيتم حذف التسجيل والملاحظات المرتبطة به نهائياً."
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteId(null)}
+        isDanger={true}
+        confirmText="نعم، احذف"
+      />
+
     </Layout>
   );
 }
 
-// مكون الحالة
+// مكون حالة الطلب (Badge)
 function StatusBadge({ status }: { status: string }) {
   const config = {
     pending: { bg: 'bg-amber-50', text: 'text-amber-600', icon: Clock, label: 'قيد الانتظار' },
