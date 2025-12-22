@@ -1,4 +1,4 @@
-from rest_framework.generics import ListCreateAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.parsers import MultiPartParser, FormParser
 from .models import RecitationSubmission
@@ -27,11 +27,17 @@ class PendingReviewsView(ListAPIView):
         ).order_by('created_at') # الأقدم أولاً ليتم تصحيحه أولاً
 
 # 3. (للمشرف) إرسال التصحيح
-class SubmitFeedbackView(UpdateAPIView):
+class SubmitFeedbackView(RetrieveUpdateAPIView):
     permission_classes = [IsAdminUser]
     queryset = RecitationSubmission.objects.all()
-    serializer_class = FeedbackSerializer
     lookup_field = 'id'
+
+    def get_serializer_class(self):
+        # في حالة العرض (GET)، نستخدم المحول الكامل لنرى بيانات الطالب وملف الصوت
+        if self.request.method == 'GET':
+            return RecitationSubmissionSerializer
+        # في حالة التعديل (PUT/PATCH)، نستخدم محول الملاحظات فقط
+        return FeedbackSerializer
 
 class StudentSubmissionsView(ListAPIView):
     permission_classes = [IsAuthenticated]
