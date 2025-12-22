@@ -1,105 +1,142 @@
-import { useEffect, useState } from 'react';
-import { Users, Award, Clock } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Mic, Clock, ChevronLeft, User, Calendar, Loader2, CheckCircle2 } from 'lucide-react';
 import apiClient from '../api/apiClient';
-import Layout from '../components/Layout'; // استيراد
+import Layout from '../components/Layout';
 
-interface Student {
+interface PendingReview {
   id: number;
-  username: string;
-  email: string;
-  total_memorized: number;
-  last_activity: string | null;
+  student_name: string;
+  surah_name: string;
+  from_ayah: number;
+  to_ayah: number;
+  created_at: string;
+  status: 'pending' | 'in_progress';
 }
 
 export default function SupervisorPage() {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const [reviews, setReviews] = useState<PendingReview[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    apiClient.get('/auth/students-progress/')
-      .then(res => {
-        setStudents(res.data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        if (err.response && err.response.status === 403) {
-          setError("عذراً، ليس لديك صلاحية للوصول لهذه الصفحة.");
-        } else {
-          setError("فشل جلب بيانات الطلاب.");
-        }
-        setLoading(false);
-      });
+    fetchPendingReviews();
   }, []);
 
-  if (loading) return (
-    <Layout title="إشراف">
-      <div className="text-center py-10">جاري التحميل...</div>
-    </Layout>
-  );
+  const fetchPendingReviews = async () => {
+    try {
+      const res = await apiClient.get('/reviews/pending-reviews/');
+      setReviews(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  if (error) return (
-    <Layout title="إشراف">
-      <div className="min-h-[50vh] flex flex-col items-center justify-center text-center">
-        <div className="text-red-600 text-xl font-bold mb-4">⛔ {error}</div>
-      </div>
-    </Layout>
-  );
+  // دالة مساعدة لحساب الوقت المنقضي
+  const getTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) return 'منذ لحظات';
+    const minutes = Math.floor(diffInSeconds / 60);
+    if (minutes < 60) return `منذ ${minutes} دقيقة`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `منذ ${hours} ساعة`;
+    const days = Math.floor(hours / 24);
+    return `منذ ${days} يوم`;
+  };
+
+  // تحديد لون الوقت (أحمر إذا تأخر أكثر من 24 ساعة)
+  const isLate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const hours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+    return hours >= 24;
+  };
 
   return (
-    <Layout title="لوحة المشرف">
-      <div className="space-y-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-1 flex items-center gap-2">
-            <Users className="text-emerald-600" />
-            متابعة الطلاب
-          </h1>
-          <p className="text-gray-500 text-sm">إحصائيات وتقدم الطلاب المسجلين</p>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-right min-w-[600px]">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-4 text-gray-600 font-bold text-sm">الطالب</th>
-                  <th className="px-6 py-4 text-gray-600 font-bold text-sm">البريد</th>
-                  <th className="px-6 py-4 text-gray-600 font-bold text-sm">المحفوظ (أثمان)</th>
-                  <th className="px-6 py-4 text-gray-600 font-bold text-sm">آخر نشاط</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {students.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="px-6 py-8 text-center text-gray-400">
-                      لا يوجد طلاب مسجلين حتى الآن.
-                    </td>
-                  </tr>
-                ) : (
-                  students.map(student => (
-                    <tr key={student.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 font-medium text-gray-800">{student.username}</td>
-                      <td className="px-6 py-4 text-gray-500 text-sm">{student.email}</td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">
-                          <Award size={12} />
-                          {student.total_memorized}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        <span className="flex items-center gap-1">
-                          <Clock size={14} />
-                          {student.last_activity || '-'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+    <Layout title="مهام الإشراف">
+      <div className="max-w-5xl mx-auto space-y-6 pb-20">
+        
+        {/* رأس الصفحة */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+              <CheckCircle2 className="text-emerald-600" />
+              تلاوات بانتظار التصحيح
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">لديك {reviews.length} مهام معلقة اليوم</p>
           </div>
         </div>
+
+        {/* المحتوى */}
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <Loader2 className="animate-spin text-emerald-600" size={32} />
+          </div>
+        ) : reviews.length === 0 ? (
+          // حالة عدم وجود مهام (Empty State)
+          <div className="bg-white rounded-3xl p-12 text-center border border-gray-100 shadow-sm flex flex-col items-center animate-fade-in">
+            <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-6">
+              <CheckCircle2 className="text-emerald-500" size={40} />
+            </div>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">أحسنت! لا توجد مهام معلقة</h3>
+            <p className="text-gray-500">لقد قمت بتصحيح جميع التلاوات المرسلة.</p>
+          </div>
+        ) : (
+          // شبكة البطاقات
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {reviews.map((review) => (
+              <div 
+                key={review.id} 
+                className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-all group animate-scale-in"
+              >
+                {/* الجزء العلوي: الطالب والوقت */}
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 border border-gray-200">
+                      <User size={20} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-800 text-sm">{review.student_name || 'طالب مجتهد'}</h4>
+                      <span className={`text-[10px] font-bold flex items-center gap-1 ${isLate(review.created_at) ? 'text-red-500' : 'text-gray-400'}`}>
+                        <Clock size={10} />
+                        {getTimeAgo(review.created_at)}
+                      </span>
+                    </div>
+                  </div>
+                  {/* حالة الاستعجال */}
+                  {isLate(review.created_at) && (
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" title="متأخر"></span>
+                  )}
+                </div>
+
+                {/* تفاصيل المهمة */}
+                <div className="bg-gray-50 rounded-xl p-3 mb-4 border border-gray-100">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Mic size={14} className="text-emerald-600" />
+                    <span className="text-xs font-bold text-gray-700">سورة {review.surah_name}</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mr-6">
+                    من الآية {review.from_ayah} إلى الآية {review.to_ayah}
+                  </p>
+                </div>
+
+                {/* زر الإجراء */}
+                <button
+                  onClick={() => navigate(`/supervisor/review/${review.id}`)}
+                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors shadow-lg shadow-emerald-100"
+                >
+                  <span>بدء التصحيح</span>
+                  <ChevronLeft size={16} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </Layout>
   );
