@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Mic, History, Star, CheckCircle2, Clock, AlertCircle, Trash2, PlayCircle, User } from 'lucide-react';
 import axios from 'axios';
-import AudioRecorder from '../components/AudioRecorder'; // تأكد من مسار المسجل
+import AudioRecorder from '../components/AudioRecorder';
 import apiClient from '../api/apiClient';
 import Layout from '../components/Layout';
-import Toast from '../components/Toast'; // تأكد من مسار Toast
-import ConfirmModal from '../components/ConfirmModal'; // تأكد من مسار ConfirmModal
+import Toast from '../components/Toast';
+import ConfirmModal from '../components/ConfirmModal';
 
 // 1. واجهة السورة (من API المصحف)
 interface Chapter {
@@ -14,7 +14,7 @@ interface Chapter {
   verses_count: number;
 }
 
-// 2. واجهة التلاوة (من الباك إند)
+// 2. واجهة التلاوة
 interface Submission {
   id: number;
   surah_name: string;
@@ -35,7 +35,7 @@ export default function RecitationsPage() {
   const [chapters, setChapters] = useState<Chapter[]>([]); 
   const [loadingHistory, setLoadingHistory] = useState(false);
   
-  // حالات التفاعل (إشعارات وحذف)
+  // حالات التفاعل
   const [notification, setNotification] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
@@ -49,11 +49,12 @@ export default function RecitationsPage() {
 
   // --- التأثيرات (Effects) ---
   useEffect(() => {
-
+    // 1. جلب قائمة السور
     axios.get('https://api.quran.com/api/v4/chapters?language=ar')
       .then(res => setChapters(res.data.chapters))
       .catch(err => console.error("فشل جلب السور:", err));
 
+    // 2. جلب السجل
     fetchHistory();
   }, []);
 
@@ -66,7 +67,6 @@ export default function RecitationsPage() {
       console.error(err);
     } finally {
       setLoadingHistory(false);
-
     }
   };
 
@@ -77,7 +77,6 @@ export default function RecitationsPage() {
     return surah ? surah.verses_count : 7;
   }, [selectedSurahId, chapters]);
 
-  // تغيير السورة وتصفير العدادات
   const handleSurahChange = (id: number) => {
     setSelectedSurahId(id);
     setFromAyah(1);
@@ -86,11 +85,10 @@ export default function RecitationsPage() {
     setToAyah(max > 10 ? 10 : max); 
   };
 
-  // إرسال التلاوة
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!audioFile) {
-      //setNotification({ msg: "الرجاء تسجيل التلاوة أولاً", type: 'error' });
+      setNotification({ msg: "الرجاء تسجيل التلاوة أولاً", type: 'error' });
       return;
     }
 
@@ -120,12 +118,10 @@ export default function RecitationsPage() {
     }
   };
 
-  // بدء عملية الحذف (فتح المودال)
   const initiateDelete = (id: number) => {
     setDeleteId(id);
   };
 
-  // تأكيد الحذف (تنفيذ الطلب)
   const confirmDelete = async () => {
     if (!deleteId) return;
 
@@ -144,7 +140,7 @@ export default function RecitationsPage() {
   // --- الواجهة (JSX) ---
   return (
     <Layout title="تلاواتي">
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-3xl mx-auto space-y-6 pb-20">
         
         {/* التبويبات */}
         <div className="bg-white p-1.5 rounded-2xl shadow-sm border border-gray-100 flex">
@@ -182,7 +178,6 @@ export default function RecitationsPage() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               
-              {/* اختيار السورة */}
               <div className="space-y-2">
                 <label className="block text-sm font-bold text-gray-700">السورة</label>
                 <select
@@ -198,7 +193,6 @@ export default function RecitationsPage() {
                 </select>
               </div>
 
-              {/* نطاق الآيات */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="block text-sm font-bold text-gray-700">من الآية</label>
@@ -226,7 +220,6 @@ export default function RecitationsPage() {
                 </div>
               </div>
 
-              {/* المسجل */}
               <div className="pt-6 border-t border-gray-100 mt-6">
                 <div className="bg-emerald-50/50 rounded-2xl p-6 border border-emerald-100/50">
                    <label className="block text-sm font-bold text-gray-700 mb-4 text-center">المسجل الصوتي</label>
@@ -234,7 +227,6 @@ export default function RecitationsPage() {
                 </div>
               </div>
 
-              {/* زر الإرسال */}
               <button
                 type="submit"
                 disabled={uploading || !audioFile}
@@ -297,14 +289,24 @@ export default function RecitationsPage() {
                     </div>
                   </div>
 
-                  {/* ملاحظات المشرف */}
-                  {sub.status === 'completed' && (
-                    <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 relative overflow-hidden mt-4">
-                      <div className="flex items-center gap-2 mb-3 border-b border-emerald-100 pb-2">
-                        <div className="p-1 bg-emerald-100 rounded-full text-emerald-700">
+                  {/* منطقة ملاحظات المشرف - التعديل هنا: تظهر للمكتمل والمرفوض */}
+                  {(sub.status === 'completed' || sub.status === 'rejected') && (
+                    <div className={`p-4 rounded-xl relative overflow-hidden mt-4 border ${
+                        sub.status === 'completed' 
+                        ? 'bg-emerald-50/50 border-emerald-100' 
+                        : 'bg-red-50/50 border-red-100' // لون أحمر خفيف عند الرفض
+                    }`}>
+                      <div className={`flex items-center gap-2 mb-3 pb-2 border-b ${
+                          sub.status === 'completed' ? 'border-emerald-100' : 'border-red-100'
+                      }`}>
+                        <div className={`p-1 rounded-full ${
+                            sub.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
+                        }`}>
                           <User size={14} />
                         </div>
-                        <span className="text-xs font-bold text-emerald-800">تصحيح الشيخ</span>
+                        <span className={`text-xs font-bold ${
+                            sub.status === 'completed' ? 'text-emerald-800' : 'text-red-800'
+                        }`}>تصحيح الشيخ</span>
                         
                         <div className="flex text-amber-400 mr-auto">
                           {Array.from({ length: 5 }).map((_, i) => (
@@ -313,17 +315,20 @@ export default function RecitationsPage() {
                         </div>
                       </div>
 
-                      {/* نص الملاحظة */}
-                      {sub.instructor_notes && (
-                        <p className="text-sm text-gray-700 leading-relaxed mb-3 bg-white p-3 rounded-lg border border-emerald-100/50 shadow-sm">
+                      {/* الملاحظات النصية */}
+                      {sub.instructor_notes ? (
+                        <p className="text-sm text-gray-700 leading-relaxed mb-3 bg-white p-3 rounded-lg border border-gray-100 shadow-sm">
                           "{sub.instructor_notes}"
                         </p>
+                      ) : (
+                        // رسالة في حالة عدم وجود ملاحظات
+                        <p className="text-xs text-gray-400 italic mb-3">لا توجد ملاحظات مكتوبة</p>
                       )}
 
-                      {/* صوت المشرف */}
+                      {/* الملاحظات الصوتية (للمشرف) */}
                       {sub.instructor_audio && (
-                        <div className="bg-white rounded-lg p-2 border border-emerald-100/50 flex items-center gap-2">
-                          <span className="text-[10px] font-bold text-emerald-600 px-2">رد صوتي:</span>
+                        <div className="bg-white rounded-lg p-2 border border-gray-100 flex items-center gap-2">
+                          <span className="text-[10px] font-bold text-gray-600 px-2">رد صوتي:</span>
                           <audio controls src={sub.instructor_audio} className="w-full h-8" />
                         </div>
                       )}
@@ -331,7 +336,7 @@ export default function RecitationsPage() {
                   )}
                   
                   <div className="mt-4 pt-3 border-t border-gray-50 flex justify-between items-center text-[10px] text-gray-400">
-                    <span>رقم الطلب #{sub.id}</span>
+                    {/* تم حذف رقم الطلب بناءً على طلبك */}
                     <span>{new Date(sub.created_at).toLocaleDateString('ar-MA')}</span>
                   </div>
                 </div>
@@ -341,7 +346,7 @@ export default function RecitationsPage() {
         )}
       </div>
 
-      {/* --- نوافذ التفاعل (Toast & Modal) --- */}
+      {/* --- نوافذ التفاعل --- */}
       {notification && (
         <Toast 
           message={notification.msg} 

@@ -10,6 +10,7 @@ import BadgesPage from './pages/BadgesPage';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
 import RecitationsPage from './pages/RecitationsPage';
+import SupervisorReviewPage from './pages/SupervisorReviewPage';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/recitations" element={<RecitationsPage />} />
+        <Route path="/supervisor/review/:id" element={<SupervisorReviewPage />} />
       </Route>
     </Routes>
   );
