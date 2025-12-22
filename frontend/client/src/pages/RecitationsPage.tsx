@@ -7,14 +7,11 @@ import Layout from '../components/Layout';
 import Toast from '../components/Toast';
 import ConfirmModal from '../components/ConfirmModal';
 
-// 1. واجهة السورة (من API المصحف)
 interface Chapter {
   id: number;
   name_arabic: string;
   verses_count: number;
 }
-
-// 2. واجهة التلاوة
 interface Submission {
   id: number;
   surah_name: string;
