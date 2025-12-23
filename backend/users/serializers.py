@@ -66,7 +66,6 @@ class StudentSummarySerializer(serializers.ModelSerializer):
             return last_log.date if last_log else None
         return None
 
-# 3. سيريالايزر تغيير كلمة المرور (للمستخدم المسجل)
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
@@ -76,6 +75,5 @@ class ChangePasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError("كلمة المرور الجديدة قصيرة جداً.")
         return value
 
-# 4. سيريالايزر طلب استعادة كلمة المرور (نسيت كلمة السر)
 class ResetPasswordRequestSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
