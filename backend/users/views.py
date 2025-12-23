@@ -62,7 +62,6 @@ class ChangePasswordView(APIView):
             if not user.check_password(serializer.data.get("old_password")):
                 return Response({"old_password": ["كلمة المرور الحالية غير صحيحة."]}, status=status.HTTP_400_BAD_REQUEST)
             
-            # تعيين الجديدة
             user.set_password(serializer.data.get("new_password"))
             user.save()
             return Response({"message": "تم تغيير كلمة المرور بنجاح."}, status=status.HTTP_200_OK)
