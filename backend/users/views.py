@@ -69,7 +69,6 @@ class ChangePasswordView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# --- 5. طلب رابط استعادة كلمة المرور (نسيت كلمة السر) ---
 class RequestPasswordResetView(APIView):
     permission_classes = [AllowAny]
 
