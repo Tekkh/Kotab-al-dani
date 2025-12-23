@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { User, Mail, Calendar, Save, Loader2, ShieldCheck, Target, Lock, AlertCircle } from 'lucide-react';
+import { User, Calendar, Save, Loader2, ShieldCheck, Target, Lock, AlertCircle } from 'lucide-react';
 import apiClient from '../api/apiClient';
 import Layout from '../components/Layout';
 
