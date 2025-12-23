@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 import re
 
-# 1. سيريالايزر تسجيل مستخدم جديد
+
 class UserSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True, required=True)
 
@@ -44,7 +44,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
         return user
 
-# 2. سيريالايزر ملخص الطالب (للوحة المشرف)
+
 class StudentSummarySerializer(serializers.ModelSerializer):
     total_memorized = serializers.SerializerMethodField()
     last_activity = serializers.SerializerMethodField()
@@ -54,13 +54,13 @@ class StudentSummarySerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'total_memorized', 'last_activity']
 
     def get_total_memorized(self, obj):
-        # التأكد من وجود العلاقة قبل محاولة الوصول إليها لتجنب الأخطاء
+
         if hasattr(obj, 'thumn_progress'):
             return obj.thumn_progress.filter(status='memorized').count()
         return 0
 
     def get_last_activity(self, obj):
-        # التأكد من وجود العلاقة
+
         if hasattr(obj, 'logs'):
             last_log = obj.logs.order_by('-date').first()
             return last_log.date if last_log else None
