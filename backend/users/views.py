@@ -58,7 +58,7 @@ class ChangePasswordView(APIView):
         serializer = ChangePasswordSerializer(data=request.data)
         if serializer.is_valid():
             user = request.user
-            # التحقق من كلمة المرور القديمة
+        
             if not user.check_password(serializer.data.get("old_password")):
                 return Response({"old_password": ["كلمة المرور الحالية غير صحيحة."]}, status=status.HTTP_400_BAD_REQUEST)
             
