@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { 
   Save, Megaphone, User, Loader2, ShieldCheck, 
-  Calendar, Clock, Plus, Edit2, Trash2, X, CheckCircle 
+  Calendar, Clock, Plus, Edit2, Trash2, X, CheckCircle, Lock, AlertCircle 
 } from 'lucide-react';
 import apiClient from '../api/apiClient';
 import Layout from '../components/Layout';
 
-// --- الواجهات (Interfaces) ---
 interface SiteSettings {
   announcement_text: string;
   is_announcement_active: boolean;
@@ -29,33 +28,34 @@ interface Lesson {
 }
 
 export default function SettingsPage() {
-  // --- الحالات (State) ---
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   
-  // حالات التحميل
   const [loading, setLoading] = useState(true);
   const [savingSettings, setSavingSettings] = useState(false);
   const [savingProfile, setSavingProfile] = useState(false);
   
-  // حالة المودال (النافذة المنبثقة) للدروس
+  // Password State
+  const [passData, setPassData] = useState({ old_password: '', new_password: '' });
+  const [passMsg, setPassMsg] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const [passLoading, setPassLoading] = useState(false);
+
+  // Lesson Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentLesson, setCurrentLesson] = useState<Lesson>({ 
     day_of_week: '', time_description: '', lesson_title: '', is_active: true, order: 0 
   });
   const [savingLesson, setSavingLesson] = useState(false);
 
-  // رسائل التنبيه
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-  // --- جلب البيانات ---
   const fetchData = async () => {
     try {
       const [settingsRes, profileRes, lessonsRes] = await Promise.all([
         apiClient.get('/site-settings/'),
         apiClient.get('/my-profile/'),
-        apiClient.get('/lessons/') // جلب الدروس
+        apiClient.get('/lessons/')
       ]);
       
       setSettings(settingsRes.data);
@@ -71,8 +71,6 @@ export default function SettingsPage() {
   useEffect(() => {
     fetchData();
   }, []);
-
-  // --- دوال الحفظ والتحديث ---
 
   const handleSaveSettings = async () => {
     if (!settings) return;
@@ -106,13 +104,25 @@ export default function SettingsPage() {
     }
   };
 
-  // --- دوال إدارة الدروس ---
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPassMsg(null);
+    setPassLoading(true);
+    try {
+      await apiClient.post('/auth/change-password/', passData);
+      setPassMsg({ type: 'success', text: 'تم تحديث كلمة المرور' });
+      setPassData({ old_password: '', new_password: '' });
+    } catch (err) {
+      setPassMsg({ type: 'error', text: 'تأكد من كلمة المرور الحالية' });
+    } finally {
+      setPassLoading(false);
+    }
+  };
 
   const openLessonModal = (lesson?: Lesson) => {
     if (lesson) {
       setCurrentLesson(lesson);
     } else {
-      // درس جديد
       setCurrentLesson({ day_of_week: '', time_description: '', lesson_title: '', is_active: true, order: lessons.length + 1 });
     }
     setIsModalOpen(true);
@@ -123,16 +133,14 @@ export default function SettingsPage() {
     setSavingLesson(true);
     try {
       if (currentLesson.id) {
-        // تعديل
         await apiClient.put(`/lessons/${currentLesson.id}/`, currentLesson);
         setMessage({ type: 'success', text: 'تم تعديل الدرس بنجاح' });
       } else {
-        // إضافة جديد
         await apiClient.post('/lessons/', currentLesson);
         setMessage({ type: 'success', text: 'تم إضافة الدرس الجديد' });
       }
       setIsModalOpen(false);
-      fetchData(); // إعادة تحميل البيانات
+      fetchData();
     } catch (err) {
       setMessage({ type: 'error', text: 'حدث خطأ أثناء حفظ الدرس' });
     } finally {
@@ -155,7 +163,6 @@ export default function SettingsPage() {
     try {
       const newStatus = !lesson.is_active;
       await apiClient.patch(`/lessons/${lesson.id}/`, { is_active: newStatus });
-      // تحديث الواجهة محلياً للسرعة
       setLessons(lessons.map(l => l.id === lesson.id ? { ...l, is_active: newStatus } : l));
     } catch (err) {
       console.error(err);
@@ -168,7 +175,6 @@ export default function SettingsPage() {
     <Layout title="إعدادات المشرف">
       <div className="max-w-6xl mx-auto space-y-8 pb-10">
         
-        {/* رأس الصفحة */}
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
@@ -179,7 +185,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* رسائل التنبيه */}
         {message && (
           <div className={`p-4 rounded-xl text-sm font-bold flex items-center gap-2 ${message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
             <CheckCircle size={18} />
@@ -189,9 +194,11 @@ export default function SettingsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* 1. العمود الأيمن: الملف الشخصي */}
+          {/* العمود الأيمن: البيانات الشخصية والأمان */}
           <div className="lg:col-span-1 space-y-6">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sticky top-24">
+              
+              {/* قسم البيانات الشخصية */}
               <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
                 <div className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
                   <User size={20} />
@@ -225,16 +232,67 @@ export default function SettingsPage() {
                 
                 <button type="submit" disabled={savingProfile} className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-800 hover:bg-gray-900 text-white font-bold rounded-lg transition-colors disabled:opacity-70 text-sm">
                   {savingProfile ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
-                  تحديث بياناتي
+                  تحديث البيانات
                 </button>
               </form>
+
+              {/* فاصل */}
+              <div className="my-8 border-t border-gray-100 relative">
+                 <span className="absolute left-1/2 -translate-x-1/2 -top-3 bg-white px-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                    الأمان
+                 </span>
+              </div>
+
+              {/* قسم كلمة المرور */}
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <Lock size={16} className="text-orange-500" />
+                  <h3 className="font-bold text-gray-800 text-sm">تغيير كلمة المرور</h3>
+                </div>
+
+                <form onSubmit={handleChangePassword} className="space-y-3">
+                  {passMsg && (
+                    <div className={`p-2 rounded-lg text-xs flex items-center gap-1 ${passMsg.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                      <AlertCircle size={14} /> {passMsg.text}
+                    </div>
+                  )}
+                  <div>
+                    <input
+                      type="password"
+                      placeholder="كلمة المرور الحالية"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-orange-500 outline-none text-sm transition-all"
+                      value={passData.old_password}
+                      onChange={e => setPassData({...passData, old_password: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="password"
+                      placeholder="كلمة المرور الجديدة"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:border-orange-500 outline-none text-sm transition-all"
+                      value={passData.new_password}
+                      onChange={e => setPassData({...passData, new_password: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <button 
+                    type="submit" 
+                    disabled={passLoading}
+                    className="w-full py-2 bg-white border border-gray-200 text-gray-600 hover:text-orange-600 hover:border-orange-200 font-bold rounded-lg transition-all disabled:opacity-50 text-xs flex items-center justify-center gap-2 shadow-sm"
+                  >
+                     {passLoading ? <Loader2 className="animate-spin" size={14} /> : 'تحديث كلمة المرور'}
+                  </button>
+                </form>
+              </div>
+
             </div>
           </div>
 
-          {/* 2. العمود الأيسر: إعدادات الموقع + الجدول */}
+          {/* العمود الأيسر: إعدادات الموقع + الجدول */}
           <div className="lg:col-span-2 space-y-8">
             
-            {/* أ) شريط الإعلانات */}
+            {/* شريط الإعلانات */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="bg-gradient-to-r from-orange-50 to-white px-6 py-4 border-b border-orange-100 flex justify-between items-center">
                 <h3 className="font-bold text-gray-800 flex items-center gap-2">
@@ -262,13 +320,13 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            {/* ب) إدارة الجدول الأسبوعي */}
+            {/* إدارة الجدول */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                 <h3 className="font-bold text-gray-800 flex items-center gap-2">
                   <Calendar size={20} className="text-emerald-600" />
                   <span className="hidden sm:inline">إدارة الجدول الأسبوعي</span>
-                  <span className="sm:hidden">جدول الدروس الأسبوعي</span>
+                  <span className="sm:hidden">جدول الدروس</span>
                 </h3>
                 <button 
                   onClick={() => openLessonModal()}
@@ -279,12 +337,10 @@ export default function SettingsPage() {
               </div>
 
               <div className="p-0">
-                {/* 1. عرض الموبايل (بطاقات) - يظهر فقط في الشاشات الصغيرة */}
+                {/* عرض الموبايل */}
                 <div className="md:hidden space-y-4 p-4">
                   {lessons.length > 0 ? lessons.map((lesson) => (
                     <div key={lesson.id} className="border border-gray-200 rounded-xl p-4 bg-white shadow-sm flex flex-col gap-3">
-                      
-                      {/* رأس البطاقة: اليوم والحالة */}
                       <div className="flex justify-between items-center border-b border-gray-100 pb-2">
                         <span className="font-bold text-gray-800 bg-gray-100 px-3 py-1 rounded-lg text-sm">
                           {lesson.day_of_week}
@@ -296,8 +352,6 @@ export default function SettingsPage() {
                           {lesson.is_active ? 'نشط' : 'معطل'}
                         </button>
                       </div>
-
-                      {/* محتوى الدرس */}
                       <div>
                         <h4 className="font-bold text-emerald-700 text-lg mb-1">{lesson.lesson_title}</h4>
                         <div className="flex items-center gap-2 text-gray-500 text-sm">
@@ -305,19 +359,11 @@ export default function SettingsPage() {
                           <span>{lesson.time_description}</span>
                         </div>
                       </div>
-
-                      {/* أزرار التحكم */}
                       <div className="flex gap-2 pt-2 border-t border-gray-100">
-                        <button 
-                          onClick={() => openLessonModal(lesson)} 
-                          className="flex-1 flex items-center justify-center gap-2 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-bold hover:bg-blue-100 transition-colors"
-                        >
+                        <button onClick={() => openLessonModal(lesson)} className="flex-1 flex items-center justify-center gap-2 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-bold hover:bg-blue-100 transition-colors">
                           <Edit2 size={16} /> تعديل
                         </button>
-                        <button 
-                          onClick={() => handleDeleteLesson(lesson.id!)} 
-                          className="flex-1 flex items-center justify-center gap-2 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-bold hover:bg-red-100 transition-colors"
-                        >
+                        <button onClick={() => handleDeleteLesson(lesson.id!)} className="flex-1 flex items-center justify-center gap-2 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-bold hover:bg-red-100 transition-colors">
                           <Trash2 size={16} /> حذف
                         </button>
                       </div>
@@ -327,7 +373,7 @@ export default function SettingsPage() {
                   )}
                 </div>
 
-                {/* 2. عرض الحاسوب (جدول) - يظهر فقط في الشاشات المتوسطة والكبيرة */}
+                {/* عرض الجدول للحاسوب */}
                 <div className="hidden md:block overflow-x-auto">
                   <table className="w-full text-sm text-right">
                     <thead className="bg-gray-50 text-gray-600 font-bold border-b border-gray-100">
@@ -378,7 +424,7 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* --- Modal (نافذة إضافة/تعديل الدرس) --- */}
+        {/* Modal */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-fade-in">

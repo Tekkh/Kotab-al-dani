@@ -4,7 +4,8 @@ from .views import (
     PendingReviewsView, 
     SubmitFeedbackView, 
     StudentSubmissionsView,
-    DeleteSubmissionView
+    DeleteSubmissionView,
+    SupervisorArchiveView
 )
 
 urlpatterns = [
@@ -14,4 +15,5 @@ urlpatterns = [
     path('submit-feedback/<int:id>/', SubmitFeedbackView.as_view(), name='submit-feedback'),
     path('my-submissions/', StudentSubmissionsView.as_view(), name='my-submissions'),
     path('delete-submission/<int:id>/', DeleteSubmissionView.as_view(), name='delete-submission'),
-]
+    path('supervisor-archive/', SupervisorArchiveView.as_view(), name='supervisor-archive'),
+]   

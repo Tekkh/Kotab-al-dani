@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import logoImage from '../assets/Logo.svg';  
-import { AlertCircle, ArrowLeft } from 'lucide-react';
+import { AlertCircle, ArrowLeft, BookOpen } from 'lucide-react';
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('');
@@ -18,8 +17,6 @@ export default function RegisterPage() {
     e.preventDefault();
     setError(null);
 
-    
-    // 1. التحقق من المستخدم
     if (username.length < 4) {
       setError('اسم المستخدم قصير جداً (4 أحرف على الأقل).');
       return;
@@ -29,13 +26,11 @@ export default function RegisterPage() {
       return;
     }
 
-    // 2. التحقق من تطابق كلمة المرور
     if (password !== confirmPassword) {
       setError('كلمتا المرور غير متطابقتين.');
       return;
     }
 
-    // 3. التحقق من تعقيد كلمة المرور
     if (password.length < 8) {
       setError('كلمة المرور يجب أن تكون 8 خانات على الأقل.');
       return;
@@ -54,10 +49,8 @@ export default function RegisterPage() {
       navigate('/login');
     } catch (err: any) {
       console.error(err);
-      // عرض رسالة الخطأ القادمة من السيرفر إن وجدت
       const serverError = err.response?.data;
       if (serverError) {
-        // نحاول استخراج أول رسالة خطأ متاحة
         const firstKey = Object.keys(serverError)[0];
         const msg = Array.isArray(serverError[firstKey]) ? serverError[firstKey][0] : serverError[firstKey];
         setError(`خطأ: ${msg}`);
@@ -73,11 +66,10 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 font-cairo" dir="rtl">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
         
-        {/* اللوغو القابل للضغط (للعودة) */}
         <div className="flex justify-between items-center mb-8 border-b border-gray-50 pb-4">
           <div className="flex items-center gap-2">
-            <img src={logoImage} alt="Logo" className="w-8 h-8" />
-            <span className="font-bold text-gray-600 text-sm hidden sm:block">كُتّاب أبي عمرو الداني</span>
+            <BookOpen className="text-emerald-600" size={28} />
+            <span className="font-bold text-gray-800 text-lg hidden sm:block">كُتّاب الداني</span>
           </div>
           
           <Link to="/" className="flex items-center gap-1 text-gray-400 hover:text-emerald-600 transition-colors text-sm font-medium">
@@ -103,7 +95,7 @@ export default function RegisterPage() {
             <label className="block text-sm font-bold text-gray-700 mb-1">اسم المستخدم (باللاتينية)</label>
             <input
               type="text"
-              dir="ltr" // اتجاه الكتابة من اليسار
+              dir="ltr"
               placeholder="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -150,7 +142,6 @@ export default function RegisterPage() {
             </div>
           </div>
           
-          {/* تلميح لكلمة المرور */}
           <p className="text-xs text-gray-400 px-1">
             * يجب أن تحتوي على 8 رموز، رقم، ورمز خاص (!@#$)
           </p>

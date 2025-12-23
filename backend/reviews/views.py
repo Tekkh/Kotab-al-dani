@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -52,3 +54,17 @@ class DeleteSubmissionView(DestroyAPIView):
 
     def get_queryset(self):
         return RecitationSubmission.objects.filter(student=self.request.user)
+
+class SupervisorArchiveView(ListAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = RecitationSubmissionSerializer
+
+    def get_queryset(self):
+        # حساب تاريخ ما قبل 7 أيام
+        seven_days_ago = timezone.now() - timedelta(days=7)
+        
+        # نجلب فقط المكتملة أو المرفوضة + التي لم يمر عليها 7 أيام
+        return RecitationSubmission.objects.filter(
+            status__in=[RecitationSubmission.Status.COMPLETED, RecitationSubmission.Status.REJECTED],
+            updated_at__gte=seven_days_ago
+        ).order_by('-updated_at')
