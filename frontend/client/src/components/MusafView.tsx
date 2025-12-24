@@ -58,7 +58,7 @@ export default function MusafView() {
 
   // --- 2. دوال التحكم ---
   const getPageUrl = (pageNum: number) => 
-    `https://cdn.jsdelivr.net/gh/QuranHub/quran-pages-images@main/kfgqpc/warsh/${pageNum}.jpg`;
+    `https://cdn.jsdelivr.net/gh/Tekkh/quran-warsh@main/images/page${pageNum}.jpg`;
 
   const goToNextPage = useCallback(() => setPage(p => Math.min(604, p + 1)), []);
   const goToPrevPage = useCallback(() => setPage(p => Math.max(1, p - 1)), []);

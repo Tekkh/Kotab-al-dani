@@ -3,7 +3,7 @@ import apiClient from '../api/apiClient';
 import LogWirdModal from '../components/LogWirdModal';
 import PreviousProgressModal from '../components/PreviousProgressModal';
 import CelebrationModal, { type NewBadge } from '../components/CelebrationModal';
-import DeleteConfirmModal from '../components/DeleteConfirmModal'; // [جديد] استيراد
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
 import MusafView from '../components/MusafView';
 import { useAuth } from '../context/AuthContext';
 import SupervisorDashboard from './SupervisorDashboard';
@@ -204,7 +204,7 @@ export default function DashboardPage() {
               className="col-span-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-bold py-4 rounded-2xl border border-emerald-200 transition-all flex items-center justify-center gap-2 shadow-sm"
             >
               <Zap size={20} className="fill-emerald-700" />
-              تسجيل وِرد جديد
+              تسجيل ثمن جديد
             </button>
             
             <button 
@@ -218,7 +218,7 @@ export default function DashboardPage() {
 
           {/* سجل الأوراد */}
           <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-            <h3 className="font-bold text-gray-800 mb-3 border-b pb-2 px-2">آخر الأوراد</h3>
+            <h3 className="font-bold text-gray-800 mb-3 border-b pb-2 px-2">آخر الأثمان</h3>
             <div className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar px-1">
               {logs.length === 0 ? (
                 <p className="text-gray-400 text-sm text-center py-4">لا توجد سجلات بعد</p>

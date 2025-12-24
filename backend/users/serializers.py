@@ -2,7 +2,6 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 import re
 
-
 class UserSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True, required=True)
 
@@ -48,23 +47,28 @@ class UserSerializer(serializers.ModelSerializer):
 class StudentSummarySerializer(serializers.ModelSerializer):
     total_memorized = serializers.SerializerMethodField()
     last_activity = serializers.SerializerMethodField()
+    full_name = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'total_memorized', 'last_activity']
+        fields = ['id', 'username', 'first_name', 'last_name', 'full_name', 'email', 'total_memorized', 'last_activity']
 
     def get_total_memorized(self, obj):
-
         if hasattr(obj, 'thumn_progress'):
             return obj.thumn_progress.filter(status='memorized').count()
         return 0
 
     def get_last_activity(self, obj):
-
         if hasattr(obj, 'logs'):
             last_log = obj.logs.order_by('-date').first()
             return last_log.date if last_log else None
         return None
+
+    def get_full_name(self, obj):
+        """إرجاع الاسم والنسب، أو اسم المستخدم في حال عدم توفرهما"""
+        full = f"{obj.first_name} {obj.last_name}".strip()
+        return full if full else obj.username
+
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
@@ -74,6 +78,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         if len(value) < 8:
             raise serializers.ValidationError("كلمة المرور الجديدة قصيرة جداً.")
         return value
+
 
 class ResetPasswordRequestSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)

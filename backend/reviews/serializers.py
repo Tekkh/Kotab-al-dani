@@ -1,9 +1,13 @@
+from django.utils import timezone
 from rest_framework import serializers
 from .models import RecitationSubmission
 
-# 1. محول الطالب (للرفع والعرض)
 class RecitationSubmissionSerializer(serializers.ModelSerializer):
-    student_name = serializers.CharField(source='student.first_name', read_only=True) # لعرض اسم الطالب للمشرف
+    """
+    محول بيانات التلاوة (للعرض والرفع).
+    يعرض اسم الطالب الكامل للمشرف.
+    """
+    student_name = serializers.SerializerMethodField()
     
     class Meta:
         model = RecitationSubmission
@@ -14,20 +18,26 @@ class RecitationSubmissionSerializer(serializers.ModelSerializer):
             'instructor_rating', 'instructor_notes', 'instructor_audio',
             'created_at', 'reviewed_at'
         ]
-        # حقول يقرؤها الطالب فقط ولا يستطيع تعديلها
         read_only_fields = [
             'status', 'instructor_rating', 'instructor_notes', 
             'instructor_audio', 'created_at', 'reviewed_at'
         ]
 
-# 2. محول المشرف (لإرسال التقييم)
+    def get_student_name(self, obj):
+        """إرجاع الاسم الكامل للطالب (الاسم + النسب)"""
+        full_name = f"{obj.student.first_name} {obj.student.last_name}".strip()
+        return full_name if full_name else obj.student.username
+
+
 class FeedbackSerializer(serializers.ModelSerializer):
+    """
+    محول خاص بالمشرف لإرسال التقييم والملاحظات فقط.
+    """
     class Meta:
         model = RecitationSubmission
         fields = ['status', 'instructor_rating', 'instructor_notes', 'instructor_audio']
 
     def update(self, instance, validated_data):
         # تحديث وقت المراجعة تلقائياً عند الحفظ
-        from django.utils import timezone
         instance.reviewed_at = timezone.now()
         return super().update(instance, validated_data)

@@ -109,7 +109,7 @@ export default function SupervisorPage() {
             <div>
               <p className="text-sm font-bold text-amber-800">سياسة الأرشيف</p>
               <p className="text-xs text-amber-700 mt-1">
-                يتم الاحتفاظ بالتلاوات المصححة هنا لمدة 7 أيام فقط للمراجعة، ثم تختفي تلقائياً من لوحتك (لكنها تبقى في سجل الطالب).
+                يتم الاحتفاظ بالتلاوات المصححة هنا لمدة 7 أيام فقط للمراجعة، ثم تختفي تلقائياً من لوحتك.
               </p>
             </div>
           </div>
