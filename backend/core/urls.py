@@ -6,13 +6,11 @@ from django.conf.urls.static import static
 
 
 
-# Imports
 from lessons.views import WeeklyLessonViewSet, SiteSettingView
 from progress.views import ProgressLogViewSet, ThumnProgressViewSet, QuranStructureViewSet, SupervisorDashboardView
 from library.views import MatnViewSet, TajweedLessonViewSet, TafsirViewSet, quran_page_proxy, tafsir_proxy_view
 from gamification.views import UserBadgeViewSet, MyProfileView, SetPreviousProgressView, AllBadgesView
 
-# Router
 router = DefaultRouter()
 router.register(r'lessons', WeeklyLessonViewSet, basename='lesson')
 router.register(r'progress-logs', ProgressLogViewSet, basename='progresslog')
