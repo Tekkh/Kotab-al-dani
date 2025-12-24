@@ -20,7 +20,6 @@ router.register(r'thumn-progress', ThumnProgressViewSet, basename='thumnprogress
 router.register(r'quran-structure', QuranStructureViewSet, basename='quranstructure')
 router.register(r'my-badges', UserBadgeViewSet, basename='my-badges')
 
-#  تسجيل المكتبة
 router.register(r'library/matoon', MatnViewSet, basename='matn')
 router.register(r'library/tajweed', TajweedLessonViewSet, basename='tajweed')
 router.register(r'library/tafsir', TafsirViewSet, basename='tafsir')
