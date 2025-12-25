@@ -12,11 +12,9 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      // إرسال طلب استعادة كلمة المرور للباك إند
       await axios.post('http://127.0.0.1:8000/api/auth/password-reset/', { email });
       setSubmitted(true);
     } catch (err) {
-      // نظهر رسالة نجاح حتى لو فشل الطلب لأسباب أمنية (لمنع معرفة الإيميلات المسجلة)
       setSubmitted(true); 
     } finally {
       setLoading(false);

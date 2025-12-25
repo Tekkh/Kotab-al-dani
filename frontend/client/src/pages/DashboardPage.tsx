@@ -37,7 +37,6 @@ export default function DashboardPage() {
   const [isCelebrationOpen, setIsCelebrationOpen] = useState(false);
   const [newEarnedBadges, setNewEarnedBadges] = useState<NewBadge[]>([]);
 
-  // [جديد] حالة الحذف
   const [logToDelete, setLogToDelete] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -55,12 +54,10 @@ export default function DashboardPage() {
     setIsCelebrationOpen(true);
   };
 
-  // 1. بدلاً من الحذف فوراً، نفتح النافذة ونحفظ الـ ID
   const confirmDelete = (id: number) => {
     setLogToDelete(id);
   };
 
-  // 2. تنفيذ الحذف الفعلي عند الضغط على "نعم" في النافذة
   const executeDelete = async () => {
     if (!logToDelete) return;
     setIsDeleting(true);
@@ -68,7 +65,7 @@ export default function DashboardPage() {
       await apiClient.delete(`/progress-logs/${logToDelete}/`);
       setLogs(logs.filter(log => log.id !== logToDelete));
       fetchData(); 
-      setLogToDelete(null); // إغلاق النافذة
+      setLogToDelete(null);
     } catch (err) { 
       console.error(err); 
       alert("فشل الحذف");
@@ -118,9 +115,9 @@ export default function DashboardPage() {
         newBadges={newEarnedBadges}
       />
 
-      {/* [جديد] نافذة تأكيد الحذف */}
+      {/* نافذة تأكيد الحذف */}
       <DeleteConfirmModal 
-        isOpen={!!logToDelete} // تفتح إذا كان هناك ID
+        isOpen={!!logToDelete}
         onRequestClose={() => setLogToDelete(null)}
         onConfirm={executeDelete}
         loading={isDeleting}

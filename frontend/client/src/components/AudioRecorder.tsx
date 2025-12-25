@@ -19,7 +19,7 @@ export default function AudioRecorder({ onRecordingComplete }: AudioRecorderProp
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorderRef.current = new MediaRecorder(stream);
-      chunksRef.current = []; // تصفير البيانات القديمة
+      chunksRef.current = []; 
 
       mediaRecorderRef.current.ondataavailable = (e) => {
         if (e.data.size > 0) {
@@ -28,11 +28,9 @@ export default function AudioRecorder({ onRecordingComplete }: AudioRecorderProp
       };
 
       mediaRecorderRef.current.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: 'audio/webm' }); // أو audio/mp4
+        const blob = new Blob(chunksRef.current, { type: 'audio/webm' }); 
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
-        
-        // تحويل الـ Blob إلى ملف File ليقبله السيرفر
         const file = new File([blob], "recitation.webm", { type: 'audio/webm' });
         onRecordingComplete(file);
       };
@@ -66,7 +64,7 @@ export default function AudioRecorder({ onRecordingComplete }: AudioRecorderProp
   const resetRecording = () => {
     setAudioUrl(null);
     setRecordingTime(0);
-    onRecordingComplete(null as any); // تصفير الملف في الأب
+    onRecordingComplete(null as any);
   };
 
   // تنسيق الوقت (00:00)
