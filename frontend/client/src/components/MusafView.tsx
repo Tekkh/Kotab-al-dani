@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { 
-  ChevronRight, ChevronLeft, Search, Loader2, 
+  ChevronRight, ChevronLeft, Loader2, 
   BookOpen, Bookmark, Maximize2, Minimize2, 
   Layers, Save
 } from 'lucide-react';
