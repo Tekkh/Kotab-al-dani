@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  ArrowRight, User, BookOpen, Clock, 
-  PlayCircle, Mic, Save, AlertCircle, CheckCircle2 
+  ArrowRight, User, BookOpen, Clock,
+  Mic, Save, AlertCircle, CheckCircle2 
 } from 'lucide-react';
 import apiClient from '../api/apiClient';
 import Layout from '../components/Layout';
-import AudioRecorder from '../components/AudioRecorder'; // سنستخدمه لتسجيل رد المشرف
+import AudioRecorder from '../components/AudioRecorder'; 
 import Toast from '../components/Toast';
 
 interface ReviewData {
@@ -15,7 +15,7 @@ interface ReviewData {
   surah_name: string;
   from_ayah: number;
   to_ayah: number;
-  audio_file: string; // تلاوة الطالب
+  audio_file: string;
   created_at: string;
   instructor_audio?: string;
   instructor_notes?: string;
@@ -28,11 +28,10 @@ export default function SupervisorReviewPage() {
   const [data, setData] = useState<ReviewData | null>(null);
   const [loading, setLoading] = useState(true);
   
-  // حقول النموذج للمشرف
   const [notes, setNotes] = useState('');
   const [rating, setRating] = useState(5);
   const [instructorAudio, setInstructorAudio] = useState<File | null>(null);
-  const [status, setStatus] = useState<'completed' | 'rejected'>('completed'); // الافتراضي قبول
+  const [status, setStatus] = useState<'completed' | 'rejected'>('completed'); 
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{msg: string, type: 'success' | 'error'} | null>(null);
 
@@ -71,7 +70,6 @@ export default function SupervisorReviewPage() {
 
       setToast({ msg: "تم إرسال التصحيح بنجاح! ✅", type: 'success' });
       
-      // العودة للقائمة بعد ثانية ونصف
       setTimeout(() => navigate('/supervisor'), 1500);
       
     } catch (err) {
@@ -88,7 +86,6 @@ export default function SupervisorReviewPage() {
     <Layout title="تصحيح التلاوة">
       <div className="max-w-3xl mx-auto space-y-6 pb-24">
         
-        {/* زر العودة */}
         <button 
           onClick={() => navigate(-1)} 
           className="flex items-center gap-2 text-gray-500 hover:text-emerald-600 font-bold transition-colors w-fit"

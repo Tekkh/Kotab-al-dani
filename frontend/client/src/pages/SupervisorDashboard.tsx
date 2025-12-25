@@ -124,7 +124,6 @@ export default function SupervisorDashboard() {
       {/* 1. رأس الصفحة + زر المصحف */}
       <div className="flex items-center justify-between">
         <div>
-          {/*<h2 className="text-2xl font-bold text-gray-800">نظرة شاملة على أداء الكُتّاب اليوم</h2>*/}
           <p className="text-gray-600 text-sm">نظرة شاملة على أداء الكُتّاب اليوم</p>
         </div>
         <button 

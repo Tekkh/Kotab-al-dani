@@ -20,13 +20,13 @@ interface Submission {
   status: 'pending' | 'in_progress' | 'completed' | 'rejected';
   instructor_rating?: number;
   instructor_notes?: string;
-  instructor_audio?: string; // ملف صوت المشرف
-  audio_file: string;        // ملف صوت الطالب
+  instructor_audio?: string; 
+  audio_file: string;       
   created_at: string;
 }
 
 export default function RecitationsPage() {
-  // --- إدارة الحالة (State Management) ---
+
   const [activeTab, setActiveTab] = useState<'new' | 'history'>('new');
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [chapters, setChapters] = useState<Chapter[]>([]); 
@@ -134,7 +134,7 @@ export default function RecitationsPage() {
     }
   };
 
-  // --- الواجهة (JSX) ---
+  // --- الواجهة ---
   return (
     <Layout title="تلاواتي">
       <div className="max-w-3xl mx-auto space-y-6 pb-20">
@@ -291,7 +291,7 @@ export default function RecitationsPage() {
                     <div className={`p-4 rounded-xl relative overflow-hidden mt-4 border ${
                         sub.status === 'completed' 
                         ? 'bg-emerald-50/50 border-emerald-100' 
-                        : 'bg-red-50/50 border-red-100' // لون أحمر خفيف عند الرفض
+                        : 'bg-red-50/50 border-red-100' 
                     }`}>
                       <div className={`flex items-center gap-2 mb-3 pb-2 border-b ${
                           sub.status === 'completed' ? 'border-emerald-100' : 'border-red-100'

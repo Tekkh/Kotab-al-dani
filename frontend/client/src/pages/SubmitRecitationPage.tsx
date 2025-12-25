@@ -9,7 +9,6 @@ export default function SubmitRecitationPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // بيانات النموذج
   const [formData, setFormData] = useState({
     surah_name: '',
     from_ayah: '',
@@ -29,23 +28,21 @@ export default function SubmitRecitationPage() {
     setLoading(true);
 
     try {
-      // إعداد البيانات للإرسال (FormData ضروري لرفع الملفات)
+ 
       const data = new FormData();
       data.append('surah_name', formData.surah_name);
       data.append('from_ayah', formData.from_ayah);
       data.append('to_ayah', formData.to_ayah);
-      data.append('audio_file', audioFile); // الملف الصوتي
+      data.append('audio_file', audioFile); 
 
-      // الإرسال للـ API الذي بنيناه
       await apiClient.post('/reviews/submit-recitation/', data, {
         headers: {
-          'Content-Type': 'multipart/form-data', // مهم جداً
+          'Content-Type': 'multipart/form-data', 
         },
       });
 
-      // نجاح -> توجيه لصفحة "تلاواتي" (سنبنيها لاحقاً)
       alert("تم إرسال التلاوة للمشرف بنجاح! 🎉");
-      navigate('/dashboard'); // أو إلى صفحة التلاوات
+      navigate('/dashboard'); 
     } catch (err) {
       console.error(err);
       setError("حدث خطأ أثناء الإرسال، حاول مرة أخرى.");

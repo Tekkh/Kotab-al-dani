@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mic, Clock, ChevronLeft, User, Loader2, CheckCircle2, Archive, AlertTriangle, Edit } from 'lucide-react';
+import { 
+  Mic, Clock, ChevronLeft, User, Loader2, 
+  CheckCircle2, Archive, AlertTriangle, Edit 
+} from 'lucide-react';
 import apiClient from '../api/apiClient';
 import Layout from '../components/Layout';
 
@@ -11,29 +14,30 @@ interface ReviewItem {
   from_ayah: number;
   to_ayah: number;
   created_at: string;
-  updated_at?: string; // وقت التصحيح للأرشيف
+  updated_at?: string;
   status: 'pending' | 'in_progress' | 'completed' | 'rejected';
 }
 
 export default function SupervisorPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'pending' | 'archive'>('pending');
-  
   const [pendingReviews, setPendingReviews] = useState<ReviewItem[]>([]);
   const [archiveReviews, setArchiveReviews] = useState<ReviewItem[]>([]);
-  
   const [loading, setLoading] = useState(true);
 
-  // جلب البيانات بناءً على التبويب النشط
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
+        const endpoint = activeTab === 'pending' 
+          ? '/reviews/pending-reviews/' 
+          : '/reviews/supervisor-archive/';
+          
+        const res = await apiClient.get(endpoint);
+        
         if (activeTab === 'pending') {
-          const res = await apiClient.get('/reviews/pending-reviews/');
           setPendingReviews(res.data);
         } else {
-          const res = await apiClient.get('/reviews/supervisor-archive/');
           setArchiveReviews(res.data);
         }
       } catch (err) {
@@ -45,7 +49,6 @@ export default function SupervisorPage() {
     fetchData();
   }, [activeTab]);
 
-  // دوال مساعدة للوقت
   const getTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -67,11 +70,13 @@ export default function SupervisorPage() {
     return hours >= 24;
   };
 
+  const currentReviews = activeTab === 'pending' ? pendingReviews : archiveReviews;
+
   return (
     <Layout title="لوحة الإشراف">
       <div className="max-w-5xl mx-auto space-y-6 pb-20">
         
-        {/* التبويبات */}
+        {/* Tabs Navigation */}
         <div className="bg-white p-1.5 rounded-2xl shadow-sm border border-gray-100 flex">
           <button
             onClick={() => setActiveTab('pending')}
@@ -102,28 +107,27 @@ export default function SupervisorPage() {
           </button>
         </div>
 
-        {/* تنبيه الأرشيف */}
+        {/* Archive Warning */}
         {activeTab === 'archive' && (
           <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 flex items-start gap-3 animate-fade-in">
             <AlertTriangle className="text-amber-500 shrink-0" size={20} />
             <div>
               <p className="text-sm font-bold text-amber-800">سياسة الأرشيف</p>
               <p className="text-xs text-amber-700 mt-1">
-                يتم الاحتفاظ بالتلاوات المصححة هنا لمدة 7 أيام فقط للمراجعة، ثم تختفي تلقائياً من لوحتك.
+                يتم الاحتفاظ بالتلاوات المصححة هنا لمدة 7 أيام فقط للمراجعة.
               </p>
             </div>
           </div>
         )}
 
-        {/* المحتوى */}
+        {/* Content Area */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <Loader2 className="animate-spin text-emerald-600" size={32} />
           </div>
         ) : (
           <>
-            {/* عرض القائمة الحالية (سواء معلقة أو أرشيف) */}
-            {(activeTab === 'pending' ? pendingReviews : archiveReviews).length === 0 ? (
+            {currentReviews.length === 0 ? (
               <div className="bg-white rounded-3xl p-12 text-center border border-gray-100 shadow-sm flex flex-col items-center animate-fade-in">
                 <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 ${activeTab === 'pending' ? 'bg-emerald-50 text-emerald-500' : 'bg-gray-50 text-gray-400'}`}>
                   {activeTab === 'pending' ? <CheckCircle2 size={40} /> : <Archive size={40} />}
@@ -137,12 +141,9 @@ export default function SupervisorPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {(activeTab === 'pending' ? pendingReviews : archiveReviews).map((review) => (
-                  <div 
-                    key={review.id} 
-                    className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-all group animate-scale-in"
-                  >
-                    {/* رأس البطاقة */}
+                {currentReviews.map((review) => (
+                  <div key={review.id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-all group animate-scale-in">
+                    
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 border border-gray-200">
@@ -154,7 +155,6 @@ export default function SupervisorPage() {
                             activeTab === 'pending' && isLate(review.created_at) ? 'text-red-500' : 'text-gray-400'
                           }`}>
                             <Clock size={10} />
-                            {/* في الأرشيف نعرض متى تم التصحيح، في المعلق نعرض متى تم الإنشاء */}
                             {activeTab === 'archive' 
                               ? `صُححت ${getTimeAgo(review.updated_at || review.created_at)}`
                               : getTimeAgo(review.created_at)
@@ -163,7 +163,6 @@ export default function SupervisorPage() {
                         </div>
                       </div>
                       
-                      {/* حالة البطاقة في الأرشيف */}
                       {activeTab === 'archive' && (
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                           review.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
@@ -172,13 +171,11 @@ export default function SupervisorPage() {
                         </span>
                       )}
 
-                      {/* نقطة التنبيه في المعلق */}
                       {activeTab === 'pending' && isLate(review.created_at) && (
                         <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" title="متأخر"></span>
                       )}
                     </div>
 
-                    {/* تفاصيل التلاوة */}
                     <div className="bg-gray-50 rounded-xl p-3 mb-4 border border-gray-100">
                       <div className="flex items-center gap-2 mb-1">
                         <Mic size={14} className="text-emerald-600" />
@@ -189,7 +186,6 @@ export default function SupervisorPage() {
                       </p>
                     </div>
 
-                    {/* زر الإجراء (يختلف حسب التبويب) */}
                     <button
                       onClick={() => navigate(`/supervisor/review/${review.id}`)}
                       className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors shadow-sm ${

@@ -4,7 +4,6 @@ import apiClient from '../api/apiClient';
 import Layout from '../components/Layout';
 import axios from 'axios';
 
-// ... (الواجهات السابقة كما هي) ...
 interface Matn { id: number; title: string; author: string; description: string; pdf_file: string; }
 interface TajweedLesson { id: number; title: string; content: string; }
 
@@ -17,11 +16,10 @@ interface TafsirAyah {
   ayah_text: string;
 }
 
-// [تحديث] إضافة عدد الآيات
 interface Chapter {
   id: number;
   name_arabic: string;
-  verses_count: number; // <--- حقل مهم جداً
+  verses_count: number; 
 }
 
 export default function LibraryPage() {
@@ -47,17 +45,17 @@ export default function LibraryPage() {
     apiClient.get('/library/tajweed/').then(res => setTajweedLessons(res.data));
   }, []);
 
-  // [جديد] حساب عدد آيات السورة المختارة حالياً
+
   const currentSurahVerseCount = useMemo(() => {
     const surah = chapters.find(c => c.id === selectedSurah);
-    return surah ? surah.verses_count : 7; // افتراضياً 7 (الفاتحة)
+    return surah ? surah.verses_count : 7;
   }, [selectedSurah, chapters]);
 
-  // [جديد] دالة لتغيير السورة وتصفير الآية
+  // دالة لتغيير السورة وتصفير الآية
   const handleSurahChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSurah(Number(e.target.value));
-    setSelectedAyah(1); // إعادة تعيين الآية للأولى عند تغيير السورة
-    setTafsirResult(null); // إخفاء النتيجة السابقة
+    setSelectedAyah(1); 
+    setTafsirResult(null); 
   };
 
   const handleFetchTafsir = async (e: React.FormEvent) => {
@@ -108,7 +106,7 @@ export default function LibraryPage() {
                     <label className="block text-sm font-bold text-gray-700 mb-2">السورة</label>
                     <select 
                       value={selectedSurah}
-                      onChange={handleSurahChange} // استخدام الدالة الجديدة
+                      onChange={handleSurahChange} 
                       className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white cursor-pointer"
                     >
                       {chapters.map(ch => (
@@ -187,7 +185,7 @@ export default function LibraryPage() {
                   >
                     {/* العنوان */}
                     <summary className="flex justify-between items-center p-4 md:p-5 cursor-pointer font-bold text-gray-800 group-open:text-emerald-800 select-none list-none gap-3">
-                      <div className="flex items-center gap-3 min-w-0"> {/* min-w-0 يسمح بتقليص النص */}
+                      <div className="flex items-center gap-3 min-w-0">
                         <span className="w-8 h-8 md:w-10 md:h-10 bg-gray-100 group-open:bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-700 font-bold text-sm shrink-0 transition-colors">
                           {index + 1}
                         </span>

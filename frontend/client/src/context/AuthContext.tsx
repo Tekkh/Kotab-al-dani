@@ -3,8 +3,8 @@ import React, { createContext, useContext, useState } from 'react';
 interface AuthContextType {
   token: string | null;
   isLoggedIn: boolean;
-  isStaff: boolean; // <--- جديد: هل هو مشرف؟
-  login: (token: string, isStaff: boolean) => void; // <--- تحديث الدالة لاستقبال النوع
+  isStaff: boolean; // <-- هل هو مشرف؟
+  login: (token: string, isStaff: boolean) => void; 
   logout: () => void;
 }
 
@@ -12,14 +12,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('authToken'));
-  // قراءة حالة المشرف من التخزين (نحول النص 'true' إلى boolean)
   const [isStaff, setIsStaff] = useState<boolean>(localStorage.getItem('isStaff') === 'true');
 
   const login = (newToken: string, newIsStaff: boolean) => {
     setToken(newToken);
     setIsStaff(newIsStaff);
     localStorage.setItem('authToken', newToken);
-    localStorage.setItem('isStaff', String(newIsStaff)); // حفظ الحالة
+    localStorage.setItem('isStaff', String(newIsStaff));
   };
 
   const logout = () => {

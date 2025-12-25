@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-//import { Link } from 'react-router-dom';
 import apiClient from '../api/apiClient';
 import Layout from '../components/Layout';
 import { getLevelData, getNextLevelData } from '../utils/levels';
@@ -8,7 +7,6 @@ import {
   Sunrise, Footprints, ArrowUp, Backpack, Wind, 
   PieChart, Dumbbell, CircleDot, Sparkles, Moon, 
   Castle, Heart, Gem, Mountain, CalendarCheck, Flame, Crown,
-  //ArrowRight 
 } from 'lucide-react';
 
 interface UserBadge {
@@ -165,7 +163,7 @@ export default function BadgesPage() {
         {/* -------------------------------------------------------- */}
 
 
-        {/* --- 2. قسم الأوسمة (الشبكة) --- */}
+        {/* --- 2. قسم الأوسمة --- */}
         <div>
           <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
             <Award className="text-emerald-600" />
