@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 
 Modal.setAppElement('#root');
 
-// تعريف شكل البيانات القادمة من الـ API (كما برمجناها في views.py)
 export interface NewBadge {
   name: string;
   description: string;
@@ -15,11 +14,11 @@ export interface NewBadge {
 interface Props {
   isOpen: boolean;
   onRequestClose: () => void;
-  newBadges: NewBadge[]; // قائمة الأوسمة الجديدة
+  newBadges: NewBadge[];
 }
 
 export default function CelebrationModal({ isOpen, onRequestClose, newBadges }: Props) {
-  // حالة لحجم الشاشة (لضبط الـ Confetti)
+
   const [windowDimension, setWindowDimension] = useState({ width: window.innerWidth, height: window.innerHeight });
 
   useEffect(() => {
@@ -30,7 +29,6 @@ export default function CelebrationModal({ isOpen, onRequestClose, newBadges }: 
     return () => window.removeEventListener('resize', detectSize);
   }, []);
 
-  // إذا لم تكن هناك أوسمة جديدة، لا نعرض شيئاً (أمان)
   if (newBadges.length === 0) return null;
 
   return (
@@ -48,7 +46,7 @@ export default function CelebrationModal({ isOpen, onRequestClose, newBadges }: 
              width={windowDimension.width} 
              height={windowDimension.height} 
              numberOfPieces={200} 
-             recycle={false} // تتوقف بعد فترة قصيرة
+             recycle={false}
            />
         </div>
       )}

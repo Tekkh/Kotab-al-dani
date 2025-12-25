@@ -4,12 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* تطبيق الخط على كامل التطبيق */
 body {
   font-family: 'Cairo', sans-serif;
 }
 
-/* كلاس مخصص إذا أردنا استخدامه تحديداً */
 .font-cairo {
   font-family: 'Cairo', sans-serif;
 }

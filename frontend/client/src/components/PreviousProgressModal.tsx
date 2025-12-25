@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Modal from 'react-modal';
 import apiClient from '../api/apiClient';
-import { CheckCircle2, Info } from 'lucide-react'; // استيراد أيقونة معلومات
+import { CheckCircle2, Info } from 'lucide-react'; 
 
 Modal.setAppElement('#root');
 
@@ -37,7 +37,7 @@ export default function PreviousProgressModal({ isOpen, onRequestClose, onSucces
     setLoading(true);
     try {
       await apiClient.post('/set-previous-progress/', {
-        hizb_count: hizbCount, // سيرسله حتى لو كان فارغاً (سيعالج كـ 0 في الخلفية)
+        hizb_count: hizbCount,
         specific_badges: selectedBadges
       });
       

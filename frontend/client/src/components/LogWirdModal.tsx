@@ -8,7 +8,6 @@ interface LogWirdModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   onLogCreated: () => void;
-  // [جديد] دالة لاستقبال الأوسمة الجديدة وتمريرها للصفحة الرئيسية
   onBadgesEarned?: (badges: any[]) => void;
 }
 
@@ -55,10 +54,8 @@ export default function LogWirdModal({ isOpen, onRequestClose, onLogCreated, onB
           const response = await apiClient.post('/thumn-progress/', {
             juz, hizb, thumn, status: 'memorized'
           });
-          
-          // [جديد] التحقق هل هناك أوسمة جديدة في الرد؟
+
           if (response.data.new_earned_badges && response.data.new_earned_badges.length > 0) {
-            // نمرر الأوسمة للأب (Dashboard) ليشغل الاحتفال
             if (onBadgesEarned) {
                onBadgesEarned(response.data.new_earned_badges);
             }

@@ -9,7 +9,6 @@ interface ToastProps {
 
 export default function Toast({ message, type, onClose }: ToastProps) {
   useEffect(() => {
-    // إخفاء تلقائي بعد 3 ثواني
     const timer = setTimeout(() => {
       onClose();
     }, 3000);

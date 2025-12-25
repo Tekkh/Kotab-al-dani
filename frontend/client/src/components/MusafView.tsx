@@ -18,27 +18,22 @@ export default function MusafView() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   
-  // حالات البيانات
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [selectedSurah, setSelectedSurah] = useState<number>(1);
-  
-  // حالات الواجهة الجديدة
+
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [savedPage, setSavedPage] = useState<number | null>(null);
 
   // --- 1. التحضير والبيانات ---
   useEffect(() => {
-    // جلب السور
     axios.get('https://api.quran.com/api/v4/chapters?language=ar')
       .then(res => setChapters(res.data.chapters))
       .catch(console.error);
 
-    // استعادة العلامة المرجعية من التخزين المحلي
     const saved = localStorage.getItem('quran_bookmark');
     if (saved) setSavedPage(parseInt(saved));
   }, []);
 
-  // تحديث السورة بناءً على الصفحة
   useEffect(() => {
     if (chapters.length > 0) {
       const currentChapter = chapters.find(ch => page >= ch.pages[0] && page <= ch.pages[1]);
@@ -63,10 +58,9 @@ export default function MusafView() {
   const goToNextPage = useCallback(() => setPage(p => Math.min(604, p + 1)), []);
   const goToPrevPage = useCallback(() => setPage(p => Math.max(1, p - 1)), []);
 
-  // التعامل مع لوحة المفاتيح (الأسهم)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') goToNextPage(); // اليسار = التالي (في العربية)
+      if (e.key === 'ArrowLeft') goToNextPage();
       if (e.key === 'ArrowRight') goToPrevPage();
       if (e.key === 'Escape') setIsFullscreen(false);
     };
@@ -78,7 +72,7 @@ export default function MusafView() {
   const handleSaveBookmark = () => {
     localStorage.setItem('quran_bookmark', page.toString());
     setSavedPage(page);
-    // (يمكن إضافة توست/إشعار هنا مستقبلاً)
+
   };
 
   // الذهاب للعلامة المحفوظة
@@ -96,14 +90,9 @@ export default function MusafView() {
 
   return (
     <div className={`bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col transition-all duration-300 ${isFullscreen ? 'fixed inset-0 z-50 h-screen rounded-none' : 'h-[850px] relative'}`}>
-      
-      {/* --- الشريط العلوي (تم إعادة تصميمه بالكامل) --- */}
       <div className="bg-gray-50/80 backdrop-blur-sm border-b border-gray-200 p-3 flex flex-col lg:flex-row items-center justify-between gap-3">
-        
-        {/* المجموعة 1: أدوات التنقل (يمين) */}
+
         <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 w-full lg:w-auto">
-          
-          {/* قائمة السور - تصميم محسن */}
           <div className="relative group">
             <BookOpen size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 pointer-events-none z-10" />
             <select 
@@ -118,7 +107,6 @@ export default function MusafView() {
             </select>
           </div>
 
-          {/* قائمة الأحزاب - تصميم محسن */}
           <div className="relative group">
             <Layers size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 pointer-events-none z-10" />
             <select 
@@ -132,7 +120,6 @@ export default function MusafView() {
             </select>
           </div>
 
-          {/* حقل رقم الصفحة - مدمج وأنيق */}
           <form onSubmit={(e) => { e.preventDefault(); setPage(parseInt(inputPage) || 1); }} className="relative flex items-center">
             <input 
               type="number" min="1" max="604"
@@ -183,7 +170,6 @@ export default function MusafView() {
         </div>
       </div>
 
-      {/* ... (باقي كود منطقة عرض الصورة يبقى كما هو تماماً) ... */}
       <div className="flex-1 bg-[#fffdf5] flex justify-center items-center overflow-hidden relative group">
         {loading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#fffdf5] z-10">
