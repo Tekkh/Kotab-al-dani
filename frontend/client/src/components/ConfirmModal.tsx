@@ -1,4 +1,4 @@
-import { AlertTriangle, X } from 'lucide-react';
+import { AlertTriangle} from 'lucide-react';
 
 interface ConfirmModalProps {
   isOpen: boolean;
@@ -40,7 +40,7 @@ export default function ConfirmModal({
           >
             {cancelText}
           </button>
-          
+
           <button
             onClick={onConfirm}
             className={`flex-1 py-2.5 rounded-xl text-white font-bold shadow-sm hover:shadow-md transition-all text-sm ${isDanger ? 'bg-red-500 hover:bg-red-600' : 'bg-emerald-600 hover:bg-emerald-700'}`}

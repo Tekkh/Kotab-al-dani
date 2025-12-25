@@ -13,10 +13,12 @@ import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
 import RecitationsPage from './pages/RecitationsPage';
 import SupervisorReviewPage from './pages/SupervisorReviewPage';
+import ReloadPrompt from './components/ReloadPrompt';
 
 function App() {
   return (
     <Routes>
+      <ReloadPrompt />
       {/* الروابط العامة */}
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
