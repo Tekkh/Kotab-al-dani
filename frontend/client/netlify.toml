@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm build"
+  command = "VITE_API_URL=https://kotab-al-dani.onrender.com/api pnpm build"
   publish = "dist"
 
 [dev]
