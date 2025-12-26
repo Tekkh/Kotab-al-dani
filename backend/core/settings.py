@@ -166,3 +166,11 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST_USER = 'support@el-kouttab.com'
+
+ALLOWED_URLS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+
+if ALLOWED_URLS and ALLOWED_URLS[0]: 
+    CORS_ALLOWED_ORIGINS = ALLOWED_URLS
+    CSRF_TRUSTED_ORIGINS = ALLOWED_URLS
+else:
+    CORS_ALLOW_ALL_ORIGINS = True
