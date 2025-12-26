@@ -41,39 +41,3 @@
 - **Server:** Gunicorn
 
 ---
-
-## 🚀 دليل التشغيل المحلي (Local Development)
-
-اتبع هذه الخطوات لتشغيل المشروع على جهازك:
-
-### 1. المتطلبات المسبقة
-- Python 3.10+
-- Node.js 18+
-- مدير الحزم `pnpm` (مفضل) أو `npm`.
-
-### 2. إعداد الواجهة الخلفية (Backend)
-
-```bash
-# انتقل لمجلد الباك إند
-cd backend
-
-# أنشئ بيئة افتراضية
-python -m venv venv
-
-# قم بتفعيل البيئة
-# Windows:
-venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate
-
-# ثبّت المكتبات المطلوبة
-pip install -r requirements.txt
-
-# قم بترحيل قواعد البيانات
-python manage.py migrate
-
-# أنشئ حساب مشرف (Admin)
-python manage.py createsuperuser
-
-# شغّل السيرفر
-python manage.py runserver
