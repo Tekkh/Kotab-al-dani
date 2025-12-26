@@ -16,7 +16,7 @@ export default function LoginPage() {
     setError(null);
     try {
       const response = await axios.post(
-        'http://127.0.0.1:8000/api/auth/login/', 
+        'https://kotab-al-dani.onrender.com/api/auth/login/', 
         { username, password }
       );
       login(response.data.token, response.data.is_staff);

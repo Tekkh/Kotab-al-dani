@@ -17,7 +17,7 @@ export default function HomePage() {
   const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/lessons/')
+    axios.get('https://kotab-al-dani.onrender.com/api/lessons/')
       .then(res => setLessons(res.data))
       .catch(err => console.error(err));
   }, []);

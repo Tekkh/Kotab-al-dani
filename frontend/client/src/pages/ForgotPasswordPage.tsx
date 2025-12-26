@@ -12,7 +12,7 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('http://127.0.0.1:8000/api/auth/password-reset/', { email });
+      await axios.post('https://kotab-al-dani.onrender.com/api/auth/password-reset/', { email });
       setSubmitted(true);
     } catch (err) {
       setSubmitted(true); 

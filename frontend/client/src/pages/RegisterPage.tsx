@@ -43,7 +43,7 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await axios.post(
-        'http://127.0.0.1:8000/api/auth/register/', 
+        'https://kotab-al-dani.onrender.com/api/auth/register/', 
         { username, email, password, confirm_password: confirmPassword }
       );
       navigate('/login');

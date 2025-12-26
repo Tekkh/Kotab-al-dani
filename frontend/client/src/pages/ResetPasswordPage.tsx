@@ -20,7 +20,7 @@ export default function ResetPasswordPage() {
     
     setStatus('loading');
     try {
-      await axios.post('http://127.0.0.1:8000/api/auth/password-reset/confirm/', {
+      await axios.post('https://kotab-al-dani.onrender.com/api/auth/password-reset/confirm/', {
         uid,
         token,
         new_password: newPassword
