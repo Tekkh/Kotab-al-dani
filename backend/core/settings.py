@@ -10,24 +10,28 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 from dotenv import load_dotenv
+
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(os.path.join(BASE_DIR, '.env')) 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+# ==========================================
+#  SECURITY SETTINGS (Dynamic Configuration)
+# ==========================================
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG') == 'True'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key-12345')
 
-ALLOWED_HOSTS = []
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+
+print(f"Server is running with DEBUG={DEBUG}")
 
 
 # Application definition
@@ -145,11 +149,11 @@ CORS_ALLOWED_ORIGINS = [
 # --- إعدادات Django REST Framework ---
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # استخدام المصادقة بالتوكن
+
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        # السماح بالوصول للمستخدمين المسجلين فقط افتراضيًا
+
         'rest_framework.permissions.IsAuthenticated',
     ],
 }

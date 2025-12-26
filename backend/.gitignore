@@ -1,0 +1,26 @@
+# Python & Django Core
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+*.pot
+*.pyc
+*.pyd
+*.pyo
+
+.env
+.venv
+env/
+venv/
+ENV/
+.Python
+
+db.sqlite3
+db.sqlite3-journal
+
+/media/
+/staticfiles/
+
+.vscode/
+.idea/
+*.DS_Store

@@ -7,10 +7,21 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies (أكبر مجلد يجب تجاهله)
 node_modules
+.pnpm-store
+
+# Build Output (مجلد البناء لا يرفع، يتم بناؤه في الاستضافة)
 dist
 dist-ssr
 *.local
+
+# Environment Variables (أمان)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Editor directories and files
 .vscode/*
@@ -18,7 +29,7 @@ dist-ssr
 .idea
 .DS_Store
 *.suo
-*.ntvs*
+*.ntvs
 *.njsproj
 *.sln
 *.sw?
