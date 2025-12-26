@@ -17,8 +17,9 @@ import ReloadPrompt from './components/ReloadPrompt';
 
 function App() {
   return (
+    <>
+    <ReloadPrompt />
     <Routes>
-      <ReloadPrompt />
       {/* الروابط العامة */}
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
@@ -38,6 +39,7 @@ function App() {
         <Route path="/supervisor/review/:id" element={<SupervisorReviewPage />} />
       </Route>
     </Routes>
+    </>
   );
 }
 
