@@ -10,7 +10,6 @@ urlpatterns = [
     path('api/reviews/', include('reviews.urls')),
     path('api/library/', include('library.urls')),
 
-    # 4. التطبيقات الأساسية
     path('api/', include('lessons.urls')),
     path('api/', include('gamification.urls')),
     path('api/', include('progress.urls')),
