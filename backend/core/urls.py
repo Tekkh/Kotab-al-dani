@@ -15,6 +15,5 @@ urlpatterns = [
     path('api/', include('progress.urls')),
 ]
 
-# إعدادات الميديا (للصور والملفات الصوتية) في وضع التطوير
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
