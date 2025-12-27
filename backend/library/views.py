@@ -67,10 +67,9 @@ def tafsir_proxy_view(request, surah_id, ayah_number):
     2. نص الآية العثماني (من api.quran.com)
     """
     try:
-        # 1. جلب التفسير (التفسير الميسر = 1)
+        
         tafsir_url = f"http://api.quran-tafseer.com/tafseer/1/{surah_id}/{ayah_number}"
         
-        # 2. جلب نص الآية (الرسم العثماني)
         quran_url = f"https://api.quran.com/api/v4/quran/verses/uthmani"
         params = {
             'chapter_number': surah_id,
