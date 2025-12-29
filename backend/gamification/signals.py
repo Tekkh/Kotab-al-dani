@@ -6,8 +6,6 @@ from .services import add_xp, check_and_award_badges, update_streak
 @receiver(post_save, sender=ThumnProgress)
 def trigger_gamification(sender, instance, created, **kwargs):
     if instance.status == 'memorized':
-        # 1. تحديث XP والمداومة
         add_xp(instance.user, amount=10)
         update_streak(instance.user)
-        # 2. فحص الأوسمة
         check_and_award_badges(instance.user)
