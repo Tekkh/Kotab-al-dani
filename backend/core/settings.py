@@ -33,7 +33,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
-print(f"Server is running with DEBUG={DEBUG}")
+#print(f"Server is running with DEBUG={DEBUG}")
 
 
 # Application definition
@@ -101,6 +101,9 @@ if database_url:
         conn_max_age=600
     )
 
+
+# Password validation
+# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
