@@ -1,0 +1,1381 @@
+[
+{
+  "model": "gamification.badge",
+  "pk": 1,
+  "fields": {
+    "name": "بداية الغيث",
+    "description": "حفظت أول ثمن لك! بداية موفقة.",
+    "icon_name": "star",
+    "condition_type": "first_thumn",
+    "order": 1
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 2,
+  "fields": {
+    "name": "رائحة الفجر",
+    "description": "حفظت أول حزب. أول قطرة في مشوار مبارك.",
+    "icon_name": "sunrise",
+    "condition_type": "first_hizb",
+    "order": 10
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 3,
+  "fields": {
+    "name": "خطوة السائر",
+    "description": "حفظت 3 أحزاب. الطريق بدأ يتضح.",
+    "icon_name": "footprints",
+    "condition_type": "hizb_3",
+    "order": 20
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 4,
+  "fields": {
+    "name": "همة عالية",
+    "description": "حفظت 5 أحزاب. عزيمة تتقوى.",
+    "icon_name": "arrow-up",
+    "condition_type": "hizb_5",
+    "order": 30
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 5,
+  "fields": {
+    "name": "زاد المسافر",
+    "description": "حفظت 7 أحزاب.",
+    "icon_name": "backpack",
+    "condition_type": "hizb_7",
+    "order": 40
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 6,
+  "fields": {
+    "name": "نَفَسُ المجتهد",
+    "description": "حفظت 10 أحزاب.",
+    "icon_name": "wind",
+    "condition_type": "hizb_10",
+    "order": 50
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 7,
+  "fields": {
+    "name": "ربع القرآن",
+    "description": "حفظت 15 حزباً.",
+    "icon_name": "pie-chart",
+    "condition_type": "hizb_15",
+    "order": 60
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 8,
+  "fields": {
+    "name": "عزيمة لا تلين",
+    "description": "حفظت 20 حزباً.",
+    "icon_name": "dumbbell",
+    "condition_type": "hizb_20",
+    "order": 70
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 9,
+  "fields": {
+    "name": "نصف القرآن",
+    "description": "حفظت 30 حزباً. على الدرب تسير.",
+    "icon_name": "circle-half",
+    "condition_type": "hizb_30",
+    "order": 80
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 10,
+  "fields": {
+    "name": "تاج الحافظ",
+    "description": "أتممت حفظ القرآن كاملاً. هنيئاً لك.",
+    "icon_name": "crown",
+    "condition_type": "hizb_60",
+    "order": 999
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 11,
+  "fields": {
+    "name": "نور عمّ",
+    "description": "حفظت جزء عمّ كاملاً.",
+    "icon_name": "sparkles",
+    "condition_type": "juz_amma",
+    "order": 110
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 12,
+  "fields": {
+    "name": "تبارك البركة",
+    "description": "حفظت جزء تبارك.",
+    "icon_name": "moon",
+    "condition_type": "juz_tabarak",
+    "order": 120
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 13,
+  "fields": {
+    "name": "المُنجيَة",
+    "description": "حفظت سورة الملك.",
+    "icon_name": "castle",
+    "condition_type": "surah_mulk",
+    "order": 130
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 14,
+  "fields": {
+    "name": "القلب الحيّ",
+    "description": "حفظت سورة يس.",
+    "icon_name": "heart",
+    "condition_type": "surah_yasin",
+    "order": 140
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 15,
+  "fields": {
+    "name": "سيدة السور",
+    "description": "حفظت سورة البقرة.",
+    "icon_name": "star",
+    "condition_type": "surah_baqarah",
+    "order": 150
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 16,
+  "fields": {
+    "name": "درر الرحمن",
+    "description": "حفظت سورة الرحمن.",
+    "icon_name": "gem",
+    "condition_type": "surah_rahman",
+    "order": 160
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 17,
+  "fields": {
+    "name": "نور الكهف",
+    "description": "حفظت سورة الكهف.",
+    "icon_name": "mountain",
+    "condition_type": "surah_kahf",
+    "order": 170
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 18,
+  "fields": {
+    "name": "خطوة كل يوم",
+    "description": "مداومة 7 أيام متتابعة.",
+    "icon_name": "check-circle",
+    "condition_type": "streak_7",
+    "order": 200
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 19,
+  "fields": {
+    "name": "طريق النور",
+    "description": "مداومة 30 يوماً.",
+    "icon_name": "calendar",
+    "condition_type": "streak_30",
+    "order": 210
+  }
+},
+{
+  "model": "gamification.badge",
+  "pk": 20,
+  "fields": {
+    "name": "روح المثابر",
+    "description": "مداومة 100 يوم.",
+    "icon_name": "fire",
+    "condition_type": "streak_100",
+    "order": 220
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 4,
+  "fields": {
+    "user": 2,
+    "badge": 2,
+    "earned_at": "2025-11-27T20:18:20.843Z"
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 5,
+  "fields": {
+    "user": 2,
+    "badge": 3,
+    "earned_at": "2025-11-27T20:18:20.858Z"
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 6,
+  "fields": {
+    "user": 2,
+    "badge": 1,
+    "earned_at": "2025-11-27T20:42:25.493Z"
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 7,
+  "fields": {
+    "user": 2,
+    "badge": 4,
+    "earned_at": "2025-11-27T20:55:57.771Z"
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 8,
+  "fields": {
+    "user": 2,
+    "badge": 5,
+    "earned_at": "2025-11-27T20:55:57.785Z"
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 9,
+  "fields": {
+    "user": 2,
+    "badge": 15,
+    "earned_at": "2025-11-27T20:55:57.802Z"
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 10,
+  "fields": {
+    "user": 2,
+    "badge": 11,
+    "earned_at": "2025-11-27T21:01:04.603Z"
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 11,
+  "fields": {
+    "user": 2,
+    "badge": 16,
+    "earned_at": "2025-11-27T21:01:28.193Z"
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 12,
+  "fields": {
+    "user": 2,
+    "badge": 13,
+    "earned_at": "2025-11-27T21:09:45.974Z"
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 13,
+  "fields": {
+    "user": 2,
+    "badge": 6,
+    "earned_at": "2025-11-27T21:10:01.473Z"
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 14,
+  "fields": {
+    "user": 2,
+    "badge": 7,
+    "earned_at": "2025-11-27T21:10:01.500Z"
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 15,
+  "fields": {
+    "user": 2,
+    "badge": 18,
+    "earned_at": "2025-11-28T10:07:25.372Z"
+  }
+},
+{
+  "model": "gamification.userbadge",
+  "pk": 16,
+  "fields": {
+    "user": 7,
+    "badge": 1,
+    "earned_at": "2025-12-11T15:41:27.400Z"
+  }
+},
+{
+  "model": "gamification.gamificationprofile",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "total_xp": 1550,
+    "level": 5,
+    "initial_memorization_thumns": 124,
+    "current_streak": 1,
+    "last_activity_date": "2025-12-11",
+    "daily_goal": "rub"
+  }
+},
+{
+  "model": "gamification.gamificationprofile",
+  "pk": 2,
+  "fields": {
+    "user": 1,
+    "total_xp": 0,
+    "level": 1,
+    "initial_memorization_thumns": 0,
+    "current_streak": 0,
+    "last_activity_date": null,
+    "daily_goal": "thumn"
+  }
+},
+{
+  "model": "gamification.gamificationprofile",
+  "pk": 3,
+  "fields": {
+    "user": 4,
+    "total_xp": 0,
+    "level": 1,
+    "initial_memorization_thumns": 0,
+    "current_streak": 0,
+    "last_activity_date": null,
+    "daily_goal": "thumn"
+  }
+},
+{
+  "model": "gamification.gamificationprofile",
+  "pk": 4,
+  "fields": {
+    "user": 5,
+    "total_xp": 0,
+    "level": 1,
+    "initial_memorization_thumns": 0,
+    "current_streak": 0,
+    "last_activity_date": null,
+    "daily_goal": "thumn"
+  }
+},
+{
+  "model": "gamification.gamificationprofile",
+  "pk": 5,
+  "fields": {
+    "user": 6,
+    "total_xp": 0,
+    "level": 1,
+    "initial_memorization_thumns": 0,
+    "current_streak": 0,
+    "last_activity_date": null,
+    "daily_goal": "thumn"
+  }
+},
+{
+  "model": "gamification.gamificationprofile",
+  "pk": 6,
+  "fields": {
+    "user": 7,
+    "total_xp": 10,
+    "level": 1,
+    "initial_memorization_thumns": 0,
+    "current_streak": 1,
+    "last_activity_date": "2025-12-11",
+    "daily_goal": "thumn"
+  }
+},
+{
+  "model": "lessons.weeklylesson",
+  "pk": 1,
+  "fields": {
+    "day_of_week": "الثلاثاء",
+    "time_description": "بين العشائين",
+    "lesson_title": "شرح متن الدرر اللوامع في أصل مقرأ الإمام نافع",
+    "order": 0,
+    "is_active": true
+  }
+},
+{
+  "model": "lessons.weeklylesson",
+  "pk": 2,
+  "fields": {
+    "day_of_week": "الجمعة",
+    "time_description": "بين العشائين",
+    "lesson_title": "درس تفسير القرآن الكريم",
+    "order": 0,
+    "is_active": true
+  }
+},
+{
+  "model": "lessons.weeklylesson",
+  "pk": 3,
+  "fields": {
+    "day_of_week": "الأحد",
+    "time_description": "بعد صلاة الصبح",
+    "lesson_title": "شرح متن الرسالة لابن أبي زيد القيرواني",
+    "order": 0,
+    "is_active": true
+  }
+},
+{
+  "model": "lessons.sitesetting",
+  "pk": 1,
+  "fields": {
+    "announcement_text": "لا توجد حصة اليوم",
+    "is_announcement_active": false
+  }
+},
+{
+  "model": "library.matn",
+  "pk": 1,
+  "fields": {
+    "title": "متن الدرر اللوامع في أصل مقرأ الإمام نافع",
+    "author": "أبي الحسن علي ابن محمد (ابن بري)",
+    "description": "منظومة شعرية شهيرة لابن بري، تُعنى ببيان أصول قراءة نافع من روايتي ورش وقالون.",
+    "pdf_file": "matoon/الدرر_اللوامع_لابن_بري__251118_173751.pdf",
+    "created_at": "2025-11-18T16:41:30.300Z"
+  }
+},
+{
+  "model": "library.matn",
+  "pk": 2,
+  "fields": {
+    "title": "رسالة ابن أبي زيد القيرواني",
+    "author": "أبي محمد عبد الله ابن أبي زيد القيرواني",
+    "description": "مختصر شامل في الفقه المالكي والعقيدة والآداب، يُلقب بـ 'باكورة السعد' لبركته وقبوله.",
+    "pdf_file": "matoon/رسالة_ابن_أبي_زيد_القيرواني.pdf",
+    "created_at": "2025-12-02T14:39:30.177Z"
+  }
+},
+{
+  "model": "library.matn",
+  "pk": 3,
+  "fields": {
+    "title": "متن الأربعين النووية (مع زيادة ابن رجب)",
+    "author": "الإمام النووي - زيادة ابن رجب",
+    "description": "جمع فيه الإمام النووي الأحاديث التي عليها مدار الإسلام، وأتمها ابن رجب إلى خمسين حديثاً.",
+    "pdf_file": "matoon/-متن_الأربعين_النووية.pdf",
+    "created_at": "2025-12-02T14:42:25.535Z"
+  }
+},
+{
+  "model": "library.matn",
+  "pk": 4,
+  "fields": {
+    "title": "المصباح المنير في تهذيب تفسير ابن كثير",
+    "author": "الإمام إسماعيل بن عمر بن كثير",
+    "description": "تهذيب لتفسير ابن كثير العظيم، حُذفت منه الأسانيد الطويلة والإسرائيليات لتقريب المعنى.",
+    "pdf_file": "matoon/المصباح_المنير_في_تهذيب_تفسير_ابن_كثير.pdf",
+    "created_at": "2025-12-02T14:43:48.519Z"
+  }
+},
+{
+  "model": "library.matn",
+  "pk": 5,
+  "fields": {
+    "title": "فتح القوي المتين في شرح الأربعين و تتمة الخمسين",
+    "author": "عبد المحسن بن حمد العباد البدر",
+    "description": "شرح ميسر ونافع للشيخ عبد المحسن العباد على الأربعين النووية وزيادات ابن رجب الحنبلي.",
+    "pdf_file": "matoon/فتح_القوي_المتين_في_شرح_الأربعين_وتتمة_الخمسين.pdf",
+    "created_at": "2025-12-02T14:45:27.502Z"
+  }
+},
+{
+  "model": "library.matn",
+  "pk": 6,
+  "fields": {
+    "title": "كفاية الطالب الرباني على رسالة ابن أبي زيد القيرواني",
+    "author": "العلامة علي بن خلف المنوفي المالكي المصري",
+    "description": "شرح وافٍ للعلامة العدوي على 'الرسالة'، يفكك عباراتها ويوضح أحكامها الفقهية بدقة.",
+    "pdf_file": "matoon/كفاية_الطالب_الرباني_على_رسالة_ابن_أبي_زيد_القيرواني_حاشية_العدوي_3.pdf",
+    "created_at": "2025-12-02T14:47:30.263Z"
+  }
+},
+{
+  "model": "library.matn",
+  "pk": 7,
+  "fields": {
+    "title": "متن تحفة الأطفال",
+    "author": "الشيخ سليمان الجمزوري",
+    "description": "منظومة مبسطة للشيخ الجمزوري في أحكام التجويد الأساسية كالنون الساكنة والمدود للمبتدئين.",
+    "pdf_file": "matoon/تحفة_الأطفال_والغلمان_في_تجويد_القرآن.pdf",
+    "created_at": "2025-12-02T14:49:22.348Z"
+  }
+},
+{
+  "model": "library.matn",
+  "pk": 8,
+  "fields": {
+    "title": "متن المقدمة الجزرية",
+    "author": "ابن الجزري الشافعي",
+    "description": "منظومة الإمام ابن الجزري الجامعة في علم التجويد، لا يستغني عنها قارئ القرآن لإتقان المخارج والصفات.",
+    "pdf_file": "matoon/المقدمة_الجزرية.pdf",
+    "created_at": "2025-12-02T14:51:06.672Z"
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 67,
+  "fields": {
+    "title": "باب الاستعاذة",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>تعريفها وصيغتها:</h4><p class='text-gray-700 leading-relaxed'><strong>لغة:</strong> مصدر استعاذ، أي طلب العوذ والعياذ، وهو: اللجوء والاعتصام والامتناع والتحصن.<br><strong>اصطلاحاً:</strong> قول القارئ: «أعوذ بالله من الشيطان الرجيم».<br><br><strong>صيغتها المختارة:</strong> ﴿أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ﴾ [النحل: 98].<br>ويجوز غيرها من الصيغ الواردة مثل: «أعوذ بالله السميع العليم من الشيطان الرجيم».</p></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>حكمها ومحلها:</h4><p class='text-gray-700'>اتفق العلماء على أنها مطلوبة ممن يريد القراءة، واختلفوا هل هي واجبة أم مستحبة؟<br>• <strong>الجمهور:</strong> على الاستحباب (الندب).<br>• <strong>البعض (كالظاهرية):</strong> على الوجوب.<br><br><strong>محلها:</strong> قبل القراءة عند الجمهور، والمعنى في الآية: (إذا أردت قراءة القرآن فاستعذ).</p></div><div class='grid md:grid-cols-2 gap-4'><div class='bg-white p-4 rounded-xl border border-gray-200 shadow-sm'><h5 class='font-bold text-emerald-700 mb-2'>يُجهر بها في مواطن:</h5><ul class='list-disc list-inside text-gray-600 text-sm space-y-1'><li>إذا كان القارئ يقرأ جهراً وهناك من يستمع له.</li><li>في المحافل والمناسبات ومجالس التعليم.</li><li>إذا كان القارئ هو المبتدئ في القراءة بالدور.</li></ul></div><div class='bg-white p-4 rounded-xl border border-gray-200 shadow-sm'><h5 class='font-bold text-blue-700 mb-2'>يُسرُّ بها في مواطن:</h5><ul class='list-disc list-inside text-gray-600 text-sm space-y-1'><li>إذا كان القارئ يقرأ سراً.</li><li>إذا كان خالياً (منفرداً) سواء قرأ جهراً أو سراً.</li><li>في الصلاة (سواء كانت سرية أو جهرية).</li><li>في القراءة بالدور إذا لم يكن هو المبتدئ.</li></ul></div></div></div>",
+    "order": 1
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 68,
+  "fields": {
+    "title": "باب البسملة",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>تعريفها:</h4><p class='text-gray-700 leading-relaxed'>البسملة مصدر مولد من قول: «بسم الله». وهي قوله تعالى: ﴿بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ﴾.</p></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>أحكامها عند ورش:</h4><div class='grid gap-4'><div class='border-l-4 border-blue-500 bg-white p-4 shadow-sm rounded-r-xl'><h5 class='font-bold text-blue-800 mb-1'>1. في أول السورة:</h5><p class='text-gray-700'>واجبة وثابتة عند جميع القراء في أوائل السور، <strong>إلا في أول سورة براءة (التوبة)</strong> فلا بسملة فيها باتفاق.</p></div><div class='border-l-4 border-orange-500 bg-white p-4 shadow-sm rounded-r-xl'><h5 class='font-bold text-orange-800 mb-1'>2. في أجزاء السورة (الأواسط):</h5><p class='text-gray-700'>القارئ مخير بين الإتيان بها أو تركها، حتى في أجزاء سورة براءة. والإتيان بها أفضل.</p></div><div class='border-l-4 border-emerald-500 bg-white p-4 shadow-sm rounded-r-xl'><h5 class='font-bold text-emerald-800 mb-2'>3. بين السورتين (لورش):</h5><p class='text-gray-700 mb-2'>له بين كل سورتين (ما عدا الأنفال وبراءة) ثلاثة أوجه:</p><ul class='list-disc list-inside text-gray-700 space-y-1'><li><strong>السكت (المقدم أداءً):</strong> وهو وقف لطيف على آخر السورة الأولى دون تنفس، ثم البدء بالثانية، من غير بسملة.</li><li><strong>الوصل:</strong> وصل آخر السورة الأولى بأول السورة الثانية بغير بسملة (مع مراعاة الإعراب).</li><li><strong>البسملة:</strong> الفصل بينهما بالبسملة (وله حينئذ أوجه البسملة الثلاثة الجائزة: قطع الجميع، وصل الجميع، قطع الأول ووصل الثاني).</li></ul></div></div><div class='bg-gray-100 p-4 rounded-lg mt-4'><h5 class='font-bold text-gray-800 mb-1'>تنبيه (بين الأنفال وبراءة):</h5><p class='text-gray-600 text-sm'>لجميع القراء (ومنهم ورش) بين آخر الأنفال وأول براءة ثلاثة أوجه <strong>بدون بسملة</strong>:<br>1. الوقف (مع التنفس).<br>2. السكت (بدون تنفس).<br>3. الوصل.</p></div></div></div>",
+    "order": 2
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 69,
+  "fields": {
+    "title": "باب ميم الجمع",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>تعريفها:</h4><p class='text-gray-700 leading-relaxed'>هي الميم الزائدة الدالة على جمع المذكرين حقيقة أو تنزيلاً.<br><strong>علامتها:</strong> أن يسبقها أحد أربعة أحرف (الهمزة، الهاء، التاء، الكاف) مجموعة في: <strong>«أهتك»</strong>. نحو: (هاؤم، عليهم، أنتم، عليكم).</p></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>أحكامها عند ورش:</h4><p class='text-gray-600'>يتعلق حكمها بما يقع بعدها (متحرك أو ساكن):</p><div class='grid gap-4 md:grid-cols-2'><div class='bg-white p-4 rounded-xl border border-gray-200 shadow-sm'><h5 class='font-bold text-blue-700 mb-2 text-lg'>1. إذا وقعت قبل ساكن:</h5><p class='text-gray-700 mb-2'>تضم الميم من غير صلة (تخلصاً من التقاء الساكنين) لجميع القراء.</p><div class='bg-gray-50 p-2 rounded text-center font-amiri text-xl'>﴿مِنْهُمُ ٱلْمُؤْمِنُونَ﴾</div><div class='bg-gray-50 p-2 rounded text-center font-amiri text-xl mt-1'>﴿عَلَيْهِمُ ٱلذِّلَّةُ﴾</div></div><div class='bg-white p-4 rounded-xl border border-gray-200 shadow-sm'><h5 class='font-bold text-emerald-700 mb-2 text-lg'>2. إذا وقعت قبل متحرك:</h5><ul class='space-y-3 text-gray-700'><li class='border-b border-gray-100 pb-2'><span class='font-bold block mb-1'>أ- إذا كان المتحرك (همزة قطع):</span>يصلها ورش <strong>بواو لفظية</strong> تمد مداً مشبعاً (6 حركات) وصلاً.<br><span class='text-sm text-gray-500'>مثال:</span> <span class='font-amiri text-lg text-black'>﴿عَلَيْكُمُۥٓ أَنفُسَكُمْ﴾</span></li><li><span class='font-bold block mb-1'>ب- إذا كان المتحرك (غير الهمز):</span>حكمها الإسكان (إظهار شفوي).<br><span class='text-sm text-gray-500'>مثال:</span> <span class='font-amiri text-lg text-black'>﴿لَهُمْ فِيهَا﴾</span></li></ul></div></div></div></div>",
+    "order": 3
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 70,
+  "fields": {
+    "title": "باب هاء الكناية",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>تعريفها:</h4><p class='text-gray-700 leading-relaxed'>هي الهاء الزائدة الدالة على المفرد المذكر الغائب (وتسمى هاء الضمير).<br>الأصل فيها البناء على الضم، إلا إذا سبقت بكسر أو ياء ساكنة فتكسر.</p></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>أحوالها وحكمها عند ورش:</h4><div class='overflow-hidden rounded-xl border border-gray-200'><table class='w-full text-right'><thead class='bg-gray-50 text-gray-700 font-bold'><tr><th class='p-3 border-b'>الحالة (ما قبلها وما بعدها)</th><th class='p-3 border-b'>الحكم</th><th class='p-3 border-b'>المثال</th></tr></thead><tbody class='divide-y divide-gray-100'><tr class='bg-white'><td class='p-3'><span class='text-emerald-700 font-bold'>1. أن تقع بين متحركين</span></td><td class='p-3'>توصل (بواو أو ياء)</td><td class='p-3 font-amiri'>﴿إِنَّهُۥ كَانَ﴾</td></tr><tr class='bg-gray-50'><td class='p-3'>2. أن تقع بين ساكنين</td><td class='p-3'>عدم الصلة</td><td class='p-3 font-amiri'>﴿فِيهِ ٱلْقُرْءَانُ﴾</td></tr><tr class='bg-white'><td class='p-3'>3. قبلها متحرك وبعدها ساكن</td><td class='p-3'>عدم الصلة</td><td class='p-3 font-amiri'>﴿لَهُ ٱلْمُلْكُ﴾</td></tr><tr class='bg-gray-50'><td class='p-3'>4. قبلها ساكن وبعدها متحرك</td><td class='p-3'>عدم الصلة (لورش)</td><td class='p-3 font-amiri'>﴿فِيهِ هُدًى﴾</td></tr></tbody></table></div><div class='bg-yellow-50 p-4 rounded-xl border border-yellow-200'><h5 class='font-bold text-yellow-800 mb-2'>⚠️ مستثنيات وتنبيهات لورش:</h5><ul class='list-disc list-inside text-gray-700 space-y-2'><li><strong>يَرْضَهُ لَكُمْ (الزمر: 7):</strong> قرأها بالقصر (عدم الصلة) رغم وقوعها بين متحركين.</li><li><strong>يَرَهُۥ (الزلزلة):</strong> قرأها بالصلة (تشبيهاً لها بالواقعة بين متحركين بعد حذف الهمزة والجزم).</li><li><strong>وَمَا أَنسَانِيهُ (الكهف) / عَلَيْهُ ٱللَّهَ (الفتح):</strong> قرأهما بكسر الهاء.</li><li>إذا وقعت بين متحركين وكان الثاني <strong>همزة قطع</strong>: تمد مداً مشبعاً (6 حركات) وتلحق بالمد المنفصل. مثال: <span class='font-amiri'>﴿عِندَهُۥٓ إِلَّا﴾</span>.</li></ul></div></div></div>",
+    "order": 4
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 71,
+  "fields": {
+    "title": "باب المد والقصر",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>التعريف والمقادير:</h4><p class='text-gray-700 leading-relaxed'><strong>المد:</strong> إطالة الصوت بحرف المد (الألف، الواو، الياء).<br><strong>القصر:</strong> حبس الصوت (حركتان).<br><br><strong>أزمنة المدود عند ورش:</strong><br>• القصر: حركتان.<br>• التوسط: 4 حركات.<br>• الطول (الإشباع): 6 حركات.</p></div><div class='space-y-5'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>أقسام المدود ومذاهب ورش فيها:</h4><div class='grid gap-4 md:grid-cols-2'><div class='bg-white p-4 rounded-xl shadow-sm border border-gray-200'><h5 class='font-bold text-gray-800 mb-2 border-b pb-1'>1. المد الأصلي (الطبيعي)</h5><p class='text-gray-600 mb-2'>ما لا تقوم ذات الحرف إلا به، ولا يتوقف على سبب.</p><div class='flex justify-between items-center bg-gray-50 p-2 rounded'><span class='text-sm font-bold text-gray-500'>المقدار:</span><span class='text-emerald-600 font-bold'>حركتان</span></div><p class='text-xs text-gray-400 mt-2'>مثال: (قَالَ، يَقُولُ)</p></div><div class='bg-white p-4 rounded-xl shadow-sm border border-gray-200'><h5 class='font-bold text-gray-800 mb-2 border-b pb-1'>2. المد المتصل</h5><p class='text-gray-600 mb-2'>همز بعد حرف مد في كلمة واحدة.</p><div class='flex justify-between items-center bg-gray-50 p-2 rounded'><span class='text-sm font-bold text-gray-500'>المقدار:</span><span class='text-purple-600 font-bold'>6 حركات (إشباع)</span></div><p class='text-xs text-gray-400 mt-2'>مثال: (جَآءَ، سُوٓءَ، سِيٓءَ)</p></div><div class='bg-white p-4 rounded-xl shadow-sm border border-gray-200'><h5 class='font-bold text-gray-800 mb-2 border-b pb-1'>3. المد المنفصل</h5><p class='text-gray-600 mb-2'>حرف المد في كلمة والهمز في أول التالية.</p><div class='flex justify-between items-center bg-gray-50 p-2 rounded'><span class='text-sm font-bold text-gray-500'>المقدار:</span><span class='text-purple-600 font-bold'>6 حركات (إشباع)</span></div><p class='text-xs text-gray-400 mt-2'>مثال: (يَٰٓأَيُّهَا، بِمَآ أُنزِلَ)</p></div><div class='bg-white p-4 rounded-xl shadow-sm border border-gray-200'><h5 class='font-bold text-gray-800 mb-2 border-b pb-1'>4. المد اللازم (كلمي/حرفي)</h5><p class='text-gray-600 mb-2'>سكون أصلي بعد حرف المد.</p><div class='flex justify-between items-center bg-gray-50 p-2 rounded'><span class='text-sm font-bold text-gray-500'>المقدار:</span><span class='text-purple-600 font-bold'>6 حركات (إشباع)</span></div><p class='text-xs text-gray-400 mt-2'>مثال: (الضَّآلِّينَ، الٓمٓ)</p></div><div class='bg-white p-4 rounded-xl shadow-sm border border-gray-200'><h5 class='font-bold text-gray-800 mb-2 border-b pb-1'>5. العارض للسكون</h5><p class='text-gray-600 mb-2'>الوقف على متحرك بالسكون.</p><div class='flex justify-between items-center bg-gray-50 p-2 rounded'><span class='text-sm font-bold text-gray-500'>المقدار:</span><span class='text-blue-600 font-bold'>2 أو 4 أو 6</span></div><p class='text-xs text-gray-400 mt-2'>مثال: (نَسْتَعِينُ)</p></div><div class='bg-white p-4 rounded-xl shadow-sm border border-gray-200'><h5 class='font-bold text-gray-800 mb-2 border-b pb-1'>6. مد اللين المهموز</h5><p class='text-gray-600 mb-2'>واو أو ياء ساكنة مفتوح ما قبلها بعدها همز (شيء، سوء).</p><div class='flex justify-between items-center bg-gray-50 p-2 rounded'><span class='text-sm font-bold text-gray-500'>المقدار:</span><span class='text-blue-600 font-bold'>4 أو 6 (توسط/طول)</span></div><p class='text-xs text-gray-400 mt-2'>استثناءات: (مَوْئِلًا، الْمَوْءُودَةُ) لا مد فيهما.</p></div></div><div class='bg-blue-50 p-4 rounded-xl border border-blue-100 mt-4'><h5 class='font-bold text-blue-800 mb-2 text-lg'>7. مد البدل (أصل ورش)</h5><p class='text-gray-700 mb-3'>هو كل همز ممدود (تقدم الهمز على حرف المد). مثل: ﴿ءَامَنُوا﴾، ﴿أُوتُوا﴾.</p><div class='flex gap-4 mb-4'><div class='flex-1 bg-white p-2 rounded text-center shadow-sm font-bold text-gray-700'>القصر (2)</div><div class='flex-1 bg-white p-2 rounded text-center shadow-sm font-bold text-gray-700'>التوسط (4) <span class='text-xs block font-normal text-emerald-600'>(المشهور)</span></div><div class='flex-1 bg-white p-2 rounded text-center shadow-sm font-bold text-gray-700'>الطول (6)</div></div><h6 class='font-bold text-gray-800 text-sm mb-2'>⚠️ المستثنيات (يقرؤها بالقصر فقط):</h6><ul class='grid md:grid-cols-2 gap-2 text-sm text-gray-600 list-disc list-inside'><li>إذا سبقت الهمزة بساكن صحيح (الْقُرْءَان، الظَّمْئَان).</li><li>همزة الوصل ابتداءً (اِئْتُونِي).</li><li>الألف المبدلة من التنوين وقفاً (دُعَاءً).</li><li>كلمة (إِسْرَٰٓءِيلَ).</li><li>كلمة (يُؤَاخِذُ).</li></ul></div></div></div>",
+    "order": 5
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 72,
+  "fields": {
+    "title": "باب الهمز",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>تعريف الهمز وأنواعه:</h4><p class='text-gray-700 leading-relaxed'><strong>لغة:</strong> الضغط والدفع.<br><strong>اصطلاحاً:</strong> صوت يخرج من أقصى الحلق، يتصف بالجهر والشدة.<br><br><strong>أنواعه:</strong><br>1. <strong>همز الوصل:</strong> يثبت ابتداءً ويسقط وصلاً.<br>2. <strong>همز القطع:</strong> يثبت ابتداءً ووصلاً وخطاً.</p></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>أوجه تغيير الهمز عند ورش:</h4><div class='grid gap-3 md:grid-cols-2'><div class='bg-white p-4 rounded border shadow-sm'><strong class='text-blue-700 block mb-1'>1. التسهيل (بين بين):</strong><p class='text-sm text-gray-600'>النطق بالهمزة بينها وبين الحرف المجانس لحركتها (المفتوحة بين الهمزة والألف، وهكذا).</p></div><div class='bg-white p-4 rounded border shadow-sm'><strong class='text-emerald-700 block mb-1'>2. الإبدال:</strong><p class='text-sm text-gray-600'>إبدال الهمزة حرف مد خالص (ألف، واو، ياء).</p></div><div class='bg-white p-4 rounded border shadow-sm'><strong class='text-purple-700 block mb-1'>3. النقل:</strong><p class='text-sm text-gray-600'>نقل حركة الهمزة إلى الساكن الصحيح قبلها وحذف الهمزة.</p></div><div class='bg-white p-4 rounded border shadow-sm'><strong class='text-red-700 block mb-1'>4. الإسقاط (الحذف):</strong><p class='text-sm text-gray-600'>حذف الهمزة بالكلية (مثل: الصابين).</p></div></div></div></div>",
+    "order": 6
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 73,
+  "fields": {
+    "title": "فصل في الهمزتين من كلمة",
+    "content": "<div class='space-y-6'><p class='text-gray-700'>هما همزتا القطع المتحركتان المتلاصقتان في كلمة واحدة. (الأولى دائماً مفتوحة للاستفهام، والثانية متغيرة).</p><h4 class='font-bold text-gray-800 text-lg'>أحوالها عند ورش:</h4><div class='overflow-hidden rounded-xl border border-gray-200'><table class='w-full text-right text-sm'><thead class='bg-gray-50 font-bold'><tr><th class='p-3'>الحالة</th><th class='p-3'>الحكم</th><th class='p-3'>المثال</th></tr></thead><tbody class='divide-y divide-gray-100'><tr class='bg-white'><td class='p-3'><span class='font-bold text-gray-800'>1. مفتوحتان (ءَأَ)</span></td><td class='p-3'><ul class='list-disc list-inside space-y-1'><li><strong>الإبدال (ألفاً):</strong> مع الإشباع إن بعدها ساكن ﴿ءَآنذَرْتَهُمْ﴾، والقصر إن بعدها متحرك ﴿ءَآمِنتُم﴾ [الملك].</li><li><strong>التسهيل (بين بين):</strong> وجه ثانٍ.</li></ul></td><td class='p-3 font-amiri'>﴿ءَآنذَرْتَهُمْ﴾<br>﴿ءَآلِدُ﴾</td></tr><tr class='bg-gray-50'><td class='p-3'><span class='font-bold text-gray-800'>2. مفتوحة فمكسورة (ءَأِ)</span></td><td class='p-3 text-emerald-700 font-bold'>التسهيل فقط</td><td class='p-3 font-amiri'>﴿أَئِنَّكُمْ﴾<br>﴿أَئِذَا﴾</td></tr><tr class='bg-white'><td class='p-3'><span class='font-bold text-gray-800'>3. مفتوحة فمضمومة (ءَأُ)</span></td><td class='p-3 text-emerald-700 font-bold'>التسهيل فقط</td><td class='p-3 font-amiri'>﴿أَؤُنَبِّئُكُم﴾<br>﴿أَؤُنْزِلَ﴾</td></tr></tbody></table></div><div class='bg-yellow-50 p-4 rounded-lg border border-yellow-100 mt-4 text-sm'><h5 class='font-bold text-yellow-800 mb-1'>⚠️ تنبيهات خاصة:</h5><ul class='list-disc list-inside text-gray-700 space-y-1'><li><strong>(أَرَءَيْتَ):</strong> يسهل الهمزة الثانية وصلاً ووقفا، وله وجه إبدالها ألفاً (توسط/إشباع) وصلاً.</li><li><strong>(ءَأَمِنتُم) [الملك/الأنعام/الأعراف]:</strong> له فيها التسهيل فقط، ويمتنع الإبدال (لئلا يلتبس بالخبر).</li><li><strong>(ءَآلِهَتُنَا) [الزخرف]:</strong> له فيها التسهيل فقط (ويمتنع الإبدال).</li></ul></div></div>",
+    "order": 7
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 74,
+  "fields": {
+    "title": "فصل في الهمزتين من كلمتين",
+    "content": "<div class='space-y-6'><p class='text-gray-700'>هما همزتا القطع المتلاصقتان وصلاً (الأولى آخر الكلمة، والثانية أول التالية).</p><h4 class='font-bold text-gray-800 text-lg'>1. المتفقتان في الحركة:</h4><div class='grid gap-3'><div class='bg-white p-3 border-l-4 border-blue-500 shadow-sm'><div class='flex justify-between font-bold mb-1'><span>مفتوحتان</span><span class='font-amiri'>﴿جَآءَ أَمْرُنَا﴾</span></div><p class='text-sm text-gray-600'>وجهان في الثانية: <strong>الإبدال</strong> (ألفاً) أو <strong>التسهيل</strong>.</p></div><div class='bg-white p-3 border-l-4 border-orange-500 shadow-sm'><div class='flex justify-between font-bold mb-1'><span>مكسورتان</span><span class='font-amiri'>﴿هَٰٓؤُلَآءِ إِن﴾</span></div><p class='text-sm text-gray-600'>وجهان في الثانية: <strong>الإبدال</strong> (ياء) أو <strong>التسهيل</strong>.</p></div><div class='bg-white p-3 border-l-4 border-purple-500 shadow-sm'><div class='flex justify-between font-bold mb-1'><span>مضمومتان</span><span class='font-amiri'>﴿أَوْلِيَآءُ أُوْلَٰٓئِكَ﴾</span></div><p class='text-sm text-gray-600'>وجهان في الثانية: <strong>الإبدال</strong> (واو) أو <strong>التسهيل</strong>.</p></div></div><h4 class='font-bold text-gray-800 text-lg mt-6 mb-2'>2. المختلفتان في الحركة:</h4><div class='overflow-hidden rounded-xl border border-gray-200'><table class='w-full text-right text-sm'><thead class='bg-gray-50'><tr><th class='p-3'>الحركة (1 -> 2)</th><th class='p-3'>الحكم (للثانية)</th><th class='p-3'>المثال</th></tr></thead><tbody class='divide-y divide-gray-100'><tr class='bg-white'><td class='p-3'>فتح -> كسر</td><td class='p-3 text-blue-600 font-bold'>التسهيل</td><td class='p-3 font-amiri'>﴿شُهَدَآءَ إِذْ﴾</td></tr><tr class='bg-gray-50'><td class='p-3'>فتح -> ضم</td><td class='p-3 text-blue-600 font-bold'>التسهيل</td><td class='p-3 font-amiri'>﴿جَآءَ أُمَّةً﴾</td></tr><tr class='bg-white'><td class='p-3'>كسر -> فتح</td><td class='p-3 text-emerald-600 font-bold'>الإبدال (ياء)</td><td class='p-3 font-amiri'>﴿مِنَ ٱلسَّمَآءِ ءَايَةً﴾</td></tr><tr class='bg-gray-50'><td class='p-3'>ضم -> فتح</td><td class='p-3 text-emerald-600 font-bold'>الإبدال (واو)</td><td class='p-3 font-amiri'>﴿سُوٓءُ أَعْمَٰلِهِمْ﴾</td></tr><tr class='bg-white'><td class='p-3'>ضم -> كسر</td><td class='p-3'>وجهان: <strong>إبدال (واو)</strong> أو <strong>تسهيل</strong></td><td class='p-3 font-amiri'>﴿يَشَآءُ إِلَىٰ﴾</td></tr></tbody></table></div></div>",
+    "order": 8
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 75,
+  "fields": {
+    "title": "فصل في همز الوصل",
+    "content": "<div class='space-y-5'><p class='text-gray-700'>حكم همزة الوصل المقترنة بلام التعريف إذا دخلت عليها همزة الاستفهام.</p><h4 class='font-bold text-gray-800 mb-2'>الكلمات الثلاث (في 6 مواضع):</h4><div class='flex justify-center gap-4 font-amiri text-xl mb-4'><span class='bg-gray-100 px-3 py-1 rounded'>﴿ءَآلذَّكَرَيْنِ﴾</span><span class='bg-gray-100 px-3 py-1 rounded'>﴿ءَآللَّهُ﴾</span><span class='bg-gray-100 px-3 py-1 rounded'>﴿ءَآلْـَٰٔنَ﴾</span></div><div class='bg-white p-5 rounded-xl border border-gray-200 shadow-sm'><h5 class='font-bold text-emerald-800 mb-2'>مذهب ورش (وجهان):</h5><ul class='list-decimal list-inside space-y-3 text-gray-700'><li><strong>الإبدال (المقدم):</strong> إبدال همزة الوصل ألفاً مع <strong>الإشباع (6 حركات)</strong>.<br><span class='text-sm text-gray-500 mr-5'>* في (ءالئن) له أيضاً القصر في الإبدال (حركتين) بسبب النقل.</span></li><li><strong>التسهيل:</strong> تسهيل همزة الوصل بين بين (دون مد).</li></ul></div></div>",
+    "order": 9
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 76,
+  "fields": {
+    "title": "فصل في الاستفهام المكرر",
+    "content": "<div class='space-y-5'><div class='bg-emerald-50 p-4 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 mb-2'>القاعدة العامة:</h4><p class='text-gray-700'>إذا تكرر الاستفهام في آية أو آيتين (مثل: أئذا... أئنا)، فإن ورشاً يقرأ:<br><strong>الأول:</strong> بالاستفهام (بهوتنين).<br><strong>الثاني:</strong> بالإخبار (بهمزة واحدة).</p><p class='text-sm text-gray-500 mt-2'>مثال: ﴿أَءِذَا كُنَّا تُرَٰبًا... إِنَّا لَفِي خَلْقٍ﴾ [الرعد].</p></div><div class='bg-white p-4 rounded-xl border border-red-200 shadow-sm'><h5 class='font-bold text-red-700 mb-2'>⚠️ المستثنيات (العكس):</h5><p class='text-gray-700 mb-2'>خالف ورش قاعدته في موضعين (أخْبرَ في الأول واستفهمَ في الثاني):</p><ul class='list-disc list-inside text-gray-700 font-amiri text-lg'><li><strong>موضع النمل:</strong> ﴿وَقَالَ ٱلَّذِينَ كَفَرُوٓاْ ءَإِذَا كُنَّا... أَءِنَّا﴾</li><li><strong>موضع العنكبوت:</strong> ﴿إِنَّكُمْ لَتَأْتُونَ... أَءِنَّكُمْ﴾</li></ul></div></div>",
+    "order": 10
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 77,
+  "fields": {
+    "title": "باب الهمز المفرد",
+    "content": "<div class='space-y-6'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>أحكامه عند ورش:</h4><div class='grid gap-4'><div class='bg-white p-4 rounded-xl border border-gray-200 shadow-sm'><h5 class='font-bold text-emerald-700 mb-2'>1. إذا كانت الهمزة ساكنة (فاء الكلمة):</h5><p class='text-gray-700 mb-2'>تبدل حرف مد من جنس ما قبلها.</p><div class='grid grid-cols-2 gap-2 text-center'><div class='bg-gray-50 p-2 rounded font-amiri'>﴿يُؤْمِنُونَ﴾ ← (يومنون)</div><div class='bg-gray-50 p-2 rounded font-amiri'>﴿يَأْلَمُونَ﴾ ← (يالمون)</div></div><p class='text-xs text-red-500 mt-2'>* استثناء: جملة الإيواء لا تبدل (المأوى، مأواكم، تؤوي، فأووا...).</p></div><div class='bg-white p-4 rounded-xl border border-gray-200 shadow-sm'><h5 class='font-bold text-emerald-700 mb-2'>2. إذا كانت مفتوحة بعد ضم (فاء الكلمة):</h5><p class='text-gray-700 mb-2'>تبدل واواً مفتوحة.</p><div class='bg-gray-50 p-2 rounded text-center font-amiri'>﴿مُؤَجَّلًا﴾ ← (موجلا)</div><div class='bg-gray-50 p-2 rounded text-center font-amiri'>﴿يُؤَاخِذُ﴾ ← (يواخذ)</div><p class='text-xs text-red-500 mt-2'>* استثناء: (لُؤْلُؤًا، فُؤَادك) لا تبدل.</p></div><div class='bg-gray-50 p-4 rounded-xl border border-gray-300 col-span-full'><h5 class='font-bold text-gray-800 mb-2'>3. كلمات مخصوصة (عين الكلمة):</h5><p class='text-gray-600 mb-2 text-sm'>أبدل ورش الهمزة في هذه الكلمات وحذفها في غيرها:</p><ul class='grid md:grid-cols-2 gap-2 text-sm'><li><span class='font-bold'>بِئْسَ ←</span> (بيس)</li><li><span class='font-bold'>الذِّئْبُ ←</span> (الذيب)</li><li><span class='font-bold'>بِئْرٍ ←</span> (بير)</li><li><span class='font-bold'>لِئَلَّا ←</span> (ليلا) [ابدال ياء]</li><li><span class='font-bold'>النَّسِيءُ ←</span> (النسي) [ابدال وإدغام]</li><li><span class='font-bold'>الصَّٰبِـُٔونَ ←</span> (الصابون) [حذف]</li><li><span class='font-bold'>يُضَٰهِـُٔونَ ←</span> (يضاهون) [حذف]</li></ul></div></div><div class='bg-blue-50 p-4 rounded-xl border border-blue-100'><h5 class='font-bold text-blue-800 mb-2'>حكم (الـلَّـٰٓـِٔي):</h5><p class='text-gray-700 text-sm'>يقرؤها بحذف الياء (اللاء) وتسهيل الهمزة.<br><strong>وصلاً:</strong> التسهيل.<br><strong>وقفاً:</strong> 1. التسهيل مع الروم. 2. الإبدال ياء ساكنة (اللآي) مع المد المشبع (6 حركات).</p></div></div>",
+    "order": 11
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 78,
+  "fields": {
+    "title": "باب نقل الحركة إلى الساكن قبلها",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>القاعدة العامة:</h4><p class='text-gray-700 leading-relaxed'>إذا جاءت همزة قطع متحركة، وقبلها حرف ساكن صحيح (غير حرف مد) منفصل عنها (في كلمة أخرى)، فإن ورشاً:<br>1. <strong>ينقل</strong> حركة الهمزة إلى الساكن قبلها.<br>2. <strong>يحذف</strong> الهمزة.</p></div><div class='grid gap-4 md:grid-cols-2'><div class='bg-white p-4 rounded-xl shadow-sm border border-gray-200 text-center'><h5 class='font-bold text-gray-700 mb-2'>الأصل</h5><span class='font-amiri text-xl'>﴿مَنْ ءَامَنَ﴾</span></div><div class='bg-white p-4 rounded-xl shadow-sm border border-gray-200 text-center'><h5 class='font-bold text-emerald-700 mb-2'>قراءة ورش (النقل)</h5><span class='font-amiri text-xl'> (مَنَامَنَ)</span></div><div class='bg-white p-4 rounded-xl shadow-sm border border-gray-200 text-center'><h5 class='font-bold text-gray-700 mb-2'>الأصل</h5><span class='font-amiri text-xl'>﴿ٱلْأَرْضُ﴾</span></div><div class='bg-white p-4 rounded-xl shadow-sm border border-gray-200 text-center'><h5 class='font-bold text-emerald-700 mb-2'>قراءة ورش (النقل)</h5><span class='font-amiri text-xl'> (لَرْضُ)</span></div></div><div class='space-y-3'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>تنبيهات واستثناءات:</h4><ul class='list-disc list-inside space-y-2 text-gray-700'><li><strong>م ال التعريف:</strong> ينقل إليها الحركة (الآخرة -> لاخرة). وله عند الابتداء بها وجهان: (ألاخرة) أو (لاخرة).</li><li><strong>كِتَٰبِيَهْ إِنِّيٓ (الحاقة):</strong> له فيها وجهان: <br>1. <strong>النقل:</strong> (كتابيهِ نِّي). <br>2. <strong>السكت (المقدم):</strong> (كتابيهْ .. إني) مع الإظهار.</li><li><strong>رِدْءًا (القصص):</strong> نقل حركتها وإن كانت في كلمة واحدة (ردا).</li><li><strong>عادًا الأُولى (النجم):</strong> ينقل حركة الهمزة إلى اللام ويدغم التنوين فيها (عادَلُّولى).</li></ul></div></div>",
+    "order": 12
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 79,
+  "fields": {
+    "title": "باب الإظهار والإدغام",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>تعريف الإدغام:</h4><p class='text-gray-700 leading-relaxed'><strong>لغة:</strong> الإدخال.<br><strong>اصطلاحاً:</strong> النطق بالحرفين حرفاً واحداً كالثاني مشدداً.</p></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>أسباب الإدغام:</h4><ul class='list-disc list-inside text-gray-700 space-y-2'><li><strong>التماثل:</strong> اتحاد الحرفين مخرجاً وصفة (ب وب).</li><li><strong>التجانس:</strong> اتحاد المخرج واختلاف الصفة (ت ود).</li><li><strong>التقارب:</strong> تقارب المخرج أو الصفة (ق وك).</li></ul><h4 class='font-bold text-gray-800 text-lg mt-6 mb-2'>أقسام الإدغام:</h4><div class='grid md:grid-cols-2 gap-4'><div class='bg-white p-4 rounded border shadow-sm'><strong class='text-blue-700 block mb-1'>1. الإدغام الصغير:</strong><p class='text-sm text-gray-600'>أن يكون الأول ساكناً والثاني متحركاً. (حكمه الإدغام غالباً).</p></div><div class='bg-white p-4 rounded border shadow-sm'><strong class='text-emerald-700 block mb-1'>2. الإدغام الكبير:</strong><p class='text-sm text-gray-600'>أن يتحرك الحرفان. (ليس لورش فيه إلا كلمات مخصوصة مثل: تَأْمَنَّا، مَكَّنِّي).</p></div></div></div></div>",
+    "order": 13
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 80,
+  "fields": {
+    "title": "فصل في حروف قُرِبتْ مخارجها",
+    "content": "<div class='space-y-6'><p class='text-gray-700'>مذهب ورش في إدغام الحروف المتقاربة والمتجانسة:</p><div class='overflow-hidden rounded-xl border border-gray-200'><table class='w-full text-right text-sm'><thead class='bg-gray-50 font-bold'><tr><th class='p-3'>الحروف</th><th class='p-3'>المثال</th><th class='p-3'>الحكم عند ورش</th></tr></thead><tbody class='divide-y divide-gray-100'><tr class='bg-white'><td class='p-3 font-bold'>ذال (إذ)</td><td class='p-3 font-amiri'>﴿إِذْ ظَلَمُوا﴾ ﴿إِذ دَّخَلُوا﴾</td><td class='p-3 text-emerald-700 font-bold'>الإدغام (في: ظ، ز، ص، د)</td></tr><tr class='bg-gray-50'><td class='p-3 font-bold'>دال (قد)</td><td class='p-3 font-amiri'>﴿قَد ضَّلَّ﴾ ﴿قَد ظَّلَمَ﴾</td><td class='p-3 text-emerald-700 font-bold'>الإدغام (في: ض، ظ)</td></tr><tr class='bg-white'><td class='p-3 font-bold'>تاء التأنيث</td><td class='p-3 font-amiri'>﴿كَانَت ظَّالِمَة﴾</td><td class='p-3 text-emerald-700 font-bold'>الإدغام (في: ظ)</td></tr><tr class='bg-gray-50'><td class='p-3 font-bold'>لام (هل/بل)</td><td class='p-3 font-amiri'>﴿بَل ظَّنَنتُمْ﴾</td><td class='p-3 text-emerald-700 font-bold'>الإدغام (في: ط، ظ، ض)</td></tr><tr class='bg-white'><td class='p-3 font-bold'>النون مع الواو</td><td class='p-3 font-amiri'>﴿يسٓ وَٱلْقُرْءَانِ﴾</td><td class='p-3 text-emerald-700 font-bold'>الإدغام (وصلاً)</td></tr><tr class='bg-white'><td class='p-3 font-bold'>النون مع الواو</td><td class='p-3 font-amiri'>﴿نٓ وَٱلْقَلَمِ﴾</td><td class='p-3 text-blue-700 font-bold'>الإظهار (الوجهان)</td></tr><tr class='bg-gray-50'><td class='p-3 font-bold'>الباء مع الميم</td><td class='p-3 font-amiri'>﴿يُعَذِّبُ مَن يَشَآءُ﴾</td><td class='p-3 text-blue-700 font-bold'>الإظهار</td></tr><tr class='bg-white'><td class='p-3 font-bold'>الثاء مع الذال</td><td class='p-3 font-amiri'>﴿يَلْهَث ذَّٰلِكَ﴾</td><td class='p-3 text-blue-700 font-bold'>الإظهار</td></tr><tr class='bg-gray-50'><td class='p-3 font-bold'>الباء مع الميم</td><td class='p-3 font-amiri'>﴿ٱرْكَب مَّعَنَا﴾</td><td class='p-3 text-blue-700 font-bold'>الإظهار</td></tr></tbody></table></div></div>",
+    "order": 14
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 81,
+  "fields": {
+    "title": "فصل في أحكام النون الساكنة والتنوين",
+    "content": "<div class='space-y-6'><div class='grid gap-4'><div class='bg-white p-4 rounded-xl border-l-4 border-blue-500 shadow-sm'><h5 class='font-bold text-blue-800 mb-2'>1. الإظهار</h5><p class='text-sm text-gray-600'>عند حروف الحلق الستة (ء، هـ، ع، ح، غ، خ).</p><p class='text-xs text-gray-400 mt-1'>مثال: ﴿مَنْ ءَامَنَ﴾ (مع ملاحظة النقل في الهمز عند ورش: مَنَامَنَ).</p></div><div class='bg-white p-4 rounded-xl border-l-4 border-emerald-500 shadow-sm'><h5 class='font-bold text-emerald-800 mb-2'>2. الإدغام</h5><p class='text-sm text-gray-600'><strong>بغنة:</strong> في (ي، ن، م، و). <br><strong>بغير غنة:</strong> في (ل، ر).</p><p class='text-xs text-gray-400 mt-1'>مثال: ﴿مِن وَالٍ﴾، ﴿مِن رَّبِّهِمْ﴾.</p></div><div class='bg-white p-4 rounded-xl border-l-4 border-orange-500 shadow-sm'><h5 class='font-bold text-orange-800 mb-2'>3. الإقلاب</h5><p class='text-sm text-gray-600'>قلب النون ميماً عند الباء مع الغنة.</p><p class='text-xs text-gray-400 mt-1'>مثال: ﴿مِنْ بَعْدِ﴾.</p></div><div class='bg-white p-4 rounded-xl border-l-4 border-purple-500 shadow-sm'><h5 class='font-bold text-purple-800 mb-2'>4. الإخفاء</h5><p class='text-sm text-gray-600'>عند باقي الحروف (15 حرفاً). وتفخم الغنة عند حروف الاستعلاء (ص، ض، ط، ظ، ق) إلا الخاء والغين.</p><p class='text-xs text-gray-400 mt-1'>مثال: ﴿مِن قَبْلُ﴾ (غنة مفخمة)، ﴿أَنفُسَكُم﴾ (مرققة).</p></div></div></div>",
+    "order": 15
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 82,
+  "fields": {
+    "title": "باب الفتح والإمالة",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>المصطلحات عند ورش:</h4><ul class='list-disc list-inside text-gray-700 space-y-1'><li><strong>الفتح:</strong> فتح القارئ فاه بالحرف (الأصل).</li><li><strong>التقليل (بين بين):</strong> إمالة صغرى، وهي بين الفتح والإمالة الكبرى (وهو مذهب ورش).</li><li><strong>الإمالة الكبرى:</strong> لم ترد عن ورش إلا في (الهاء) من لفظ ﴿طَهَ﴾.</li></ul></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>أسباب التقليل (قوائم):</h4><div class='grid gap-3'><div class='bg-white p-3 border rounded shadow-sm'><strong class='text-emerald-700 block'>1. ذوات الياء:</strong><p class='text-sm text-gray-600'>كل ألف أصلها ياء (الهدى، الهوى). له فيها <strong>الوجهان</strong> (الفتح والتقليل).</p></div><div class='bg-white p-3 border rounded shadow-sm'><strong class='text-emerald-700 block'>2. رؤوس الآي (السور الـ 11):</strong><p class='text-sm text-gray-600'>في سور (طه، النجم، المعارج، القيامة، النازعات، عبس، الأعلى، الشمس، الليل، الضحى، العلق). له فيها <strong>التقليل قولاً واحداً</strong> (إلا ما كان بالهاء 'ـها' ففيه الوجهان).</p></div><div class='bg-white p-3 border rounded shadow-sm'><strong class='text-emerald-700 block'>3. ذوات الراء:</strong><p class='text-sm text-gray-600'>كل ألف قبلها راء (اشترى، النصارى). له فيها <strong>التقليل قولاً واحداً</strong>.</p></div><div class='bg-white p-3 border rounded shadow-sm'><strong class='text-emerald-700 block'>4. كلمات مخصوصة:</strong><p class='text-sm text-gray-600'><strong>(التوراة):</strong> تقليل قولا واحداً.<br><strong>(الكافرين/كافرين):</strong> تقليل قولا واحداً (بالياء والنصب/الجر).<br><strong>(رأى):</strong> تقليل الراء والهمزة وصلاً (إذا جاء بعدها متحرك).</p></div></div></div></div>",
+    "order": 16
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 83,
+  "fields": {
+    "title": "فصل (اجتماع البدل مع التقليل)",
+    "content": "<div class='space-y-5'><p class='text-gray-700'>تحريرات اجتماع مد البدل مع ذوات الياء (التي فيها الوجهان):</p><div class='overflow-hidden rounded-xl border border-gray-200'><table class='w-full text-center text-sm'><thead class='bg-gray-50 font-bold'><tr><th class='p-3'>مد البدل</th><th class='p-3'>ذوات الياء</th><th class='p-3'>الحكم</th></tr></thead><tbody class='divide-y divide-gray-100'><tr class='bg-white'><td class='p-3'>قصر (2)</td><td class='p-3'>فتح</td><td class='p-3 text-emerald-600'>جائز</td></tr><tr class='bg-gray-50'><td class='p-3'>توسط (4)</td><td class='p-3'>تقليل</td><td class='p-3 text-emerald-600'>جائز (المقدم)</td></tr><tr class='bg-white'><td class='p-3'>طول (6)</td><td class='p-3'>فتح</td><td class='p-3 text-emerald-600'>جائز</td></tr><tr class='bg-white'><td class='p-3'>طول (6)</td><td class='p-3'>تقليل</td><td class='p-3 text-emerald-600'>جائز</td></tr><tr class='bg-red-50 text-red-700 font-bold'><td class='p-3'>قصر (2)</td><td class='p-3'>تقليل</td><td class='p-3'>ممتنع</td></tr><tr class='bg-red-50 text-red-700 font-bold'><td class='p-3'>توسط (4)</td><td class='p-3'>فتح</td><td class='p-3'>ممتنع</td></tr></tbody></table></div><p class='text-xs text-gray-500 text-center mt-2'>* ذوات الراء (المقللة قولاً واحداً) تجوز مع جميع أوجه البدل.</p></div>",
+    "order": 17
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 84,
+  "fields": {
+    "title": "باب الراءات",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>الأصل والترقيق:</h4><p class='text-gray-700'>الأصل في الراء التفخيم. واختص ورش بترقيقها (مفتوحة أو مضمومة) إذا سبقت بأسباب موجبة.</p></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>أسباب الترقيق عند ورش:</h4><ul class='list-disc list-inside text-gray-700 space-y-2'><li><strong>الكسر اللازم قبلها:</strong> متصل بها في نفس الكلمة (مِرَاء، الآخِرة).</li><li><strong>الياء الساكنة قبلها:</strong> (خَيْراً، كَبِيراً).</li><li><strong>قبلها حرف ساكن قبله كسر:</strong> (إِجْرَامِ، السِّحْرَ). <span class='text-sm text-gray-500'>(شرط ألا يكون الساكن خ، ص، ط، ق، ظ).</span></li><li><strong>الراء الممالة:</strong> أو التي قبلها ألف ممالة (النَّارِ، أدْرَاكَ).</li></ul><div class='bg-red-50 p-4 rounded-lg border border-red-100 mt-4'><h5 class='font-bold text-red-800 mb-2'>⚠️ موانع الترقيق (التفخيم):</h5><ul class='list-disc list-inside text-gray-700 text-sm space-y-1'><li>إذا أتى بعد الراء حرف استعلاء (صِرَاطاً، فِرَاق).</li><li>في الأسماء الأعجمية (إِبْرَاهِيم، إِسْرَائِيل).</li><li>في التكرار (فِرَاراً، مِدْرَاراً).</li></ul></div></div></div>",
+    "order": 18
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 85,
+  "fields": {
+    "title": "باب اللامات",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>التغليظ (التفخيم):</h4><p class='text-gray-700'>الأصل في اللام الترقيق. واختص ورش بتغليظ اللام المفتوحة بشروط.</p></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>شروط تغليظ اللام:</h4><ol class='list-decimal list-inside text-gray-700 space-y-2 bg-white p-4 rounded border shadow-sm'><li>أن تكون اللام <strong>مفتوحة</strong> (مخففة أو مشددة).</li><li>أن يسبقها أحد الحروف الثلاثة: <strong>(ص، ط، ظ)</strong>.</li><li>أن تكون هذه الحروف <strong>مفتوحة</strong> أو <strong>ساكنة</strong>.</li></ol><div class='grid grid-cols-3 gap-2 text-center mt-4'><div class='bg-gray-50 p-2 rounded font-amiri'>﴿ٱلصَّلَوٰةَ﴾</div><div class='bg-gray-50 p-2 rounded font-amiri'>﴿ٱلطَّلَٰقُ﴾</div><div class='bg-gray-50 p-2 rounded font-amiri'>﴿ظَلَمَ﴾</div></div><div class='bg-blue-50 p-4 rounded-lg mt-4 text-sm'><h5 class='font-bold text-blue-800 mb-1'>حالات الوجهين:</h5><ul class='list-disc list-inside text-gray-600'><li><strong>(فِصَالاً):</strong> حال بينهما ألف (التغليظ والترقيق).</li><li><strong>(يُصَلَّى):</strong> وقعت اللام قبل ألف مقللة (التغليظ مع الفتح، أو الترقيق مع التقليل).</li><li><strong>الوقف:</strong> إذا تطرفت اللام (يوصَلْ)، جاز الوجهان (والتغليظ أرجح).</li></ul></div></div></div>",
+    "order": 19
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 86,
+  "fields": {
+    "title": "باب الوقف بالروم والإشمام",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>تعريف الروم والإشمام:</h4><p class='text-gray-700 mb-2'><strong>الروم:</strong> هو الإتيان ببعض الحركة (ثلثها) بصوت خفي يسمعه القريب دون البعيد. (يدخل في المرفوع والمجرور/ المضموم والمكسور).</p><p class='text-gray-700'><strong>الإشمام:</strong> ضم الشفتين بُعيد تسكين الحرف (إشارة للحركة دون صوت). (يدخل في المرفوع والمضموم فقط).</p></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>أوجه الوقف على أواخر الكلم:</h4><div class='overflow-hidden rounded-xl border border-gray-200'><table class='w-full text-right text-sm'><thead class='bg-gray-50 font-bold'><tr><th class='p-3'>حركة الحرف الأخير</th><th class='p-3'>الأوجه الجائزة</th></tr></thead><tbody class='divide-y divide-gray-100'><tr class='bg-white'><td class='p-3 font-bold'>الفتح (ـَ)</td><td class='p-3'>السكون المحض فقط (لا روم ولا إشمام).</td></tr><tr class='bg-gray-50'><td class='p-3 font-bold'>الكسر (ـِ)</td><td class='p-3'>1. السكون المحض.<br>2. الروم (بمقدار القصر دائماً).</td></tr><tr class='bg-white'><td class='p-3 font-bold'>الضم (ـُ)</td><td class='p-3'>1. السكون المحض.<br>2. الروم.<br>3. الإشمام (يعامل معاملة السكون في المدود).</td></tr></tbody></table></div><div class='bg-red-50 p-4 rounded-lg border border-red-100'><h5 class='font-bold text-red-800 mb-2'>⚠️ موانع الروم والإشمام:</h5><ul class='list-disc list-inside text-gray-700 text-sm grid grid-cols-1 md:grid-cols-2 gap-1'><li>هاء التأنيث (التاء المربوطة).</li><li>ميم الجمع.</li><li>الحركة العارضة (لالتقاء الساكنين).</li><li>هاء الضمير (على مذهب التفصيل).</li></ul></div></div></div>",
+    "order": 20
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 87,
+  "fields": {
+    "title": "فصل في اتباع مرسوم الخط",
+    "content": "<div class='space-y-5'><p class='text-gray-700'>مذهب ورش في الوقف على مرسوم الخط العثماني:</p><div class='grid gap-3'><div class='bg-white p-3 border-l-4 border-blue-500 shadow-sm'><h5 class='font-bold text-blue-800 mb-1'>1. تاء التأنيث المفتوحة:</h5><p class='text-sm text-gray-600'>يوقف عليها <strong>بالتاء</strong> كما رسمت. (رحمت، شجرت، بقيت).</p></div><div class='bg-white p-3 border-l-4 border-emerald-500 shadow-sm'><h5 class='font-bold text-emerald-800 mb-1'>2. وكأيِّن:</h5><p class='text-sm text-gray-600'>يوقف عليها <strong>بالنون</strong> (وكأين) اتباعاً للرسم.</p></div><div class='bg-white p-3 border-l-4 border-purple-500 shadow-sm'><h5 class='font-bold text-purple-800 mb-1'>3. أيًّا مَّا:</h5><p class='text-sm text-gray-600'>يجوز الوقف على (أيًّا) أو على (ما)، والأرجح الوقف على (أيا) لانفصالها رسماً.</p></div><div class='bg-white p-3 border-l-4 border-orange-500 shadow-sm'><h5 class='font-bold text-orange-800 mb-1'>4. (مالِ) في 4 مواضع:</h5><p class='text-sm text-gray-600'>﴿فَمَالِ هَٰٓؤُلَآءِ﴾، ﴿مَالِ هَٰذَا ٱلرَّسُولِ﴾... يجوز الوقف على (ما) أو على اللام (مال)، والوقف على اللام هو اختباراً.</p></div></div></div>",
+    "order": 21
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 88,
+  "fields": {
+    "title": "باب ياءات الإضافة",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>تعريفها:</h4><p class='text-gray-700'>هي الياء الزائدة الدالة على المتكلم، تلحق بالأسماء والأفعال والحروف (نفسي، فطرني، لي).<br><strong>علامتها:</strong> يصح إحلال الكاف أو الهاء محلها (فطرك، فطره).</p></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>مذهب ورش (الفتح والإسكان):</h4><p class='text-gray-600'>الأصل عند ورش هو <strong>الفتح</strong> إذا جاء بعدها همزة قطع (مفتوحة، مكسورة، أو مضمومة) أو همزة وصل.</p><div class='grid gap-4'><div class='bg-white p-4 rounded border shadow-sm'><strong class='text-emerald-700 block mb-1'>1. قبل همزة القطع (بأنواعها):</strong><p class='text-sm text-gray-600'>يفتحها ورش. <br>مثال: ﴿إِنِّيٓ أَعْلَمُ﴾، ﴿مِنِّيٓ إِنَّكَ﴾، ﴿إِنِّيٓ أُعِيذُهَا﴾.</p><p class='text-xs text-red-500 mt-1'>* استثناءات يسكنها: (أَرِنِيٓ أَنظُرْ)، (تَفْتِنِّيٓ أَلَا)، (تَرْحَمْنِيٓ أَكُن)، (ذَرُونِيٓ أَقْتُلْ)...</p></div><div class='bg-white p-4 rounded border shadow-sm'><strong class='text-emerald-700 block mb-1'>2. قبل همزة الوصل (بلام):</strong><p class='text-sm text-gray-600'>يفتحها ورش. <br>مثال: ﴿رَبِّيَ ٱلَّذِي﴾.</p><p class='text-xs text-red-500 mt-1'>* استثناء: (عَهْدِي ٱلظَّٰلِمِينَ) أسكنها.</p></div><div class='bg-white p-4 rounded border shadow-sm'><strong class='text-emerald-700 block mb-1'>3. قبل همزة الوصل (مجردة):</strong><p class='text-sm text-gray-600'>يفتحها ورش. <br>مثال: ﴿لِنَفْسِي ٱذْهَبْ﴾.</p><p class='text-xs text-red-500 mt-1'>* استثناءات يسكنها: (أَخِي ٱشْدُدْ)، (إِنِّي ٱصْطَفَيْتُكَ)، (يَٰلَيْتَنِي ٱتَّخَذْتُ)، (ذِكْرِي ٱذْهَبَا).</p></div><div class='bg-white p-4 rounded border shadow-sm'><strong class='text-blue-700 block mb-1'>4. قبل باقي الحروف:</strong><p class='text-sm text-gray-600'>الأصل <strong>الإسكان</strong>، وفتح في مواضع محددة مثل: (بَيْتِيَ) [البقرة/الحج/نوح]، (وَجْهِيَ)، (وَمَمَاتِي)، (مَعِيَ) [في الظلة]، (لِيَ) [في مواضع].</p></div></div></div></div>",
+    "order": 22
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 89,
+  "fields": {
+    "title": "باب ياءات الزوائد",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>تعريفها وحكمها:</h4><p class='text-gray-700'>هي الياءات المتطرفة الزائدة في التلاوة عن رسم المصاحف العثمانية.<br><strong>حكمها عند ورش:</strong> يثبتها وصلاً (لفظاً) ويحذفها وقفاً.</p></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>عددها وأمثلة عليها:</h4><p class='text-gray-600'>أثبت ورش 47 ياءً زائدة وصلاً.</p><div class='grid grid-cols-2 md:grid-cols-3 gap-3 text-center'><span class='bg-gray-50 p-2 rounded border font-amiri'>﴿إِذَا يَسْرِ﴾</span><span class='bg-gray-50 p-2 rounded border font-amiri'>﴿بِٱلْوَادِ﴾</span><span class='bg-gray-50 p-2 rounded border font-amiri'>﴿يَدْعُ ٱلدَّاعِ﴾</span><span class='bg-gray-50 p-2 rounded border font-amiri'>﴿الْمُنَادِ﴾</span><span class='bg-gray-50 p-2 rounded border font-amiri'>﴿يُؤْتِيَنِ﴾</span><span class='bg-gray-50 p-2 rounded border font-amiri'>﴿فَمَآ ءَاتَىٰنِۦ﴾</span></div><div class='bg-yellow-50 p-4 rounded-lg border border-yellow-100 mt-4'><h5 class='font-bold text-yellow-800 mb-1'>⚠️ تنبيه (فَمَآ ءَاتَىٰنِۦ) [النمل]:</h5><p class='text-gray-700 text-sm'>لورش فيها عند الوقف وجهان:<br>1. إثبات الياء (آتاني).<br>2. حذف الياء (آتان).</p></div></div></div>",
+    "order": 23
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 90,
+  "fields": {
+    "title": "باب فرش الحروف وكلمات مخصوصة",
+    "content": "<div class='space-y-6'><p class='text-gray-700'>أحكام لكلمات محددة تخالف القواعد العامة أو تنفرد بحكم:</p><div class='space-y-4'><div class='bg-white p-4 rounded-xl border border-gray-200 shadow-sm'><h5 class='font-bold text-gray-800 mb-2'>1. الألفات السبعة (أنا، لكنا، الظنونا، الرسولا، السبيلا، قواريرَا، سلاسلا):</h5><p class='text-sm text-gray-600 mb-2'>تثبت وقفاً وتحذف وصلاً.</p><ul class='list-disc list-inside text-xs text-gray-500'><li><strong>(أَنَا۠):</strong> إذا جاء بعدها همزة قطع، فلها حكم المد المنفصل (تثبت وتمد وصلاً)، إلا المكسورة (أنا إلا) فتحذف وصلاً.</li><li><strong>(سَلَٰسِلَاْ):</strong> لورش فيها التنوين وصلاً (سلاسلاً)، والوقف بالألف المبدلة (سلاسلا).</li><li><strong>(قَوَارِيرَاْ):</strong> الأولى منونة وصلاً وموقوف عليها بالألف. الثانية غير منونة لورش (قواريرَ).</li></ul></div><div class='bg-white p-4 rounded-xl border border-gray-200 shadow-sm'><h5 class='font-bold text-gray-800 mb-2'>2. الإظهار المطلق (4 كلمات):</h5><div class='flex gap-3 justify-center font-amiri text-lg'><span class='text-emerald-700'>دُنْيَا</span><span class='text-emerald-700'>بُنْيَٰن</span><span class='text-emerald-700'>قِنْوَان</span><span class='text-emerald-700'>صِنْوَان</span></div><p class='text-xs text-center text-gray-500 mt-2'>يجب إظهار النون لئلا تشتبه بالمضاعف.</p></div><div class='bg-white p-4 rounded-xl border border-gray-200 shadow-sm'><h5 class='font-bold text-gray-800 mb-2'>3. كلمات متفرقة:</h5><ul class='list-disc list-inside text-sm text-gray-700 space-y-2'><li><strong>(يَلْهَث ذَّٰلِكَ):</strong> الإظهار فقط (يَلْهَثْ ذَلِكَ).</li><li><strong>(ٱرْكَب مَّعَنَا):</strong> الإظهار فقط (باء مقلقلة).</li><li><strong>(يسٓ وَٱلْقُرْءَانِ) / (نٓ وَٱلْقَلَمِ):</strong> الإدغام وصلاً (ويجوز الإظهار في ن، والإدغام مقدم).</li><li><strong>(تَأْمَنَّا):</strong> الإشمام (ضم الشفتين عند النون) أو الروم (الاختلاس).</li></ul></div></div></div>",
+    "order": 24
+  }
+},
+{
+  "model": "library.tajweedlesson",
+  "pk": 91,
+  "fields": {
+    "title": "باب مخارج الحروف وصفاتها",
+    "content": "<div class='space-y-6'><div class='bg-emerald-50 p-5 rounded-xl border-r-4 border-emerald-600'><h4 class='font-bold text-emerald-900 text-lg mb-2'>أولاً: المخارج (17 مخرجاً):</h4><div class='space-y-2'><details class='bg-white border rounded-lg'><summary class='p-3 font-bold cursor-pointer'>1. الجوف (1 مخرج)</summary><div class='p-3 text-sm text-gray-600'>مخرج مقدر، تخرج منه حروف المد الثلاثة (الألف، الواو، الياء).</div></details><details class='bg-white border rounded-lg'><summary class='p-3 font-bold cursor-pointer'>2. الحلق (3 مخارج)</summary><div class='p-3 text-sm text-gray-600'><ul class='list-disc list-inside'><li>أقصى الحلق (ء، هـ)</li><li>وسط الحلق (ع، ح)</li><li>أدنى الحلق (غ، خ)</li></ul></div></details><details class='bg-white border rounded-lg'><summary class='p-3 font-bold cursor-pointer'>3. اللسان (10 مخارج)</summary><div class='p-3 text-sm text-gray-600'>أقصى (ق، ك) - وسط (ج، ش، ي) - حافة (ض، ل) - طرف (ن، ر، ط د ت، ص ز س، ظ ذ ث).</div></details><details class='bg-white border rounded-lg'><summary class='p-3 font-bold cursor-pointer'>4. الشفتان (2 مخرج)</summary><div class='p-3 text-sm text-gray-600'>بطن الشفة (ف) - الشفتان معاً (ب، م، و).</div></details><details class='bg-white border rounded-lg'><summary class='p-3 font-bold cursor-pointer'>5. الخيشوم (1 مخرج)</summary><div class='p-3 text-sm text-gray-600'>مخرج الغنة.</div></details></div></div><div class='space-y-4'><h4 class='font-bold text-gray-800 text-lg border-b pb-2'>ثانياً: الصفات:</h4><div class='grid md:grid-cols-2 gap-4'><div class='bg-white p-4 rounded border'><h5 class='font-bold text-blue-700 mb-2'>صفات لها ضد (5):</h5><ul class='text-sm space-y-1'><li>الجهر × الهمس</li><li>الشدة × الرخاوة (بينهما التوسط)</li><li>الاستعلاء × الاستفال</li><li>الإطباق × الانفتاح</li><li>الإذلاق × الإصمات</li></ul></div><div class='bg-white p-4 rounded border'><h5 class='font-bold text-emerald-700 mb-2'>صفات لا ضد لها (7):</h5><ul class='text-sm space-y-1'><li>الصفير (ص، ز، س)</li><li>القلقلة (قطب جد)</li><li>اللين (و، ي ساكنتان مفتوح ما قبلهما)</li><li>الانحراف (ل، ر)</li><li>التكرير (ر)</li><li>التفشي (ش)</li><li>الاستطالة (ض)</li></ul></div></div></div></div>",
+    "order": 25
+  }
+},
+{
+  "model": "library.tafsir",
+  "pk": 1,
+  "fields": {
+    "surah_id": 1,
+    "surah_name": "سورة الفاتحة",
+    "text": "بِسْمِ اللهِ الرَّحْمنِ الرَّحِيمِ (1)\r\nسورة الفاتحة سميت هذه السورة بالفاتحة; لأنه يفتتح بها القرآن العظيم, وتسمى المثاني; لأنها تقرأ في كل ركعة, ولها أسماء أخر. أبتدئ قراءة القرآن باسم الله مستعينا به, (اللهِ) علم على الرب -تبارك وتعالى- المعبود بحق دون سواه, وهو أخص أسماء الله تعالى, ولا يسمى به غيره سبحانه. (الرَّحْمَنِ) ذي الرحمة العامة الذي وسعت رحمته جميع الخلق, (الرَّحِيمِ) بالمؤمنين, وهما اسمان من أسمائه تعالى، يتضمنان إثبات صفة الرحمة لله تعالى كما يليق بجلاله.\r\nالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ (2)\r\n(الحَمْدُ للهِ رَبِّ العَالَمِينَ) الثناء على الله بصفاته التي كلُّها أوصاف كمال, وبنعمه الظاهرة والباطنة، الدينية والدنيوية، وفي ضمنه أَمْرٌ لعباده أن يحمدوه, فهو المستحق له وحده, وهو سبحانه المنشئ للخلق, القائم بأمورهم, المربي لجميع خلقه بنعمه, ولأوليائه بالإيمان والعمل الصالح.\r\nالرَّحْمَنِ الرَّحِيمِ (3)\r\n(الرَّحْمَنِ) الذي وسعت رحمته جميع الخلق, (الرَّحِيمِ), بالمؤمنين, وهما اسمان من أسماء الله تعالى.\r\nمَالِكِ يَوْمِ الدِّينِ (4)\r\nوهو سبحانه وحده مالك يوم القيامة, وهو يوم الجزاء على الأعمال. وفي قراءة المسلم لهذه الآية في كل ركعة من صلواته تذكير له باليوم الآخر, وحثٌّ له على الاستعداد بالعمل الصالح, والكف عن المعاصي والسيئات.\r\nإِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ (5)\r\nإنا نخصك وحدك بالعبادة, ونستعين بك وحدك في جميع أمورنا, فالأمر كله بيدك, لا يملك منه أحد مثقال ذرة. وفي هذه الآية دليل على أن العبد لا يجوز له أن يصرف شيئًا من أنواع العبادة كالدعاء والاستغاثة والذبح والطواف إلا لله وحده, وفيها شفاء القلوب من داء التعلق بغير اله, ومن أمراض الرياء والعجب, والكبرياء.\r\nاهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ (6)\r\nدُلَّنا, وأرشدنا, ووفقنا إلى الطريق المستقيم, وثبتنا عليه حتى نلقاك, وهو الإسلام، الذي هو الطريق الواضح الموصل إلى رضوان الله وإلى جنته, الذي دلّ عليه خاتم رسله وأنبيائه محمد صلى الله عليه وسلم, فلا سبيل إلى سعادة العبد إلا بالاستقامة عليه.\r\nصِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلا الضَّالِّينَ (7)\r\nطريق الذين أنعمت عليهم من النبيين والصدِّيقين والشهداء والصالحين, فهم أهل الهداية والاستقامة, ولا تجعلنا ممن سلك طريق المغضوب عليهم, الذين عرفوا الحق ولم يعملوا به, وهم اليهود, ومن كان على شاكلتهم, والضالين, وهم الذين لم يهتدوا, فضلوا الطريق, وهم النصارى, ومن اتبع سنتهم. وفي هذا الدعاء شفاء لقلب المسلم من مرض الجحود والجهل والضلال, ودلالة على أن أعظم نعمة على الإطلاق هي نعمة الإسلام, فمن كان أعرف للحق وأتبع له, كان أولى بالصراط المستقيم, ولا ريب أن أصحاب رسول الله صلى الله عليه وسلم هم أولى الناس بذلك بعد الأنبياء عليهم السلام, فدلت الآية على فضلهم, وعظيم منزلتهم, رضي الله عنهم. ويستحب للقارئ أن يقول في الصلاة بعد قراءة الفاتحة: (آمين), ومعناها: اللهم استجب, وليست آية من سورة الفاتحة باتفاق العلماء; ولهذا أجمعوا على عدم كتابتها في المصاحف."
+  }
+},
+{
+  "model": "progress.quranstructure",
+  "pk": 1,
+  "fields": {
+    "surah_id": 1,
+    "surah_name": "الفاتحة",
+    "ayah_id": 1,
+    "ayah_text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+    "juz": 1,
+    "hizb": 1,
+    "rub": 1,
+    "thumn": 1,
+    "page": 1
+  }
+},
+{
+  "model": "progress.quranstructure",
+  "pk": 2,
+  "fields": {
+    "surah_id": 1,
+    "surah_name": "الفاتحة",
+    "ayah_id": 2,
+    "ayah_text": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+    "juz": 1,
+    "hizb": 1,
+    "rub": 1,
+    "thumn": 1,
+    "page": 1
+  }
+},
+{
+  "model": "progress.quranstructure",
+  "pk": 3,
+  "fields": {
+    "surah_id": 2,
+    "surah_name": "البقرة",
+    "ayah_id": 1,
+    "ayah_text": "الم",
+    "juz": 1,
+    "hizb": 1,
+    "rub": 1,
+    "thumn": 2,
+    "page": 2
+  }
+},
+{
+  "model": "progress.quranstructure",
+  "pk": 4,
+  "fields": {
+    "surah_id": 2,
+    "surah_name": "البقرة",
+    "ayah_id": 2,
+    "ayah_text": "ذَٰلِكَ الْكِتَابُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًى لِّلْمُتَّقِينَ",
+    "juz": 1,
+    "hizb": 1,
+    "rub": 1,
+    "thumn": 2,
+    "page": 2
+  }
+},
+{
+  "model": "progress.quranstructure",
+  "pk": 5,
+  "fields": {
+    "surah_id": 2,
+    "surah_name": "البقرة",
+    "ayah_id": 3,
+    "ayah_text": "الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ وَيُقِيمُونَ الصَّلَاةَ وَمِمَّا رَزَقْنَاهُمْ يُنفِقُونَ",
+    "juz": 1,
+    "hizb": 1,
+    "rub": 1,
+    "thumn": 2,
+    "page": 2
+  }
+},
+{
+  "model": "progress.quranstructure",
+  "pk": 6,
+  "fields": {
+    "surah_id": 2,
+    "surah_name": "البقرة",
+    "ayah_id": 4,
+    "ayah_text": "وَالَّذِينَ يُؤْمِنُونَ بِمَا أُنزِلَ إِلَيْكَ وَمَا أُنزِلَ مِن قَبْلِكَ وَبِالْآخِرَةِ هُمْ يُوقِنُونَ",
+    "juz": 1,
+    "hizb": 1,
+    "rub": 1,
+    "thumn": 2,
+    "page": 2
+  }
+},
+{
+  "model": "progress.quranstructure",
+  "pk": 7,
+  "fields": {
+    "surah_id": 2,
+    "surah_name": "البقرة",
+    "ayah_id": 5,
+    "ayah_text": "أُولَٰئِكَ عَلَىٰ هُدًى مِّن رَّبِّهِمْ ۖ وَأُولَٰئِكَ هُمُ الْمُفْلِحُونَ",
+    "juz": 1,
+    "hizb": 1,
+    "rub": 1,
+    "thumn": 2,
+    "page": 2
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "juz": 1,
+    "hizb": 1,
+    "thumn": 1,
+    "status": "memorized",
+    "updated_at": "2025-11-19T18:18:05.497Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "juz": 1,
+    "hizb": 2,
+    "thumn": 1,
+    "status": "memorized",
+    "updated_at": "2025-11-24T14:23:15.432Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 3,
+  "fields": {
+    "user": 2,
+    "juz": 12,
+    "hizb": 23,
+    "thumn": 1,
+    "status": "memorized",
+    "updated_at": "2025-11-25T10:49:26.700Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 4,
+  "fields": {
+    "user": 2,
+    "juz": 12,
+    "hizb": 24,
+    "thumn": 1,
+    "status": "memorized",
+    "updated_at": "2025-11-25T10:51:50.863Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 9,
+  "fields": {
+    "user": 2,
+    "juz": 1,
+    "hizb": 1,
+    "thumn": 4,
+    "status": "memorized",
+    "updated_at": "2025-11-25T10:58:02.825Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 13,
+  "fields": {
+    "user": 2,
+    "juz": 29,
+    "hizb": 57,
+    "thumn": 1,
+    "status": "memorized",
+    "updated_at": "2025-11-25T14:20:12.130Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 14,
+  "fields": {
+    "user": 2,
+    "juz": 9,
+    "hizb": 17,
+    "thumn": 1,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:39:20.006Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 15,
+  "fields": {
+    "user": 2,
+    "juz": 9,
+    "hizb": 17,
+    "thumn": 2,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:39:23.991Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 16,
+  "fields": {
+    "user": 2,
+    "juz": 9,
+    "hizb": 17,
+    "thumn": 3,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:39:27.639Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 17,
+  "fields": {
+    "user": 2,
+    "juz": 9,
+    "hizb": 17,
+    "thumn": 4,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:39:31.201Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 18,
+  "fields": {
+    "user": 2,
+    "juz": 9,
+    "hizb": 17,
+    "thumn": 5,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:39:34.586Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 19,
+  "fields": {
+    "user": 2,
+    "juz": 9,
+    "hizb": 17,
+    "thumn": 6,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:39:37.991Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 20,
+  "fields": {
+    "user": 2,
+    "juz": 9,
+    "hizb": 17,
+    "thumn": 7,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:39:41.909Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 21,
+  "fields": {
+    "user": 2,
+    "juz": 9,
+    "hizb": 17,
+    "thumn": 8,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:39:46.214Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 22,
+  "fields": {
+    "user": 2,
+    "juz": 10,
+    "hizb": 19,
+    "thumn": 1,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:40:22.644Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 23,
+  "fields": {
+    "user": 2,
+    "juz": 10,
+    "hizb": 19,
+    "thumn": 2,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:40:26.284Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 24,
+  "fields": {
+    "user": 2,
+    "juz": 10,
+    "hizb": 19,
+    "thumn": 3,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:40:39.960Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 25,
+  "fields": {
+    "user": 2,
+    "juz": 10,
+    "hizb": 19,
+    "thumn": 4,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:40:43.605Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 26,
+  "fields": {
+    "user": 2,
+    "juz": 10,
+    "hizb": 19,
+    "thumn": 5,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:40:46.945Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 27,
+  "fields": {
+    "user": 2,
+    "juz": 10,
+    "hizb": 19,
+    "thumn": 6,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:40:50.012Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 28,
+  "fields": {
+    "user": 2,
+    "juz": 10,
+    "hizb": 19,
+    "thumn": 7,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:40:53.595Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 29,
+  "fields": {
+    "user": 2,
+    "juz": 10,
+    "hizb": 19,
+    "thumn": 8,
+    "status": "memorized",
+    "updated_at": "2025-11-26T10:40:57.007Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 30,
+  "fields": {
+    "user": 2,
+    "juz": 13,
+    "hizb": 25,
+    "thumn": 4,
+    "status": "memorized",
+    "updated_at": "2025-11-27T20:02:48.611Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 31,
+  "fields": {
+    "user": 2,
+    "juz": 14,
+    "hizb": 28,
+    "thumn": 6,
+    "status": "memorized",
+    "updated_at": "2025-11-27T20:04:21.228Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 32,
+  "fields": {
+    "user": 2,
+    "juz": 14,
+    "hizb": 28,
+    "thumn": 7,
+    "status": "memorized",
+    "updated_at": "2025-11-27T20:12:13.565Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 33,
+  "fields": {
+    "user": 2,
+    "juz": 12,
+    "hizb": 24,
+    "thumn": 5,
+    "status": "memorized",
+    "updated_at": "2025-11-27T20:42:25.437Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 35,
+  "fields": {
+    "user": 2,
+    "juz": 14,
+    "hizb": 28,
+    "thumn": 3,
+    "status": "memorized",
+    "updated_at": "2025-11-27T21:09:39.231Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 36,
+  "fields": {
+    "user": 2,
+    "juz": 11,
+    "hizb": 21,
+    "thumn": 1,
+    "status": "memorized",
+    "updated_at": "2025-11-28T10:03:42.097Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 37,
+  "fields": {
+    "user": 2,
+    "juz": 14,
+    "hizb": 28,
+    "thumn": 2,
+    "status": "memorized",
+    "updated_at": "2025-11-28T10:07:25.313Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 41,
+  "fields": {
+    "user": 2,
+    "juz": 18,
+    "hizb": 35,
+    "thumn": 6,
+    "status": "memorized",
+    "updated_at": "2025-12-11T15:26:12.195Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 42,
+  "fields": {
+    "user": 2,
+    "juz": 18,
+    "hizb": 35,
+    "thumn": 7,
+    "status": "memorized",
+    "updated_at": "2025-12-11T15:26:18.692Z"
+  }
+},
+{
+  "model": "progress.thumnprogress",
+  "pk": 43,
+  "fields": {
+    "user": 7,
+    "juz": 1,
+    "hizb": 1,
+    "thumn": 1,
+    "status": "memorized",
+    "updated_at": "2025-12-11T15:41:27.324Z"
+  }
+},
+{
+  "model": "progress.progresslog",
+  "pk": 45,
+  "fields": {
+    "user": 2,
+    "log_type": "memorization",
+    "date": "2025-12-11",
+    "quantity_description": "الحزب 35 - الثمن 6 (الجزء 18)",
+    "self_notes": ""
+  }
+},
+{
+  "model": "progress.progresslog",
+  "pk": 47,
+  "fields": {
+    "user": 7,
+    "log_type": "memorization",
+    "date": "2025-12-11",
+    "quantity_description": "الحزب 1 - الثمن 1 (الجزء 1)",
+    "self_notes": ""
+  }
+},
+{
+  "model": "reviews.recitationsubmission",
+  "pk": 4,
+  "fields": {
+    "student": 2,
+    "audio_file": "recitations/2025/12/20/tek_recitation.webm",
+    "surah_name": "الفاتحة",
+    "from_ayah": 1,
+    "to_ayah": 7,
+    "status": "completed",
+    "instructor_rating": 3,
+    "instructor_notes": "المرجو التركيز",
+    "instructor_audio": "feedback/2025/12/22/reply_recitation.webm",
+    "created_at": "2025-12-20T21:37:51.348Z",
+    "updated_at": "2025-12-22T14:45:11.709Z",
+    "reviewed_at": "2025-12-22T14:45:11.703Z"
+  }
+},
+{
+  "model": "reviews.recitationsubmission",
+  "pk": 9,
+  "fields": {
+    "student": 2,
+    "audio_file": "recitations/2025/12/22/tek_recitation.webm",
+    "surah_name": "الروم",
+    "from_ayah": 1,
+    "to_ayah": 10,
+    "status": "rejected",
+    "instructor_rating": 1,
+    "instructor_notes": "أعد الحفظ",
+    "instructor_audio": "",
+    "created_at": "2025-12-22T14:28:42.745Z",
+    "updated_at": "2025-12-22T14:47:47.169Z",
+    "reviewed_at": "2025-12-22T14:47:47.168Z"
+  }
+},
+{
+  "model": "reviews.recitationsubmission",
+  "pk": 10,
+  "fields": {
+    "student": 2,
+    "audio_file": "recitations/2025/12/22/tek_recitation_Z3aMXWa.webm",
+    "surah_name": "الكوثر",
+    "from_ayah": 1,
+    "to_ayah": 3,
+    "status": "completed",
+    "instructor_rating": 5,
+    "instructor_notes": "",
+    "instructor_audio": "",
+    "created_at": "2025-12-22T14:29:19.392Z",
+    "updated_at": "2025-12-22T14:47:53.587Z",
+    "reviewed_at": "2025-12-22T14:47:53.587Z"
+  }
+},
+{
+  "model": "reviews.recitationsubmission",
+  "pk": 11,
+  "fields": {
+    "student": 2,
+    "audio_file": "recitations/2025/12/22/tek_recitation_ONTrtdK.webm",
+    "surah_name": "الفاتحة",
+    "from_ayah": 1,
+    "to_ayah": 7,
+    "status": "rejected",
+    "instructor_rating": 2,
+    "instructor_notes": "المرجو التركيز على",
+    "instructor_audio": "",
+    "created_at": "2025-12-22T14:49:15.682Z",
+    "updated_at": "2025-12-22T14:50:04.012Z",
+    "reviewed_at": "2025-12-22T14:50:04.012Z"
+  }
+},
+{
+  "model": "reviews.recitationsubmission",
+  "pk": 12,
+  "fields": {
+    "student": 2,
+    "audio_file": "recitations/2025/12/22/tek_recitation_KqnBmpj.webm",
+    "surah_name": "المائدة",
+    "from_ayah": 11,
+    "to_ayah": 12,
+    "status": "completed",
+    "instructor_rating": 2,
+    "instructor_notes": "لا تظهر الملاحظات",
+    "instructor_audio": "",
+    "created_at": "2025-12-22T14:51:17.294Z",
+    "updated_at": "2025-12-22T14:51:47.157Z",
+    "reviewed_at": "2025-12-22T14:51:47.156Z"
+  }
+}
+]
