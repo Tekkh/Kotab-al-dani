@@ -63,7 +63,7 @@ export default function LibraryPage() {
     setTafsirLoading(true);
     setTafsirResult(null);
     try {
-      const res = await apiClient.get(`/proxy/tafsir/${selectedSurah}/${selectedAyah}/`);
+      const res = await apiClient.get(`/library/tafsir-proxy/${selectedSurah}/${selectedAyah}/`);
       setTafsirResult(res.data);
     } catch (err) {
       console.error(err);
