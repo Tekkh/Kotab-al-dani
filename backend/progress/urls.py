@@ -8,7 +8,7 @@ from .views import (
 )
 
 router = DefaultRouter()
-router.register(r'logs', ProgressLogViewSet, basename='progress-log')
+router.register(r'progress-logs', ProgressLogViewSet, basename='progress-log')
 router.register(r'thumns', ThumnProgressViewSet, basename='thumn-progress')
 router.register(r'quran-structure', QuranStructureViewSet, basename='quran-structure')
 
