@@ -58,7 +58,7 @@ export default function AudioRecorder({ onRecordingComplete }: AudioRecorderProp
     }
   };
 
-  // إعادة التسجيل (حذف الحالي)
+  // إعادة التسجيل
   const resetRecording = () => {
     setAudioUrl(null);
     setRecordingTime(0);
