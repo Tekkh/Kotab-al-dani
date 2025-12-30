@@ -14,7 +14,6 @@ export default function AudioRecorder({ onRecordingComplete }: AudioRecorderProp
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<number | null>(null);
 
-  // بدء التسجيل
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -37,8 +36,7 @@ export default function AudioRecorder({ onRecordingComplete }: AudioRecorderProp
 
       mediaRecorderRef.current.start();
       setIsRecording(true);
-      
-      // بدء العداد
+
       setRecordingTime(0);
       timerRef.current = window.setInterval(() => {
         setRecordingTime(prev => prev + 1);
