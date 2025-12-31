@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { 
   ChevronRight, ChevronLeft, Loader2, 
-  BookOpen, Bookmark, Save, X, Maximize2, Layers,
+  BookOpen, Bookmark, Save, X, Maximize2, Layers 
 } from 'lucide-react';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
@@ -25,17 +25,17 @@ export default function MusafView() {
   const [showControls, setShowControls] = useState(true);
   const [savedPage, setSavedPage] = useState<number | null>(null);
   
-  // تتبع حالة التكبير للسماح بالسحب
+  // تتبع حالة التكبير (ضروري لتعطيل السحب عند التكبير)
   const [currentScale, setCurrentScale] = useState(1);
 
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // متغيرات لمعالجة السحب (Swipe)
+  // متغيرات السحب (Swipe)
   const touchStart = useRef<number | null>(null);
   const touchEnd = useRef<number | null>(null);
   const minSwipeDistance = 50; 
 
-  // --- التحضير والبيانات ---
+  // --- 1. جلب البيانات ---
   useEffect(() => {
     axios.get('https://api.quran.com/api/v4/chapters?language=ar')
       .then(res => setChapters(res.data.chapters))
@@ -63,6 +63,8 @@ export default function MusafView() {
   const getPageUrl = (pageNum: number) => 
     `https://cdn.jsdelivr.net/gh/Tekkh/quran-warsh@main/images/page${pageNum}.jpg`;
 
+  // --- 2. دوال التنقل ---
+  // ملاحظة: نعيد المقياس لـ 1 عند القلب لضمان عمل السحب في الصفحة الجديدة
   const goToNextPage = useCallback(() => {
     setPage(p => Math.min(604, p + 1));
     setCurrentScale(1); 
@@ -109,7 +111,7 @@ export default function MusafView() {
     setPage(Math.min(604, targetPage));
   };
 
-  // --- منطق السحب (Swipe Logic) ---
+  // --- 3. منطق السحب (Swipe Logic) ---
   const onTouchStart = (e: React.TouchEvent) => {
     touchEnd.current = null; 
     touchStart.current = e.targetTouches[0].clientX;
@@ -122,7 +124,7 @@ export default function MusafView() {
   const onTouchEnd = () => {
     if (!touchStart.current || !touchEnd.current) return;
     
-    // نسمح بالسحب فقط إذا كانت الصورة بحجمها الطبيعي (غير مكبرة)
+    // إذا كانت الصورة مكبرة، لا نغير الصفحة (نترك المستخدم يتحرك داخل الصورة)
     if (currentScale > 1.1) return;
 
     const distance = touchStart.current - touchEnd.current;
@@ -143,6 +145,10 @@ export default function MusafView() {
           : 'relative h-[850px] rounded-2xl shadow-sm border border-gray-200 bg-white'
         }
       `}
+      // ربط أحداث اللمس بالحاوية الرئيسية
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
       {/* === الشريط العلوي === */}
       <div className={`
@@ -211,12 +217,7 @@ export default function MusafView() {
       </div>
 
       {/* === منطقة عرض المصحف === */}
-      <div 
-        className={`flex-1 relative flex justify-center items-center overflow-hidden ${isFullscreen ? 'bg-black' : 'bg-white'}`}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
+      <div className={`flex-1 relative flex justify-center items-center overflow-hidden ${isFullscreen ? 'bg-black' : 'bg-white'}`}>
         
         {loading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/10 z-20">
@@ -224,13 +225,18 @@ export default function MusafView() {
           </div>
         )}
 
-        {/* ✅ الإصلاح هنا: أزلنا الدوال غير المستخدمة واستخدمنا المكون مباشرة */}
+        {/* التعديل الجوهري هنا:
+          panning={{ disabled: currentScale === 1 }}
+          هذا السطر هو الذي يسمح للمتصفح بفهم "السحب" عندما تكون الصورة بحجمها الطبيعي
+          وبالتالي يعمل كود onTouchEnd الخاص بنا
+        */}
         <TransformWrapper
           initialScale={1}
           minScale={1}
           maxScale={4}
           centerOnInit={true}
           doubleClick={{ disabled: true }}
+          panning={{ disabled: currentScale === 1 }} 
           onTransformed={(e) => setCurrentScale(e.state.scale)}
         >
           <TransformComponent
@@ -244,7 +250,7 @@ export default function MusafView() {
                 className="max-h-full w-auto max-w-full object-contain"
                 onLoad={() => setLoading(false)}
                 onError={() => { setLoading(false); setError(true); }}
-                // النقر على الصورة يخفي/يظهر الأدوات
+                // النقر لتبديل القوائم
                 onClick={() => {
                    if (isFullscreen) setShowControls(prev => !prev);
                 }}
@@ -255,23 +261,27 @@ export default function MusafView() {
           </TransformComponent>
         </TransformWrapper>
 
-        {/* أزرار تنقل مخفية في وضع ملء الشاشة لكنها تعمل عند الحاجة */}
-        {!isFullscreen && (
-          <>
-            <button 
-              className="absolute inset-y-0 left-0 w-12 flex items-center justify-center z-30 opacity-0 hover:opacity-100 transition-opacity"
-              onClick={(e) => { e.stopPropagation(); goToNextPage(); }}
-            >
-              <div className="bg-black/20 p-2 rounded-full text-white"><ChevronLeft /></div>
-            </button>
-            <button 
-              className="absolute inset-y-0 right-0 w-12 flex items-center justify-center z-30 opacity-0 hover:opacity-100 transition-opacity"
-              onClick={(e) => { e.stopPropagation(); goToPrevPage(); }}
-            >
-              <div className="bg-black/20 p-2 rounded-full text-white"><ChevronRight /></div>
-            </button>
-          </>
-        )}
+        {/* أزرار التنقل الجانبية
+          جعلناها تظهر دائماً إذا كانت showControls مفعلة
+          (حذفنا شرط !isFullscreen) لتظهر في ملء الشاشة أيضاً كما طلبت
+        */}
+        <div 
+           className={`absolute inset-y-0 left-0 w-16 md:w-24 flex items-center justify-start pl-2 z-30 transition-opacity duration-300 ${!showControls ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+           onClick={(e) => { e.stopPropagation(); goToNextPage(); }} 
+        >
+          <button className="bg-black/20 hover:bg-black/40 text-white p-2 rounded-full backdrop-blur-sm transition-all shadow-lg transform hover:scale-110">
+            <ChevronLeft size={32} />
+          </button>
+        </div>
+
+        <div 
+           className={`absolute inset-y-0 right-0 w-16 md:w-24 flex items-center justify-end pr-2 z-30 transition-opacity duration-300 ${!showControls ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+           onClick={(e) => { e.stopPropagation(); goToPrevPage(); }}
+        >
+          <button className="bg-black/20 hover:bg-black/40 text-white p-2 rounded-full backdrop-blur-sm transition-all shadow-lg transform hover:scale-110">
+            <ChevronRight size={32} />
+          </button>
+        </div>
 
         {/* رقم الصفحة */}
         <div className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-900/80 text-white px-4 py-1 rounded-full text-xs font-mono backdrop-blur-md transition-opacity duration-300 z-30 ${(!showControls && isFullscreen) ? 'opacity-0' : 'opacity-100'}`}>
