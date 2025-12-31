@@ -20,7 +20,6 @@ export default function MusafView() {
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [selectedSurah, setSelectedSurah] = useState<number>(1);
   
-  // حالات العرض
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [savedPage, setSavedPage] = useState<number | null>(null);
