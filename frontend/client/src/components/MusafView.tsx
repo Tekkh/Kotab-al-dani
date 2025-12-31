@@ -25,15 +25,15 @@ export default function MusafView() {
   const [showControls, setShowControls] = useState(true);
   const [savedPage, setSavedPage] = useState<number | null>(null);
   
-  // تتبع حالة التكبير (ضروري لتعطيل السحب عند التكبير)
+  // تتبع حالة التكبير
   const [currentScale, setCurrentScale] = useState(1);
 
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // متغيرات السحب (Swipe)
-  const touchStart = useRef<number | null>(null);
-  const touchEnd = useRef<number | null>(null);
-  const minSwipeDistance = 50; 
+  // متغيرات اللمس (للسحب والنقر)
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null); // لتجنب الخلط مع التمرير العمودي
+  const touchStartTime = useRef<number>(0); // لحساب زمن النقرة
 
   // --- 1. جلب البيانات ---
   useEffect(() => {
@@ -64,7 +64,6 @@ export default function MusafView() {
     `https://cdn.jsdelivr.net/gh/Tekkh/quran-warsh@main/images/page${pageNum}.jpg`;
 
   // --- 2. دوال التنقل ---
-  // ملاحظة: نعيد المقياس لـ 1 عند القلب لضمان عمل السحب في الصفحة الجديدة
   const goToNextPage = useCallback(() => {
     setPage(p => Math.min(604, p + 1));
     setCurrentScale(1); 
@@ -111,28 +110,45 @@ export default function MusafView() {
     setPage(Math.min(604, targetPage));
   };
 
-  // --- 3. منطق السحب (Swipe Logic) ---
+  // --- 3. منطق اللمس الذكي (Smart Touch Logic) ---
   const onTouchStart = (e: React.TouchEvent) => {
-    touchEnd.current = null; 
-    touchStart.current = e.targetTouches[0].clientX;
+    touchStartX.current = e.targetTouches[0].clientX;
+    touchStartY.current = e.targetTouches[0].clientY;
+    touchStartTime.current = Date.now(); // تسجيل وقت البدء
   };
 
-  const onTouchMove = (e: React.TouchEvent) => {
-    touchEnd.current = e.targetTouches[0].clientX;
-  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
 
-  const onTouchEnd = () => {
-    if (!touchStart.current || !touchEnd.current) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
     
-    // إذا كانت الصورة مكبرة، لا نغير الصفحة (نترك المستخدم يتحرك داخل الصورة)
-    if (currentScale > 1.1) return;
+    const diffX = touchStartX.current - touchEndX;
+    const diffY = touchStartY.current - touchEndY;
+    const timeDiff = Date.now() - touchStartTime.current;
 
-    const distance = touchStart.current - touchEnd.current;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
+    // 1. كشف النقرة (Tap Detection)
+    // إذا كانت الحركة صغيرة جداً والوقت قصير -> فهذه نقرة لإخفاء القوائم
+    if (Math.abs(diffX) < 10 && Math.abs(diffY) < 10 && timeDiff < 200) {
+        if (isFullscreen) setShowControls(prev => !prev);
+        return;
+    }
 
-    if (isLeftSwipe) goToNextPage();
-    if (isRightSwipe) goToPrevPage();
+    // 2. كشف السحب (Swipe Detection)
+    // يعمل فقط إذا لم يكن هناك تكبير (Scale == 1) لتجنب التعارض مع تحريك الصورة
+    if (currentScale === 1 && Math.abs(diffX) > 50 && Math.abs(diffY) < 100) {
+        if (diffX < 0) {
+            // السحب لليمين (Start < End) -> الصفحة التالية (منطق المصحف العربي)
+            goToNextPage();
+        } else {
+            // السحب لليسار (Start > End) -> الصفحة السابقة
+            goToPrevPage();
+        }
+    }
+
+    // تصفير القيم
+    touchStartX.current = null;
+    touchStartY.current = null;
   };
 
   return (
@@ -147,7 +163,6 @@ export default function MusafView() {
       `}
       // ربط أحداث اللمس بالحاوية الرئيسية
       onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
       {/* === الشريط العلوي === */}
@@ -225,17 +240,13 @@ export default function MusafView() {
           </div>
         )}
 
-        {/* التعديل الجوهري هنا:
-          panning={{ disabled: currentScale === 1 }}
-          هذا السطر هو الذي يسمح للمتصفح بفهم "السحب" عندما تكون الصورة بحجمها الطبيعي
-          وبالتالي يعمل كود onTouchEnd الخاص بنا
-        */}
         <TransformWrapper
           initialScale={1}
           minScale={1}
           maxScale={4}
           centerOnInit={true}
           doubleClick={{ disabled: true }}
+          // تعطيل التحريك (Panning) عندما تكون الصورة غير مكبرة ليسمح بالسحب للصفحة التالية
           panning={{ disabled: currentScale === 1 }} 
           onTransformed={(e) => setCurrentScale(e.state.scale)}
         >
@@ -250,10 +261,7 @@ export default function MusafView() {
                 className="max-h-full w-auto max-w-full object-contain"
                 onLoad={() => setLoading(false)}
                 onError={() => { setLoading(false); setError(true); }}
-                // النقر لتبديل القوائم
-                onClick={() => {
-                   if (isFullscreen) setShowControls(prev => !prev);
-                }}
+                // ألغينا onClick هنا لأننا نعالجه في onTouchEnd
               />
             ) : (
               <div className="text-red-500">فشل تحميل الصفحة</div>
@@ -261,12 +269,9 @@ export default function MusafView() {
           </TransformComponent>
         </TransformWrapper>
 
-        {/* أزرار التنقل الجانبية
-          جعلناها تظهر دائماً إذا كانت showControls مفعلة
-          (حذفنا شرط !isFullscreen) لتظهر في ملء الشاشة أيضاً كما طلبت
-        */}
+        {/* أزرار التنقل الجانبية - تظهر الآن في وضع ملء الشاشة أيضاً طالما التحكم مفعل */}
         <div 
-           className={`absolute inset-y-0 left-0 w-16 md:w-24 flex items-center justify-start pl-2 z-30 transition-opacity duration-300 ${!showControls ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+           className={`absolute inset-y-0 left-0 w-16 md:w-24 flex items-center justify-start pl-2 z-30 transition-opacity duration-300 ${(!showControls) ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
            onClick={(e) => { e.stopPropagation(); goToNextPage(); }} 
         >
           <button className="bg-black/20 hover:bg-black/40 text-white p-2 rounded-full backdrop-blur-sm transition-all shadow-lg transform hover:scale-110">
@@ -275,7 +280,7 @@ export default function MusafView() {
         </div>
 
         <div 
-           className={`absolute inset-y-0 right-0 w-16 md:w-24 flex items-center justify-end pr-2 z-30 transition-opacity duration-300 ${!showControls ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+           className={`absolute inset-y-0 right-0 w-16 md:w-24 flex items-center justify-end pr-2 z-30 transition-opacity duration-300 ${(!showControls) ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
            onClick={(e) => { e.stopPropagation(); goToPrevPage(); }}
         >
           <button className="bg-black/20 hover:bg-black/40 text-white p-2 rounded-full backdrop-blur-sm transition-all shadow-lg transform hover:scale-110">
