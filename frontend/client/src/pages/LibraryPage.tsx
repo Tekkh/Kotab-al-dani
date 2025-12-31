@@ -63,6 +63,7 @@ export default function LibraryPage() {
     setTafsirLoading(true);
     setTafsirResult(null);
     try {
+
       const res = await apiClient.get(`/library/tafsir-proxy/${selectedSurah}/${selectedAyah}/`);
       setTafsirResult(res.data);
     } catch (err) {
@@ -174,7 +175,7 @@ export default function LibraryPage() {
             </div>
           )}
 
-          {/* المحتويات الأخرى (التجويد والمتون) كما هي */}
+          {/* === تبويب التجويد (الذي قمنا بتحسينه) === */}
           {activeTab === 'tajweed' && (
             <div className="space-y-3">
               {tajweedLessons.length > 0 ? (
@@ -183,13 +184,16 @@ export default function LibraryPage() {
                     key={lesson.id} 
                     className="group border border-gray-200 rounded-xl bg-white overflow-hidden transition-all duration-300 hover:shadow-md open:shadow-md open:border-emerald-200 open:bg-emerald-50/30 w-full"
                   >
-                    {/* العنوان */}
+                    {/* العنوان الخارجي (يسمح بسطرين كحد أقصى) */}
                     <summary className="flex justify-between items-center p-4 md:p-5 cursor-pointer font-bold text-gray-800 group-open:text-emerald-800 select-none list-none gap-3">
-                      <div className="flex items-center gap-3 min-w-0">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
                         <span className="w-8 h-8 md:w-10 md:h-10 bg-gray-100 group-open:bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-700 font-bold text-sm shrink-0 transition-colors">
                           {index + 1}
                         </span>
-                        <span className="text-base md:text-lg truncate">{lesson.title}</span>
+                        {/* هنا التغيير: line-clamp-2 بدلاً من truncate */}
+                        <span className="text-base md:text-lg line-clamp-2 leading-snug">
+                          {lesson.title}
+                        </span>
                       </div>
                       <span className="text-gray-400 group-open:text-emerald-600 group-open:rotate-180 transition-transform duration-300 shrink-0">
                         ▼
@@ -199,7 +203,13 @@ export default function LibraryPage() {
                     {/* المحتوى المنسدل */}
                     <div className="px-4 pb-6 pt-2 md:px-6 md:pt-2 text-gray-600 leading-relaxed border-t border-gray-100/50 animate-fade-in w-full overflow-hidden">
                       
-                      {/* تنسيق المحتوى الداخلي ليحترم الموبايل */}
+                      {/* العنوان الكامل في الداخل (للتأكيد والوضوح) */}
+                      <div className="mb-4 pb-2 border-b border-emerald-100/50">
+                        <h3 className="text-lg md:text-xl font-bold text-emerald-800 font-cairo">
+                          {lesson.title}
+                        </h3>
+                      </div>
+
                       <div 
                         className="
                           prose max-w-none font-medium text-sm md:text-base
@@ -218,44 +228,43 @@ export default function LibraryPage() {
               )}
             </div>
           )}
+
           {activeTab === 'matoon' && (
              <div className="grid md:grid-cols-2 gap-6">
                 {matoon.length > 0 ? matoon.map(m => (
                   <div key={m.id} className="flex flex-col p-6 border border-gray-200 rounded-2xl hover:shadow-lg transition-all bg-white group h-full">
-                     
-                     {/* المحتوى العلوي المساحة المتبقية) */}
-                     <div className="flex-1 mb-6">
-                        <div className="flex justify-between items-start mb-2">
-                           <h3 className="font-bold text-gray-800 text-lg group-hover:text-emerald-700 transition-colors">
-                             {m.title}
-                           </h3>
-                           <div className="p-2 bg-gray-50 rounded-lg text-gray-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors">
-                             <Book size={20} />
-                           </div>
-                        </div>
-                        
-                        <p className="text-sm text-emerald-600 font-medium mb-3 flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
-                          {m.author}
-                        </p>
-                        
-                        {m.description && (
-                          <p className="text-gray-500 text-sm leading-relaxed">
-                            {m.description}
-                          </p>
-                        )}
-                     </div>
-                     
-                     {/* زر التحميل (في الأسفل دائماً) */}
-                     <a 
-                       href={m.pdf_file} 
-                       target="_blank" 
-                       rel="noopener noreferrer" 
-                       className="w-full py-3 bg-gray-50 hover:bg-emerald-600 text-gray-600 hover:text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 border border-gray-100 hover:border-transparent group-hover:shadow-sm"
-                     >
-                       <Download size={18} />
-                       <span>تحميل نسخة PDF</span>
-                     </a>
+                      
+                      <div className="flex-1 mb-6">
+                         <div className="flex justify-between items-start mb-2">
+                            <h3 className="font-bold text-gray-800 text-lg group-hover:text-emerald-700 transition-colors">
+                              {m.title}
+                            </h3>
+                            <div className="p-2 bg-gray-50 rounded-lg text-gray-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors">
+                              <Book size={20} />
+                            </div>
+                         </div>
+                         
+                         <p className="text-sm text-emerald-600 font-medium mb-3 flex items-center gap-1">
+                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+                           {m.author}
+                         </p>
+                         
+                         {m.description && (
+                           <p className="text-gray-500 text-sm leading-relaxed">
+                             {m.description}
+                           </p>
+                         )}
+                      </div>
+                      
+                      <a 
+                        href={m.pdf_file} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="w-full py-3 bg-gray-50 hover:bg-emerald-600 text-gray-600 hover:text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 border border-gray-100 hover:border-transparent group-hover:shadow-sm"
+                      >
+                        <Download size={18} />
+                        <span>تحميل نسخة PDF</span>
+                      </a>
                   </div>
                 )) : <p className="text-center py-10 text-gray-400 col-span-full">لا توجد متون متاحة حالياً.</p>}
              </div>
