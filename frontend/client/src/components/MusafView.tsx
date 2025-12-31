@@ -1,9 +1,9 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { 
   ChevronRight, ChevronLeft, Loader2, 
   BookOpen, Bookmark, Maximize2, Minimize2, 
-  Layers, Save
+  Layers, Save, X
 } from 'lucide-react';
 
 interface Chapter {
@@ -21,8 +21,12 @@ export default function MusafView() {
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [selectedSurah, setSelectedSurah] = useState<number>(1);
 
+  // حالات العرض
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showControls, setShowControls] = useState(true);
   const [savedPage, setSavedPage] = useState<number | null>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // --- 1. التحضير والبيانات ---
   useEffect(() => {
@@ -62,161 +66,204 @@ export default function MusafView() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') goToNextPage();
       if (e.key === 'ArrowRight') goToPrevPage();
-      if (e.key === 'Escape') setIsFullscreen(false);
+      if (e.key === 'Escape') toggleFullscreen(false);
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [goToNextPage, goToPrevPage]);
 
-  // حفظ العلامة المرجعية
+  const toggleFullscreen = (forceState?: boolean) => {
+    const newState = forceState !== undefined ? forceState : !isFullscreen;
+    setIsFullscreen(newState);
+    setShowControls(true); 
+
+    if (newState) {
+
+      if (containerRef.current?.requestFullscreen) {
+        containerRef.current.requestFullscreen().catch(() => {});
+      }
+    } else {
+
+      if (document.exitFullscreen && document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+  };
+
   const handleSaveBookmark = () => {
     localStorage.setItem('quran_bookmark', page.toString());
     setSavedPage(page);
 
+    alert("تم حفظ العلامة");
   };
 
-  // الذهاب للعلامة المحفوظة
   const goToBookmark = () => {
     if (savedPage) setPage(savedPage);
   };
 
-  // التنقل بالأحزاب (معادلة تقريبية لمصحف المدينة/ورش 604 صفحة: الحزب = 10 صفحات تقريباً)
   const handleHizbChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const hizb = Number(e.target.value);
-    // معادلة تقريبية: الحزب 1 يبدأ ص2، الحزب 2 يبدأ ص11...
     const targetPage = (hizb - 1) * 10 + 2; 
     setPage(Math.min(604, targetPage));
   };
 
   return (
-    <div className={`bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col transition-all duration-300 ${isFullscreen ? 'fixed inset-0 z-50 h-screen rounded-none' : 'h-[850px] relative'}`}>
-      <div className="bg-gray-50/80 backdrop-blur-sm border-b border-gray-200 p-3 flex flex-col lg:flex-row items-center justify-between gap-3">
-
-        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 w-full lg:w-auto">
-          <div className="relative group">
-            <BookOpen size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 pointer-events-none z-10" />
-            <select 
-              value={selectedSurah}
-              onChange={(e) => {
-                const ch = chapters.find(c => c.id === Number(e.target.value));
-                if(ch) setPage(ch.pages[0]);
-              }}
-              className="appearance-none pl-4 pr-10 py-2 bg-white border border-gray-300 rounded-xl text-sm font-bold text-gray-700 hover:border-emerald-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition-all w-40 cursor-pointer"
-            >
-              {chapters.map(ch => <option key={ch.id} value={ch.id}>{ch.id}. {ch.name_arabic}</option>)}
-            </select>
-          </div>
-
-          <div className="relative group">
-            <Layers size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 pointer-events-none z-10" />
-            <select 
-              onChange={handleHizbChange} 
-              className="appearance-none pl-4 pr-10 py-2 bg-white border border-gray-300 rounded-xl text-sm font-medium text-gray-700 hover:border-emerald-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition-all w-32 cursor-pointer"
-            >
-              <option value="">الحزب...</option>
-              {Array.from({length: 60}, (_, i) => i + 1).map(h => (
-                <option key={h} value={h}>الحزب {h}</option>
-              ))}
-            </select>
-          </div>
-
-          <form onSubmit={(e) => { e.preventDefault(); setPage(parseInt(inputPage) || 1); }} className="relative flex items-center">
-            <input 
-              type="number" min="1" max="604"
-              value={inputPage} onChange={(e) => setInputPage(e.target.value)}
-              className="w-20 pl-2 pr-8 py-2 text-center border border-gray-300 rounded-xl text-sm font-bold text-gray-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition-all"
-            />
-            <span className="absolute right-3 text-xs text-gray-400 font-medium pointer-events-none">ص.</span>
-          </form>
-        </div>
-
-        {/* المجموعة 2: أدوات الإجراءات (يسار) */}
-        <div className="flex items-center gap-2 bg-white p-1 rounded-xl border border-gray-200 shadow-sm">
+    <div 
+      ref={containerRef}
+      className={`
+        transition-all duration-300 flex flex-col overflow-hidden bg-white
+        ${isFullscreen 
+          ? 'fixed inset-0 z-[100] h-screen w-screen bg-black' 
+          : 'relative h-[850px] rounded-2xl shadow-sm border border-gray-200'
+        }
+      `}
+    >
+      {/* === الشريط العلوي (Header) === 
+        يختفي في وضع ملء الشاشة إذا ضغط المستخدم على الصفحة
+      */}
+      <div className={`
+        absolute top-0 left-0 right-0 z-20 bg-gray-50/90 backdrop-blur-md border-b border-gray-200 p-3 transition-transform duration-300
+        ${isFullscreen ? (showControls ? 'translate-y-0' : '-translate-y-full') : 'translate-y-0 relative'}
+      `}>
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-3">
           
-          {/* زر المرجع */}
-          <button 
-            onClick={goToBookmark} 
-            disabled={!savedPage}
-            title={savedPage ? `الذهاب للعلامة (ص ${savedPage})` : "لا توجد علامة محفوظة"}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              savedPage 
-                ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100' 
-                : 'text-gray-300 cursor-not-allowed'
-            }`}
-          >
-            <Bookmark size={16} fill={savedPage ? "currentColor" : "none"} />
-            <span className="hidden sm:inline">المرجع</span>
-          </button>
+          {/* أدوات البحث والتنقل */}
+          <div className="flex flex-wrap items-center justify-center gap-2 w-full lg:w-auto">
+             {/* زر إغلاق ملء الشاشة (يظهر فقط في وضع ملء الشاشة) */}
+             {isFullscreen && (
+               <button onClick={() => toggleFullscreen(false)} className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
+                 <X size={20} />
+               </button>
+             )}
 
-          <div className="w-px h-5 bg-gray-200 mx-1"></div>
+            <div className="relative group">
+              <BookOpen size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 pointer-events-none z-10" />
+              <select 
+                value={selectedSurah}
+                onChange={(e) => {
+                  const ch = chapters.find(c => c.id === Number(e.target.value));
+                  if(ch) setPage(ch.pages[0]);
+                }}
+                className="appearance-none pl-4 pr-10 py-2 bg-white border border-gray-300 rounded-xl text-sm font-bold text-gray-700 outline-none w-36 cursor-pointer focus:ring-2 focus:ring-emerald-500"
+              >
+                {chapters.map(ch => <option key={ch.id} value={ch.id}>{ch.id}. {ch.name_arabic}</option>)}
+              </select>
+            </div>
 
-          {/* حفظ العلامة */}
-          <button 
-            onClick={handleSaveBookmark}
-            title="حفظ الصفحة الحالية كعلامة"
-            className="p-1.5 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
-          >
-            <Save size={18} />
-          </button>
+            <div className="relative group hidden sm:block">
+              <Layers size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 pointer-events-none z-10" />
+              <select 
+                onChange={handleHizbChange} 
+                className="appearance-none pl-4 pr-10 py-2 bg-white border border-gray-300 rounded-xl text-sm font-medium text-gray-700 outline-none w-32 cursor-pointer focus:ring-2 focus:ring-emerald-500"
+              >
+                <option value="">الحزب...</option>
+                {Array.from({length: 60}, (_, i) => i + 1).map(h => (
+                  <option key={h} value={h}>الحزب {h}</option>
+                ))}
+              </select>
+            </div>
 
-          {/* ملء الشاشة */}
-          <button 
-            onClick={() => setIsFullscreen(!isFullscreen)}
-            className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-            title={isFullscreen ? "إنهاء ملء الشاشة" : "ملء الشاشة"}
-          >
-            {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
-          </button>
+            <form onSubmit={(e) => { e.preventDefault(); setPage(parseInt(inputPage) || 1); }} className="relative flex items-center">
+              <input 
+                type="number" min="1" max="604"
+                value={inputPage} onChange={(e) => setInputPage(e.target.value)}
+                className="w-16 pl-2 pr-6 py-2 text-center border border-gray-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-emerald-500 outline-none"
+              />
+            </form>
+          </div>
+
+          {/* أدوات الإجراءات */}
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={goToBookmark} 
+              disabled={!savedPage}
+              className={`p-2 rounded-lg transition-colors ${savedPage ? 'text-yellow-600 bg-yellow-50' : 'text-gray-300'}`}
+              title="الذهاب للعلامة"
+            >
+              <Bookmark size={20} fill={savedPage ? "currentColor" : "none"} />
+            </button>
+
+            <button 
+              onClick={handleSaveBookmark}
+              className="p-2 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg"
+              title="حفظ العلامة"
+            >
+              <Save size={20} />
+            </button>
+
+            {/* زر التكبير (يختفي داخل وضع ملء الشاشة لتجنب التكرار) */}
+            {!isFullscreen && (
+              <button 
+                onClick={() => toggleFullscreen(true)}
+                className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
+              >
+                <Maximize2 size={20} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="flex-1 bg-[#fffdf5] flex justify-center items-center overflow-hidden relative group">
+      {/* === منطقة عرض المصحف === 
+        الضغط هنا يبدل حالة ظهور الأدوات (showControls)
+      */}
+      <div 
+        className={`flex-1 relative flex justify-center items-center overflow-hidden cursor-pointer ${isFullscreen ? 'bg-black' : 'bg-[#fffdf5]'}`}
+        onClick={() => isFullscreen && setShowControls(!showControls)}
+      >
         {loading && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#fffdf5] z-10">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 z-10">
             <Loader2 className="w-12 h-12 text-emerald-600 animate-spin mb-3" />
-            <span className="text-emerald-800 font-medium animate-pulse">جاري جلب الصفحة...</span>
+            <span className="text-emerald-800 font-medium">جاري التحميل...</span>
           </div>
         )}
 
-        {error && (
+        {error ? (
           <div className="text-center text-red-500 bg-red-50 p-6 rounded-xl">
-            <p className="font-bold">فشل تحميل الصورة</p>
+            <p className="font-bold">فشل تحميل الصفحة</p>
             <button onClick={() => setPage(page)} className="underline mt-2">إعادة المحاولة</button>
           </div>
-        )}
-
-        {!error && (
+        ) : (
           <img 
             src={getPageUrl(page)} 
             alt={`Page ${page}`} 
-            className={`h-full w-auto object-contain shadow-2xl transition-opacity duration-300 ${loading ? 'opacity-0' : 'opacity-100'}`}
+            className={`
+              transition-opacity duration-300 object-contain shadow-lg
+              ${loading ? 'opacity-0' : 'opacity-100'}
+              ${isFullscreen ? 'max-h-screen w-full h-full' : 'max-h-full w-auto'}
+            `}
             onLoad={() => setLoading(false)}
             onError={() => { setLoading(false); setError(true); }}
           />
         )}
 
-        {/* أزرار التنقل الجانبية الشفافة */}
-        <button 
-          onClick={goToNextPage}
-          className="absolute left-0 top-0 bottom-0 w-16 flex items-center justify-center hover:bg-black/5 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 focus:outline-none"
+        {/* أزرار التنقل الجانبية (تظهر فقط عند تمرير الماوس أو إذا كانت الأدوات ظاهرة) */}
+        <div 
+           className={`absolute inset-y-0 left-0 w-16 md:w-24 flex items-center justify-start pl-2 z-10 transition-opacity duration-300 ${(!showControls && isFullscreen) ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+           onClick={(e) => { e.stopPropagation(); goToNextPage(); }} 
         >
-          <div className="bg-white/90 p-2 rounded-full shadow-lg text-gray-700 hover:text-emerald-600">
-            <ChevronLeft size={28} />
-          </div>
-        </button>
-
-        <button 
-          onClick={goToPrevPage}
-          className="absolute right-0 top-0 bottom-0 w-16 flex items-center justify-center hover:bg-black/5 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 focus:outline-none"
-        >
-          <div className="bg-white/90 p-2 rounded-full shadow-lg text-gray-700 hover:text-emerald-600">
-            <ChevronRight size={28} />
-          </div>
-        </button>
-
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-4 py-1 rounded-full text-sm font-mono backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-          صفحة {page}
+          <button className="bg-black/20 hover:bg-black/40 text-white p-2 rounded-full backdrop-blur-sm transition-all shadow-lg transform hover:scale-110">
+            <ChevronLeft size={32} />
+          </button>
         </div>
+
+        <div 
+           className={`absolute inset-y-0 right-0 w-16 md:w-24 flex items-center justify-end pr-2 z-10 transition-opacity duration-300 ${(!showControls && isFullscreen) ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+           onClick={(e) => { e.stopPropagation(); goToPrevPage(); }}
+        >
+          <button className="bg-black/20 hover:bg-black/40 text-white p-2 rounded-full backdrop-blur-sm transition-all shadow-lg transform hover:scale-110">
+            <ChevronRight size={32} />
+          </button>
+        </div>
+
+        {/* رقم الصفحة العائم (يختفي مع الأدوات) */}
+        <div className={`
+          absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black/60 text-white px-4 py-1.5 rounded-full text-sm font-mono backdrop-blur-md transition-opacity duration-300
+          ${(!showControls && isFullscreen) ? 'opacity-0' : 'opacity-100'}
+        `}>
+          {page}
+        </div>
+
       </div>
     </div>
   );
