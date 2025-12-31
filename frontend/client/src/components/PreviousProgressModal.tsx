@@ -59,18 +59,23 @@ export default function PreviousProgressModal({ isOpen, onRequestClose, onSucces
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       contentLabel="تسجيل الحفظ السابق"
-      overlayClassName="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
-      className="bg-white w-full max-w-lg mx-4 rounded-2xl shadow-2xl p-0 outline-none overflow-hidden max-h-[90vh] flex flex-col"
+      overlayClassName="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" // أضفنا p-4 للهوامش في الموبايل
+      // 1. تعديل ارتفاع المودال ليكون مناسباً للموبايل
+      className="bg-white w-full max-w-lg rounded-2xl shadow-2xl outline-none flex flex-col max-h-[85vh]"
     >
-      <div dir="rtl" className="flex flex-col h-full">
+      {/* جعلنا الفورم هو الحاوية الرئيسية لكي يعمل زر الإرسال */}
+      <form onSubmit={handleSubmit} dir="rtl" className="flex flex-col h-full overflow-hidden">
+        
+        {/* === 1. الرأس (ثابت) === */}
         <div className="bg-emerald-700 p-5 text-white shrink-0">
           <h2 className="text-xl font-bold">تسجيل الحفظ السابق</h2>
           <p className="text-emerald-100 text-sm">سجل ما تحفظه مسبقاً لنحسب مستواك</p>
         </div>
         
-        <form onSubmit={handleSubmit} className="p-6 overflow-y-auto custom-scrollbar flex-1">
+        {/* === 2. المحتوى (قابل للتمرير) === */}
+        <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
           
-          {/* 1. الاختيارات الذكية (السور) */}
+          {/* الاختيارات الذكية (السور) */}
           <div className="mb-8">
             <label className="block text-sm font-bold text-gray-700 mb-3">
               اختر السور أو الأجزاء التي تحفظها:
@@ -83,7 +88,7 @@ export default function PreviousProgressModal({ isOpen, onRequestClose, onSucces
                     key={item.id}
                     onClick={() => toggleBadge(item.id)}
                     className={`
-                      cursor-pointer p-3 rounded-xl border transition-all flex items-center justify-between
+                      cursor-pointer p-3 rounded-xl border transition-all flex items-center justify-between select-none
                       ${isSelected 
                         ? 'bg-emerald-50 border-emerald-500 text-emerald-800 shadow-sm ring-1 ring-emerald-500' 
                         : 'bg-white border-gray-200 text-gray-600 hover:border-emerald-300'}
@@ -94,9 +99,9 @@ export default function PreviousProgressModal({ isOpen, onRequestClose, onSucces
                       <span className="text-[10px] text-gray-400">{item.value}</span>
                     </div>
                     {isSelected ? (
-                      <CheckCircle2 size={20} className="text-emerald-600" />
+                      <CheckCircle2 size={20} className="text-emerald-600 shrink-0" />
                     ) : (
-                      <div className="w-5 h-5 rounded-full border-2 border-gray-300"></div>
+                      <div className="w-5 h-5 rounded-full border-2 border-gray-300 shrink-0"></div>
                     )}
                   </div>
                 );
@@ -106,8 +111,8 @@ export default function PreviousProgressModal({ isOpen, onRequestClose, onSucces
 
           <div className="border-t border-gray-100 my-4"></div>
 
-          {/* 2. الإدخال اليدوي (اختياري) */}
-          <div className="mb-6 bg-gray-50 p-4 rounded-xl">
+          {/* الإدخال اليدوي */}
+          <div className="mb-2 bg-gray-50 p-4 rounded-xl">
             <div className="flex items-start gap-2 mb-2">
               <Info size={16} className="text-emerald-600 mt-1 shrink-0" />
               <label className="block text-sm font-bold text-gray-700">
@@ -126,25 +131,27 @@ export default function PreviousProgressModal({ isOpen, onRequestClose, onSucces
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
             />
           </div>
-          
-          <div className="flex gap-3 pt-2">
-            <button 
-              type="submit" 
-              disabled={loading}
-              className="flex-1 bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors disabled:opacity-50 shadow-md"
-            >
-              {loading ? 'جاري المعالجة...' : 'حفظ وتحديث مستواي'}
-            </button>
-            <button 
-              type="button"
-              onClick={onRequestClose}
-              className="px-5 py-3 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors"
-            >
-              إلغاء
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+        
+        {/* === 3. الذيل (الأزرار ثابتة في الأسفل) === */}
+        <div className="p-4 border-t border-gray-100 bg-gray-50 flex gap-3 shrink-0">
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="flex-1 bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors disabled:opacity-50 shadow-md"
+          >
+            {loading ? 'جاري المعالجة...' : 'حفظ وتحديث'}
+          </button>
+          <button 
+            type="button"
+            onClick={onRequestClose}
+            className="px-5 py-3 text-gray-500 hover:bg-gray-200 rounded-xl font-medium transition-colors border border-gray-200 bg-white"
+          >
+            إلغاء
+          </button>
+        </div>
+
+      </form>
     </Modal>
   );
 }

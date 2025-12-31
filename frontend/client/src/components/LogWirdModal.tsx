@@ -72,7 +72,7 @@ export default function LogWirdModal({ isOpen, onRequestClose, onLogCreated, onB
       
     } catch (err) {
       console.error(err);
-      setError("حدث خطأ أثناء حفظ الوِرد.");
+      setError("حدث خطأ أثناء حفظ الثمن.");
     } finally {
       setLoading(false);
     }
@@ -84,7 +84,7 @@ export default function LogWirdModal({ isOpen, onRequestClose, onLogCreated, onB
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      contentLabel="تسجيل الوِرد"
+      contentLabel="تسجيل الثمن"
       overlayClassName="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
       className="bg-white w-full max-w-lg mx-4 rounded-2xl shadow-2xl p-0 outline-none overflow-hidden transform transition-all"
     >
