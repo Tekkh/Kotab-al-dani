@@ -107,7 +107,7 @@ export default function RecitationsPage() {
       fetchHistory();
     } catch (err) {
       console.error(err);
-      setNotification({ msg: "حدث خطأ أثناء الرفع، حاول مرة أخرى", type: 'error' });
+      /*setNotification({ msg: "حدث خطأ أثناء الرفع، حاول مرة أخرى", type: 'error' });*/
     } finally {
       setUploading(false);
     }
