@@ -93,7 +93,9 @@ export default function RecitationsPage() {
       data.append('surah_name', selectedSurah?.name_arabic || 'غير محدد');
       data.append('from_ayah', fromAyah.toString());
       data.append('to_ayah', toAyah.toString());
-      /*data.append('audio_file', audioFile);*/
+      if (audioFile) {
+      data.append('audio_file', audioFile); 
+      }
 
       await apiClient.post('/reviews/submit-recitation/', data, {
         headers: { 'Content-Type': 'multipart/form-data' },
