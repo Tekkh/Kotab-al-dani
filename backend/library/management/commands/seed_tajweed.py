@@ -21,7 +21,6 @@ class Command(BaseCommand):
             with open(json_file_path, 'r', encoding='utf-8') as f:
                 lessons_data = json.load(f)
 
-            # تنظيف البيانات القديمة لإعادة البناء
             TajweedLesson.objects.all().delete()
 
             for lesson in lessons_data:
